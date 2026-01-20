@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <link rel="canonical" href="https://blog.csdn.net/qq_64671439/article/details/135299345"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="report" content="{&quot;pid&quot;: &quot;blog&quot;, &quot;spm&quot;:&quot;1001.2101&quot;}"> 
+  <meta name="referrer" content="always"> 
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <link rel="alternate" media="handheld" href="#">  
+  <meta name="applicable-device" content="pc"> 
+  <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"> 
+  <title>【强化学习的数学原理-赵世钰】课程笔记（一）基本概念_强化学习笔记-CSDN博客</title>  
+  <meta name="keywords" content="强化学习笔记"> 
+  <meta name="csdn-baidu-search" content="{&quot;autorun&quot;:true,&quot;install&quot;:true,&quot;keyword&quot;:&quot;强化学习笔记&quot;}"> 
+  <meta name="description" content="文章浏览阅读6k次，点赞66次，收藏91次。在B站上学习强化学习的课程笔记，笔记非常详细清晰，会持续更新_强化学习笔记"> 
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-d4fc849858.min.css">  
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-1024/skin-1024-ecd36efea2.min.css">    
+  <meta name="toolbar" content="{&quot;type&quot;:&quot;0&quot;,&quot;fixModel&quot;:&quot;1&quot;}">    
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css"> 
+  <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>    
+ 	<style>
+	main div.blog-content-box pre {
+		max-height: 100%;
+		overflow-y: hidden;
+	}
+	</style>
+ </head>  
+ <body class="nodata  " style=""> 
+  <div id="toolbarBox" style="min-height: 48px;"></div>    
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css"> 
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css">   
+  <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;"> 
+   <div class="container clearfix container-concision" id="mainBox">  
+    <main>  
+     <div class="blog-content-box"> 
+      <div class="article-header-box"> 
+       <div class="article-header"> 
+        <div class="article-title-box"> 
+         <h1 class="title-article" id="articleContentId">【强化学习的数学原理-赵世钰】课程笔记（一）基本概念</h1> 
+        </div> 
+        <div class="article-info-box"> 
+         <div class="article-bar-top"> 
+          <img class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png" alt=""> 
+          <div class="bar-content"> 
+           <a class="follow-nickName " href="https://blog.csdn.net/qq_64671439" target="_blank" rel="noopener" title="leaf_leaves_leaf">leaf_leaves_leaf</a> 
+           <img class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newUpTime2.png" alt=""> 
+           <span class="time">已于&nbsp;2024-02-06 19:14:37&nbsp;修改</span> 
+           <div class="read-count-box"> 
+            <img class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png" alt=""> 
+            <span class="read-count">阅读量6k</span> 
+            <a id="blog_detail_zk_collection" class="un-collection" data-report-click="{&quot;mod&quot;:&quot;popu_823&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="article-collect-img article-heard-img un-collect-status isdefault" style="display:inline-block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" alt=""> <img class="article-collect-img article-heard-img collect-status isactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" alt=""> <span class="name">收藏</span> <span class="get-collection"> 91 </span> </a> 
+            <div class="read-count-box is-like" data-type="top"> 
+             <img class="article-read-img article-heard-img" style="display:none" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" alt=""> 
+             <img class="article-read-img article-heard-img" style="display:block" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" alt=""> 
+             <span class="read-count" id="blog-digg-num">点赞数 66 </span> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="blog-tags-box"> 
+          <div class="tags-box artic-tag-box"> 
+           <span class="label">分类专栏：</span> 
+           <a class="tag-link" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" rel="noopener">【强化学习的数学原理-赵世钰】课程笔记</a> 
+           <span class="label">文章标签：</span> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E7%AC%94%E8%AE%B0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">笔记</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">机器学习</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;人工智能&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;人工智能\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;人工智能&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;人工智能\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">人工智能</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">学习</a> 
+          </div> 
+         </div> 
+         <div class="up-time">
+          <span>于&nbsp;2023-12-30 14:28:41&nbsp;首次发布</span>
+         </div> 
+         <div class="slide-content-box"> 
+          <div class="article-copyright"> 
+           <div class="creativecommons">
+             版权声明：本文为博主原创文章，遵循
+            <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"> CC 4.0 BY-SA </a>版权协议，转载请附上原文出处链接和本声明。 
+           </div> 
+           <div class="article-source-link">
+             本文链接：
+            <a href="https://blog.csdn.net/qq_64671439/article/details/135299345" target="_blank">https://blog.csdn.net/qq_64671439/article/details/135299345</a> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="operating"> 
+          <a class="href-article-edit slide-toggle">版权</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div id="blogHuaweiyunAdvert"></div> 
+      <div id="blogColumnPayAdvert"> 
+       <div class="column-group"> 
+        <div class="column-group-item column-group0 column-group-item-one"> 
+         <div class="item-l"> 
+          <a class="item-target" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" title="【强化学习的数学原理-赵世钰】课程笔记" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}"> <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt=""> <span class="title item-target"> <span> <span class="tit">【强化学习的数学原理-赵世钰】课程笔记</span> <span class="dec">专栏收录该内容</span> </span> </span> </a> 
+         </div> 
+         <div class="item-m"> 
+          <span>10 篇文章</span> 
+         </div> 
+         <div class="item-r"> 
+          <a class="item-target article-column-bt articleColumnFreeBt" data-id="12540921">订阅专栏</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <article class="baidu_pl"> 
+       <div id="article_content" class="article_content clearfix"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-704d5b9767.css"> 
+        <div id="content_views" class="htmledit_views atom-one-dark"> 
+         <p id="main-toc"><strong>目录</strong></p> 
+         <p id="-toc" style="margin-left:0px;"></p> 
+         <p id="%E4%B8%80.%20%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0-toc" style="margin-left:0px;"><a href="#%E4%B8%80.%20%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0" rel="nofollow">一. 内容概述</a></p> 
+         <p id="1.%20%E9%80%9A%E8%BF%87%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-toc" style="margin-left:40px;"><a href="#1.%20%E9%80%9A%E8%BF%87%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5" rel="nofollow">1. 通过案例介绍强化学习中的基本概念</a></p> 
+         <p id="2.%20%E5%9C%A8%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88MDP%EF%BC%89%E7%9A%84%E6%A1%86%E6%9E%B6%E4%B8%8B%E5%B0%86%E6%A6%82%E5%BF%B5%E6%AD%A3%E5%BC%8F%E6%8F%8F%E8%BF%B0%E5%87%BA%E6%9D%A5-toc" style="margin-left:40px;"><a href="#2.%20%E5%9C%A8%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88MDP%EF%BC%89%E7%9A%84%E6%A1%86%E6%9E%B6%E4%B8%8B%E5%B0%86%E6%A6%82%E5%BF%B5%E6%AD%A3%E5%BC%8F%E6%8F%8F%E8%BF%B0%E5%87%BA%E6%9D%A5" rel="nofollow">2. 在马尔可夫决策过程（MDP）的框架下将概念正式描述出来</a></p> 
+         <p id="%E4%BA%8C.%C2%A0%E9%80%9A%E8%BF%87%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-toc" style="margin-left:0px;"><a href="#%E4%BA%8C.%C2%A0%E9%80%9A%E8%BF%87%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5" rel="nofollow">二.&nbsp;通过案例介绍强化学习中的基本概念</a></p> 
+         <p id="1.%C2%A0%20%E7%BD%91%E6%A0%BC%E4%B8%96%E7%95%8C%EF%BC%88A%20grid%20world%20example%EF%BC%89-toc" style="margin-left:40px;"><a href="#1.%C2%A0%20%E7%BD%91%E6%A0%BC%E4%B8%96%E7%95%8C%EF%BC%88A%20grid%20world%20example%EF%BC%89" rel="nofollow">1.&nbsp; 网格世界（A grid world example）</a></p> 
+         <p id="2.%20%E7%8A%B6%E6%80%81%EF%BC%88State%EF%BC%89-toc" style="margin-left:40px;"><a href="#2.%20%E7%8A%B6%E6%80%81%EF%BC%88State%EF%BC%89" rel="nofollow">2. 状态（State）</a></p> 
+         <p id="3.%20%E5%8A%A8%E4%BD%9C%EF%BC%88Action%EF%BC%89-toc" style="margin-left:40px;"><a href="#3.%20%E5%8A%A8%E4%BD%9C%EF%BC%88Action%EF%BC%89" rel="nofollow">3. 动作（Action）</a></p> 
+         <p id="4.%20%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB%EF%BC%88State%20transition%EF%BC%89-toc" style="margin-left:40px;"><a href="#4.%20%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB%EF%BC%88State%20transition%EF%BC%89" rel="nofollow">4. 状态转移（State transition）</a></p> 
+         <p id="5.%20%E7%AD%96%E7%95%A5%EF%BC%88Policy%EF%BC%89-toc" style="margin-left:40px;"><a href="#5.%20%E7%AD%96%E7%95%A5%EF%BC%88Policy%EF%BC%89" rel="nofollow">5. 策略（Policy）</a></p> 
+         <p id="6.%20%E5%A5%96%E5%8A%B1%EF%BC%88Reward%EF%BC%89-toc" style="margin-left:40px;"><a href="#6.%20%E5%A5%96%E5%8A%B1%EF%BC%88Reward%EF%BC%89" rel="nofollow">6. 奖励（Reward）</a></p> 
+         <p id="7.%20%E8%BD%A8%E8%BF%B9%E5%92%8C%E6%94%B6%E7%9B%8A%EF%BC%88Trajectory%20and%20return%EF%BC%89-toc" style="margin-left:40px;"><a href="#7.%20%E8%BD%A8%E8%BF%B9%E5%92%8C%E6%94%B6%E7%9B%8A%EF%BC%88Trajectory%20and%20return%EF%BC%89" rel="nofollow">7. 轨迹和收益（Trajectory and return）</a></p> 
+         <p id="8.%C2%A0%E6%8A%98%E6%89%A3%E5%9B%9E%E6%8A%A5%EF%BC%88discounted%20return%EF%BC%89-toc" style="margin-left:40px;"><a href="#8.%C2%A0%E6%8A%98%E6%89%A3%E5%9B%9E%E6%8A%A5%EF%BC%88discounted%20return%EF%BC%89" rel="nofollow">8.&nbsp;折扣回报（discounted return）</a></p> 
+         <p id="9.%20Episode-toc" style="margin-left:40px;"><a href="#9.%20Episode" rel="nofollow">9. Episode</a></p> 
+         <p id="%E4%B8%89.%C2%A0%E5%9C%A8%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88MDP%EF%BC%89%E7%9A%84%E6%A1%86%E6%9E%B6%E4%B8%8B%E5%B0%86%E6%A6%82%E5%BF%B5%E6%AD%A3%E5%BC%8F%E6%8F%8F%E8%BF%B0%E5%87%BA%E6%9D%A5-toc" style="margin-left:0px;"><a href="#%E4%B8%89.%C2%A0%E5%9C%A8%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88MDP%EF%BC%89%E7%9A%84%E6%A1%86%E6%9E%B6%E4%B8%8B%E5%B0%86%E6%A6%82%E5%BF%B5%E6%AD%A3%E5%BC%8F%E6%8F%8F%E8%BF%B0%E5%87%BA%E6%9D%A5" rel="nofollow">三.&nbsp;在马尔可夫决策过程（MDP）的框架下将概念正式描述出来</a></p> 
+         <p id="1.%20%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20decision%20process%EF%BC%89%C2%A0%E7%9A%84%E5%85%B3%E9%94%AE%E8%A6%81%E7%B4%A0%EF%BC%9A-toc" style="margin-left:40px;"><a href="#1.%20%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20decision%20process%EF%BC%89%C2%A0%E7%9A%84%E5%85%B3%E9%94%AE%E8%A6%81%E7%B4%A0%EF%BC%9A" rel="nofollow">1. 马尔可夫决策过程（Markov decision process）&nbsp;的关键要素：</a></p> 
+         <p id="%EF%BC%881%EF%BC%89%E9%9B%86%E5%90%88%EF%BC%88Sets%EF%BC%89-toc" style="margin-left:80px;"><a href="#%EF%BC%881%EF%BC%89%E9%9B%86%E5%90%88%EF%BC%88Sets%EF%BC%89" rel="nofollow">（1）集合（Sets）</a></p> 
+         <p id="%EF%BC%882%EF%BC%89%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83%EF%BC%88Probability%20distribution%20(or%20called%20system%20model)%EF%BC%89-toc" style="margin-left:80px;"><a href="#%EF%BC%882%EF%BC%89%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83%EF%BC%88Probability%20distribution%20%28or%20called%20system%20model%29%EF%BC%89" rel="nofollow">（2）概率分布（Probability distribution (or called system model)）</a></p> 
+         <p id="%EF%BC%883%EF%BC%89%E7%AD%96%E7%95%A5%EF%BC%88policy%EF%BC%89%E2%80%94%E2%80%94%20%E5%AF%B9%E5%BA%94%20Markov%20decision%20process%20%E4%B8%AD%E7%9A%84%20decision-toc" style="margin-left:80px;"><a href="#%EF%BC%883%EF%BC%89%E7%AD%96%E7%95%A5%EF%BC%88policy%EF%BC%89%E2%80%94%E2%80%94%20%E5%AF%B9%E5%BA%94%20Markov%20decision%20process%20%E4%B8%AD%E7%9A%84%20decision" rel="nofollow">（3）策略（policy）—— 对应 Markov decision process 中的 decision</a></p> 
+         <p id="%EF%BC%884%EF%BC%89%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%80%A7%E8%B4%A8%EF%BC%9A%E6%97%A0%E8%AE%B0%E5%BF%86%E6%80%A7%E8%B4%A8%EF%BC%88Markov%20property%3A%20memoryless%20property%EF%BC%89%E2%80%94%E2%80%94%20%E5%AF%B9%E5%BA%94%20Markov%20decision%20process%20%E4%B8%AD%E7%9A%84%20Markov-toc" style="margin-left:80px;"><a href="#%EF%BC%884%EF%BC%89%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%80%A7%E8%B4%A8%EF%BC%9A%E6%97%A0%E8%AE%B0%E5%BF%86%E6%80%A7%E8%B4%A8%EF%BC%88Markov%20property%3A%20memoryless%20property%EF%BC%89%E2%80%94%E2%80%94%20%E5%AF%B9%E5%BA%94%20Markov%20decision%20process%20%E4%B8%AD%E7%9A%84%20Markov" rel="nofollow">（4）马尔可夫性质：无记忆性质（Markov property: memoryless property）—— 对应 Markov decision process 中的 Markov</a></p> 
+         <p id="2.%20%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20process%EF%BC%89-toc" style="margin-left:40px;"><a href="#2.%20%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20process%EF%BC%89" rel="nofollow">2. 马尔可夫过程（Markov process）</a></p> 
+         <p id="3.%C2%A0%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20process%EF%BC%89%E4%B8%8E%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20decision%20process%EF%BC%89%C2%A0%E7%9A%84%E5%85%B3%E7%B3%BB-toc" style="margin-left:40px;"><a href="#3.%C2%A0%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20process%EF%BC%89%E4%B8%8E%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20decision%20process%EF%BC%89%C2%A0%E7%9A%84%E5%85%B3%E7%B3%BB" rel="nofollow">3.&nbsp;马尔可夫过程（Markov process）与马尔可夫决策过程（Markov decision process）&nbsp;的关系</a></p> 
+         <p id="%E5%9B%9B.%20%E6%80%BB%E7%BB%93-toc" style="margin-left:0px;"><a href="#%E5%9B%9B.%20%E6%80%BB%E7%BB%93" rel="nofollow">四. 总结</a></p> 
+         <hr id="hr-toc"> 
+         <p></p> 
+         <h2 id="%E4%B8%80.%20%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0">一. 内容概述</h2> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;第一部分主要有两个内容：</p> 
+         <h3 id="1.%20%E9%80%9A%E8%BF%87%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">1. 通过案例介绍强化学习中的基本概念</h3> 
+         <h3 id="2.%20%E5%9C%A8%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88MDP%EF%BC%89%E7%9A%84%E6%A1%86%E6%9E%B6%E4%B8%8B%E5%B0%86%E6%A6%82%E5%BF%B5%E6%AD%A3%E5%BC%8F%E6%8F%8F%E8%BF%B0%E5%87%BA%E6%9D%A5">2. 在马尔可夫决策过程（MDP）的框架下将概念正式描述出来</h3> 
+         <hr> 
+         <h2 id="%E4%BA%8C.%C2%A0%E9%80%9A%E8%BF%87%E6%A1%88%E4%BE%8B%E4%BB%8B%E7%BB%8D%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">二.&nbsp;通过案例介绍强化学习中的基本概念</h2> 
+         <h3 id="1.%C2%A0%20%E7%BD%91%E6%A0%BC%E4%B8%96%E7%95%8C%EF%BC%88A%20grid%20world%20example%EF%BC%89">1.&nbsp; 网格世界（A grid world example）</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img alt="" height="298" src="https://i-blog.csdnimg.cn/blog_migrate/1ce628d538a0992cfdd98085fff4df34.png" width="640"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本课程中始终使用的一个示例：网格世界</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （1）网格类型：可访问（Accessible）；禁止访问（forbidden）；目标单元格（target cells）；边界（boundary）</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （2）机器人只能在相邻网格移动，不能斜着移动</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="background-color:#fbd4d0;">强化学习的任务：给任意一个起始点，找到一个比较好的路径到达目标</span>。比较好的路径就是尽量避开禁止访问的地方，不要有无意义的拐弯，不要超越边界。</p> 
+         <h3 id="2.%20%E7%8A%B6%E6%80%81%EF%BC%88State%EF%BC%89">2. 状态（State）</h3> 
+         <p>&nbsp; &nbsp; &nbsp;<strong> &nbsp; 状态（state）</strong>：智能体<strong>相对于环境</strong>的状态</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#fbd4d0;">以网格世界为例，智能体的位置就是状态。</span>有九个可能的位置，因此也就有九种状态：S1、S2、...... , S9。这些字母是一个索引，真正对应的状态可能是在二维平面上的位置（x,y），更复杂的问题可能还会对应速度，加速度，或其他类型的状态信息等等。</p> 
+         <p class="img-center"><img alt="" height="298" src="https://i-blog.csdnimg.cn/blog_migrate/c8f35bcdf6950644a6b8dbfa715f2fc2.png" width="306"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>状态空间（state space）</strong>：把所有状态放在一起，所有状态的集合（set）</p> 
+         <p class="img-center"><img alt="" height="35" src="https://i-blog.csdnimg.cn/blog_migrate/8434e73431cf65a0dc52b962852dff92.png" width="116"></p> 
+         <h3 id="3.%20%E5%8A%A8%E4%BD%9C%EF%BC%88Action%EF%BC%89">3. 动作（Action）</h3> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>动作（action）</strong>：每个状态都有五种可能的行动：a1, ... . , a5</p> 
+         <ul>
+          <li>a1：向上移动；</li>
+          <li>a2： 向右移动；</li>
+          <li>a3： 向下移动;</li>
+          <li>a4： 向左移动；</li>
+          <li>a5： 保持不变；</li>
+         </ul> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp;<strong>状态的动作空间（action space）</strong>：状态的所有可能动作的集合。</p> 
+         <p class="img-center"><img alt="" height="43" src="https://i-blog.csdnimg.cn/blog_migrate/a0e531a21e5c6522eafdb8fadc1aff8c.png" width="242"></p> 
+         <blockquote> 
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; 动作空间和状态有依赖关系，<strong>不同状态的动作空间不同</strong>，由上面的公式可知，A 是 si 的函数。</p> 
+         </blockquote> 
+         <h3 id="4.%20%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB%EF%BC%88State%20transition%EF%BC%89">4. 状态转移（State transition）</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在采取行动（action）时，智能体可能会从一个状态移动到另一个状态。这种过程称为状态转移。</p> 
+         <p class="img-center"><img alt="" height="245" src="https://i-blog.csdnimg.cn/blog_migrate/915ed031f7bf741c7b76b25b1cc223a2.png" width="248"></p> 
+         <ul>
+          <li>在状态 s1 下，如果我们选择行动 a2，那么下一个状态是什么？（向右移动一格）</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="55" src="https://i-blog.csdnimg.cn/blog_migrate/5c374a6ba7bdb81e8bf240224b1b2937.png" width="134"></p> 
+         <ul>
+          <li>在状态 s1 下，如果我们选择行动 a1，那么下一个状态是什么？（向上移动一格，会撞到边界，所以状态还是 s1）</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="58" src="https://i-blog.csdnimg.cn/blog_migrate/e8da398ca27747c50a3dfff3c4207c41.png" width="107"></p> 
+         <blockquote> 
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>状态转换描述了智能体与环境的交互行为。</strong>在游戏当中可以任意定义某个状态采取一个行动后状态的转换，但是在实际中不可以。</p> 
+         </blockquote> 
+         <hr> 
+         <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意禁止访问的区域（forbidden area）：</strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如：在状态 s5，如果我们选择操作 a2、 那么下一个状态是什么？</p> 
+         <ul>
+          <li>情况 1：禁区可以进入，但会受到惩罚。那么</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="56" src="https://i-blog.csdnimg.cn/blog_migrate/047ab82c9171c8236bfb970313a691af.png" width="99"></p> 
+         <ul>
+          <li>情况 2：禁区无法进入（如被围墙包围）</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="52" src="https://i-blog.csdnimg.cn/blog_migrate/dee1a09972c53bc750d7feef3d3287be.png" width="106"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 本课程考虑的是第一种情况，这种情况更为普遍，也更具挑战性。</p> 
+         <hr> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>表格表示法（Tabular representation）： </strong>我们可以使用表格来描述状态转换，表格的每一行对应状态（state），每一列对应行动（action）。<strong>表格表示法只能表示确定性（deterministic）的情况。</strong></p> 
+         <p><img alt="" height="554" src="https://i-blog.csdnimg.cn/blog_migrate/1fd0a9d0b8ecf895f9e3f7897dde8d2f.png" width="1200"></p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>&nbsp;State transition probability：</strong>使用概率描述状态转换</p> 
+         <ul>
+          <li>直觉：在状态 s1 下，如果我们选择行动（take action） a2，下一个状态就是 s2。</li>
+          <li>数学：使用<strong>条件概率</strong>表示</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="96" src="https://i-blog.csdnimg.cn/blog_migrate/b894a7a31b45d8ec5d2390b4c2e530a3.png" width="279"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 解释：假如当前时刻状态在 s1，采取动作 a2，那么下一时刻状态转移到 s2 的概率是1，但是下一时刻转移到其他任意 i ≠ 2 的状态的概率是 0 。&nbsp;</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 虽然这里仍然是确定性情况，但是也可以用条件概率<strong>描述随机性的（stochastic）</strong>状态转换（例如阵风），假如当前时刻状态在 s1，采取动作 a2，由于有风，有百分之 50 的概率到 s2，有百分之 50&nbsp;的概率到 s5。</p> 
+         <p class="img-center"><img alt="" height="235" src="https://i-blog.csdnimg.cn/blog_migrate/be78e05a8ac01957fe914e5027dfc588.png" width="378"></p> 
+         <h3 id="5.%20%E7%AD%96%E7%95%A5%EF%BC%88Policy%EF%BC%89">5. 策略（Policy）&nbsp;</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><span style="background-color:#fbd4d0;">策略告诉智能体在某一状态下应采取什么行动。</span></strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;（1） 策略的直观表示法： </strong>我们用箭头来描述策略。（图中的圆圈表示待在原地不动）</p> 
+         <p class="img-center"><img alt="" height="182" src="https://i-blog.csdnimg.cn/blog_migrate/a8aa1e3c2bf69be5714a292e950d8817.png" width="181"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;基于这一策略，我们可以得到以下<strong>不同起点的轨迹</strong>（path，trajectory）。</p> 
+         <p><img alt="" height="384" src="https://i-blog.csdnimg.cn/blog_migrate/2b0952a69c537a9d984b3f2cb24423fe.png" width="1200"></p> 
+         <hr> 
+         <p><strong>（2）策略的数学表示法：</strong>使用条件概率描述策略</p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp;<strong> &nbsp; 确定性策略（deterministic policy</strong><strong>）：</strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;例如，对于状态 s1，它的策略 Π 就是一个条件概率，它指定了任何一个状态下，采取任何一个动作（action）的概率是多少。</p> 
+         <p class="img-center"><img alt="" height="226" src="https://i-blog.csdnimg.cn/blog_migrate/f6547e8d1cebd4162188e31d07ac338f.png" width="168"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>公式解释：</strong>在状态 s1 下，采取动作（take action） a1 往上走的概率是 0；在状态 s1 下，采取动作（take action） a2&nbsp;往右走的概率是 1，以此类推。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;针对一个状态所有可能采取的动作的概率之和应该等于 1。</strong></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 上面例子只说了 s1，还有 s2， ...，s9，针对每个状态都要它的有策略。</p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp;<strong> 不确定性策略（stochastic policy）：</strong></p> 
+         <p class="img-center"><img alt="" height="377" src="https://i-blog.csdnimg.cn/blog_migrate/1f6df9335fffb12bc7e3ecabf9220c1c.png" width="384"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在这一策略中，对于状态 s1，使用条件概率表示策略：</p> 
+         <p class="img-center"><img alt="" height="204" src="https://i-blog.csdnimg.cn/blog_migrate/d5b21da668dcaaf5ccc1ce169f42930e.png" width="162"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>公式解释：</strong>在状态 s1 下，采取动作（take action） a1 往上走的概率是 0；在状态 s1 下，采取动作（take action） a2&nbsp;往右走的概率是 0.5，以此类推。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>针对一个状态所有可能采取的动作的概率之和应该等于 1。</strong></p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp;<strong>（3） 策略的表格表示法：</strong>每一行对应一个状态（state），每一列对应一个动作（action）</p> 
+         <p><img alt="" height="540" src="https://i-blog.csdnimg.cn/blog_migrate/f861cca53fdf065bc7345b574cd46147.png" width="1200"></p> 
+         <blockquote> 
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>&nbsp;这样的表格可以描述确定性（deterministic）或随机性（stochastic）的情况</strong>，在编程的时候就是这么做的，会用一个数组或者矩阵表示这样的一个策略。</p> 
+         </blockquote> 
+         <h3 id="6.%20%E5%A5%96%E5%8A%B1%EF%BC%88Reward%EF%BC%89">6. 奖励（Reward）</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奖励（reward）是强化学习中最独特的概念之一。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奖励：智能体采取行动（take action）后获得的真实数字，是标量。</p> 
+         <ul>
+          <li>如果这个数字是正数，则是正向奖励，代表对采取此类行动的鼓励。</li>
+          <li>如果这个数字是负数，则是负向奖励，代表对采取此类行动的惩罚，不希望这样的行为发生。</li>
+          <li>那么零奖励呢？代表没有惩罚。</li>
+          <li>正数也可以意味着惩罚，负数也可以意味着奖励，这是数学上的技巧而已。</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="256" src="https://i-blog.csdnimg.cn/blog_migrate/fe0fd640da4e675893d0acf53dbf00b9.png" width="257"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在网格世界示例中，奖励设计如下：</p> 
+         <ul>
+          <li>如果智能体试图离开边界，则让 r_bound = -1</li>
+          <li>如果智能体试图进入禁区，让 r_forbid = -1</li>
+          <li>如果行为体到达目标单元，让 r_target = +1</li>
+          <li>其他情况下，智能体获得的奖励为 r = 0</li>
+         </ul> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奖励可以被理解为一种人机界面（我们与机器交互的一种手段），我们可以用它来引导智能体按照我们的期望行事。例如，有了上述设计的奖励，智能体就会尽量避免走出边界或踏入禁区，而会尽量进入目标区域。所以可以通过设计 reward，实现目标。</p> 
+         <hr> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;（1）奖励转换（reward transition）的表格表示法：</strong>表格的每一行对应一个状态（state），每一列对应一个动作（action），表格中间表示在某个状态采取某个动作得到的奖励（reward）。</p> 
+         <p><img alt="" height="408" src="https://i-blog.csdnimg.cn/blog_migrate/7f2d7dfbc2d6a312241af02f07da1393.png" width="1138"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;表格只能表示<strong>确定性的情况（deterministic）</strong>，比如在一个状态采取了一个行动，一定会得到某种奖励，但是实际上奖励（reward）的大小可能是不确定的，这时候可以使用下面的数学表示法表示。</p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>（2）奖励的数学表示法：</strong>条件概率</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;&nbsp;直觉：</strong>在状态 s1 下，如果我们选择行动 a1，奖励为 -1</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>数学：</strong></p> 
+         <p class="img-center"><img alt="" height="30" src="https://i-blog.csdnimg.cn/blog_migrate/6d5a59d03e06341bd8229cb1bfb10ae2.png" width="382"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这里是一个确定性(deterministic)案例，在这个状态采取这个行动，一定会得到那个 reward。奖励转换（reward transition）也可能是随机（stoachstic）的。例如，如果你努力学习，这个行为会被鼓励，就会得到正的奖励。但正的奖励的数值多少不确定。</p> 
+         <blockquote> 
+          <p>&nbsp; &nbsp; &nbsp; &nbsp;<span style="background-color:#fbd4d0;"> 奖励依赖于当前的状态和动作，而不是依赖于下一个状态。比如在 s1 选择动作 a1，会回到 s1；在 s1 选择动作 a5，也会在 s1，这两个行为的下一个状态应用，但动作不一样，reward 就不一样。</span>（这个问题更详细的讨论见赵老师写的书的第一章的 Q&amp;A 的最后一个问题 P25）</p> 
+         </blockquote> 
+         <h3 id="7.%20%E8%BD%A8%E8%BF%B9%E5%92%8C%E6%94%B6%E7%9B%8A%EF%BC%88Trajectory%20and%20return%EF%BC%89">7. 轨迹和收益（Trajectory and return）</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>（1）策略1</strong></p> 
+         <p class="img-center"><img alt="" height="260" src="https://i-blog.csdnimg.cn/blog_migrate/22b44ce83bbb22709b017de679536a04.png" width="264"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>轨迹（trajectory）是一条状态-行动-回报链：&nbsp;</strong></p> 
+         <p class="img-center"><img alt="" height="70" src="https://i-blog.csdnimg.cn/blog_migrate/157245dfe448f03de8759573294a8063.png" width="410"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>这条轨迹的收益（return）是</strong>沿轨迹（trajectory）收集的所有奖励（reward）的总和（The return of this trajectory is the sum of all the rewards collected along the trajectory:）：return = 0 + 0 + 0 + 1 = 1</p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; <strong>&nbsp; （2）策略2</strong></p> 
+         <p class="img-center"><img alt="" height="238" src="https://i-blog.csdnimg.cn/blog_migrate/012a7431211995d4be510139f2fa6409.png" width="244"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;不同的策略（policy）带来不同的轨迹（trajectory）</p> 
+         <p class="img-center"><img alt="" height="68" src="https://i-blog.csdnimg.cn/blog_migrate/7bb01df5461a940788b8be37ac23ebb8.png" width="402"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 这条路径的收益是（The return of this path is）：&nbsp;return = 0 − 1 + 0 + 1 = 0</p> 
+         <hr> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;哪种策略更好？</strong></p> 
+         <ul>
+          <li>从直觉上将：第一个更好，因为它避开了禁区。</li>
+          <li>在数学角度：第一种更好，因为它的收益（return）更大！</li>
+          <li><strong>收益（return）可以用来评价一项策略（policy）的好坏</strong>（详见下一课）！</li>
+         </ul> 
+         <h3 id="8.%C2%A0%E6%8A%98%E6%89%A3%E5%9B%9E%E6%8A%A5%EF%BC%88discounted%20return%EF%BC%89">8.&nbsp;折扣回报（discounted return）</h3> 
+         <p class="img-center"><img alt="" height="240" src="https://i-blog.csdnimg.cn/blog_migrate/c52f86e15f06a4668a2d53aba5ebd003.png" width="286"></p> 
+         <p>&nbsp;&nbsp;&nbsp;<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;轨迹可能是无限的（A trajectory may be infinite:）：</strong></p> 
+         <p class="img-center"><img alt="" height="42" src="https://i-blog.csdnimg.cn/blog_migrate/a9fd02152a8f9ebbc7af27580e4ac62e.png" width="406"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;收益是（&nbsp;The return is ）：return = 0 + 0 + 0 + 1+1 + 1 + . . . = ∞</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这个定义是无效的，因为回报（return）发生了偏离，会发散！需要引入<strong>折扣率（折扣因子） （discounted rate）：γ∈ [0, 1）</strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;折扣率（discounted rate）和回报（return）结合就得到了<strong>折扣回报（Discounted return）</strong></p> 
+         <p class="img-center"><img alt="" height="105" src="https://i-blog.csdnimg.cn/blog_migrate/82886490c3eed135c915e7249616b93e.png" width="567"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;&nbsp;&nbsp;折扣回报（Discounted return）的作用：</strong>1）总和变得有限；2）平衡远期和近期的回报（reward）：</p> 
+         <ul>
+          <li>如果 γ 接近于 0， γ 的三次，五次方会很快的衰减掉，则<strong>折扣回报（Discounted return）</strong>的价值以近期（最开始）获得的奖励（reward）为主。</li>
+          <li>如果 γ 接近于 1，未来的奖励（reward）衰减比较慢，则<strong>折扣回报（Discounted return）</strong>的价值以远期奖励（reward）为主。</li>
+         </ul> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 通过控制 γ ，能够控制智能体学到的策略，若减小 γ ，会让智能体变得更加短视（更加注重最近一些的奖励 reward）；若&nbsp;γ 较大，会让智能体变得更加远视（更加注重长远的奖励 reward）</p> 
+         <h3 id="9.%20Episode">9. Episode</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p> 
+         <p class="img-center"><img alt="" height="212" src="https://i-blog.csdnimg.cn/blog_migrate/ef2f7c9019c0236e1cc3deb925003bdc.png" width="216"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;当智能体按照策略（policy）与环境交互时，<strong>可能会在某些终端状态（terminal states）停止。由此产生的轨迹（trajectory）称为一集（an episode）</strong>（或一次试验 trail）。</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 例如：episode</p> 
+         <p class="img-center"><img alt="" height="55" src="https://i-blog.csdnimg.cn/blog_migrate/6b9e48eef05081daf9795afdcce3e7cf.png" width="360"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;通常假定一集（An episode）是一个有限的轨迹（finite trajectory）</strong>，有 episodes 的任务称为偶发任务（episodic tasks）（An episode is usually assumed to be a finite trajectory. Tasks with episodes are called episodic tasks.）</p> 
+         <hr> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;有些任务可能没有结束状态（have no terminal states），这意味着与环境的交互永远不会结束。这类任务被称为持续性任务（continuing tasks）。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在 "网格世界 "的例子中，我们是否应该在到达目标后停止？还是像刚才计算折扣回报（&nbsp;discounted&nbsp;return ）的时候还可以继续让智能体执行策略，然后一直停到 s9 状态？</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;事实上，我们可以通过<strong>将偶发任务（episodic tasks）转换为持续任务（continuing tasks）</strong>，用统一的数学方法来处理偶发任务和持续任务。</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 转换的两种方法：</p> 
+         <ul>
+          <li>方案 1：将目标状态（target state）视为特殊的吸收状态（absorbing state）（absorbing state 就是在设置它的 state transition probability 的时候，如果当前状态就是 target 状态，不论采取什么样的 action 都会再回到这个状态；或者在这个状态的时候没有其他的 action ,可以修改 action space ，让它的 action 只有留在原地这样的一个 action）。一旦智能体达到吸收状态（absorbing state），就永远不会离开。因此它之后得到的所有奖励（reward&nbsp;）r = 0。</li>
+          <li>方案 2：将目标状态（target state）视为有策略的正常状态（a normal state with a policy）。如果策略好的话，智能体能够一直留在那里，收集正的收益（reward） ，策略不好的话智能体仍然可能离开目标状态，并在进入目标状态时获得 r = +1 的收益。</li>
+         </ul> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们在本课程中将考虑方案 2，这样我们就不需要将目标状态（target state）与其他状态区分开来，而可以将其视为正常状态（a normal state）。</p> 
+         <h2 id="%E4%B8%89.%C2%A0%E5%9C%A8%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88MDP%EF%BC%89%E7%9A%84%E6%A1%86%E6%9E%B6%E4%B8%8B%E5%B0%86%E6%A6%82%E5%BF%B5%E6%AD%A3%E5%BC%8F%E6%8F%8F%E8%BF%B0%E5%87%BA%E6%9D%A5">三.&nbsp;在马尔可夫决策过程（MDP）的框架下将概念正式描述出来</h2> 
+         <h3 id="1.%20%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20decision%20process%EF%BC%89%C2%A0%E7%9A%84%E5%85%B3%E9%94%AE%E8%A6%81%E7%B4%A0%EF%BC%9A">1. 马尔可夫决策过程（Markov decision process）&nbsp;的关键要素：</h3> 
+         <h4 id="%EF%BC%881%EF%BC%89%E9%9B%86%E5%90%88%EF%BC%88Sets%EF%BC%89">（1）集合（Sets）</h4> 
+         <ul>
+          <li><strong>状态（即&nbsp; state space）：</strong>状态 S 的集合。（State: the set of states S）</li>
+          <li><strong>行动（即&nbsp; action&nbsp;space）：</strong>与状态 s∈S 相关联的行动集 A(s)。（Action: the set of actions A(s) is associated for state s ∈ S.）</li>
+          <li><strong>奖励：</strong>奖励 R（s，a）的集合 （Reward: the set of rewards R(s, a).）（从状态 s 出发，选择动作 a，即 take action a ，得到的 reward 一定来源于一个集合）</li>
+         </ul> 
+         <h4 id="%EF%BC%882%EF%BC%89%E6%A6%82%E7%8E%87%E5%88%86%E5%B8%83%EF%BC%88Probability%20distribution%20(or%20called%20system%20model)%EF%BC%89">（2）概率分布（Probability distribution (or called system model)）</h4> 
+         <ul>
+          <li><strong>状态转换概率：</strong>在状态 s 下，采取行动 a，转换到状态 s' 的概率为 p(s'|s, a)&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; （State transition probability: at state s, taking action a, the probability to transit to state s'&nbsp;is p(s’|s, a)</li>
+          <li><strong>奖励概率：</strong>在状态 s 下，采取行动 a，获得奖励 r 的概率为 p(r|s, a)&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; （Reward probability: at state s, taking action a, the probability to get reward r is p(r|s, a)）</li>
+         </ul> 
+         <h4 id="%EF%BC%883%EF%BC%89%E7%AD%96%E7%95%A5%EF%BC%88policy%EF%BC%89%E2%80%94%E2%80%94%20%E5%AF%B9%E5%BA%94%20Markov%20decision%20process%20%E4%B8%AD%E7%9A%84%20decision">（3）策略（policy）<span style="background-color:#fbd4d0;">—— 对应 Markov decision process 中的 decision</span></h4> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;策略：在状态 s 下，选择行动 a 的概率为 π(a|s)</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Policy: at state s, the probability to choose action a is π(a|s)</p> 
+         <h4 id="%EF%BC%884%EF%BC%89%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%80%A7%E8%B4%A8%EF%BC%9A%E6%97%A0%E8%AE%B0%E5%BF%86%E6%80%A7%E8%B4%A8%EF%BC%88Markov%20property%3A%20memoryless%20property%EF%BC%89%E2%80%94%E2%80%94%20%E5%AF%B9%E5%BA%94%20Markov%20decision%20process%20%E4%B8%AD%E7%9A%84%20Markov">（4）马尔可夫性质：无记忆性质（Markov property: memoryless property）<span style="background-color:#fbd4d0;">—— 对应 Markov decision process 中的 Markov</span></h4> 
+         <p class="img-center"><img alt="" height="91" src="https://i-blog.csdnimg.cn/blog_migrate/9e6dabf9ebd67c2b7fa22513413cbd24.png" width="439"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 这是与历史无关的一个性质。</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 比如最开始的状态是 s0，然后我采取了一个 action a0，慢慢的我走到 st 的时候，我采取了一个 action 是 a_t，这时候我跳到下一个状态 s_t+1 的概率<strong>等于</strong>完全不考虑这些历史，也不管之前在什么地方，反正现在在 st，现在 take action a_t+1，会跑到 s_t+1 的概率。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本讲座介绍的所有概念都可以放在 MDP 的框架中（All the concepts introduced in this lecture can be put in the framework in MDP）</p> 
+         <h3 id="2.%20%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20process%EF%BC%89">2. 马尔可夫过程（Markov process）</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;网格世界（The grid world）可以抽象为一个更通用的模型，即马尔可夫过程（Markov process）。</p> 
+         <p><img alt="" height="316" src="https://i-blog.csdnimg.cn/blog_migrate/78f5def18a2f6d74a99d99674ee1b409.png" width="705"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圆圈代表状态（states），带箭头的链接代表采取 action 后的状态转换（state transition）。</p> 
+         <h3 id="3.%C2%A0%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20process%EF%BC%89%E4%B8%8E%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E5%86%B3%E7%AD%96%E8%BF%87%E7%A8%8B%EF%BC%88Markov%20decision%20process%EF%BC%89%C2%A0%E7%9A%84%E5%85%B3%E7%B3%BB">3.&nbsp;马尔可夫过程（Markov process）与马尔可夫决策过程（Markov decision process）&nbsp;的关系</h3> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一旦给出策略，即策略确定下来，那么 policy 就和整个系统融为一体了，马尔可夫决策过程（Markov decision process）就变成了马尔可夫过程（Markov process）！</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Markov decision process becomes Markov process once the policy is given!</p> 
+         <h2 id="%E5%9B%9B.%20%E6%80%BB%E7%BB%93">四. 总结</h2> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;通过使用网格世界的示例，我们展示了以下关键概念：</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By using grid-world examples, we demonstrated the following key concepts:</p> 
+         <ul>
+          <li>State</li>
+          <li>Action</li>
+          <li>State transition, state transition probability p(s 0 |s, a)</li>
+          <li>Reward, reward probability p(r|s, a)</li>
+          <li>Trajectory, episode, return, discounted return</li>
+          <li>Markov decision process</li>
+         </ul> 
+        </div> 
+       </div> 
+      </article>   
+      <img src="https://img-home.csdnimg.cn/images/20211209110851.png" alt="pdf_watermark" width="0" height="0" style="display: none"> 
+      <div class="print_watermark"></div> 
+      <div class="print_watermark_info"> 
+       <p>内容来源：csdn.net</p> 
+       <p>作者昵称：leaf_leaves_leaf</p> 
+       <p>原文链接：https://blog.csdn.net/qq_64671439/article/details/135299345</p> 
+       <p>作者主页：https://blog.csdn.net/qq_64671439</p> 
+      </div> 
+      <style>
+    .print_watermark, .print_watermark_info {
+      display: none
+    }
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact; /* Chrome, Safari */
+        color-adjust: exact; /* Firefox */
+        background-image: none !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact;
+      }
+      .blog-content-box {
+        padding: 0;
+      }
+      .blog-content-box .article-header .article-info-box > div:not(.article-bar-top){
+        display: none !important;
+      }
+      .blog-content-box .article-header .article-info-box  .article-bar-top img{
+          display:none
+      }
+      .blog-content-box .article-header .article-info-box > .article-bar-top .bar-content > *:not(.follow-nickName):not(.time){
+          display: none !important;
+      }
+      .print_watermark {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 999;
+        background-image: url('https://img-home.csdnimg.cn/images/20211209110851.png');
+        background-size: 180px auto;
+        background-repeat: repeat;
+      }
+      .print_watermark_info {
+        display: block;
+        position: fixed;
+        bottom: 16px;
+        right: 0;
+        z-index: 1000;
+        color: #e8e8ed;
+        font-size: 12px;
+        ocapity: .5
+      }
+      @page {
+        margin: 0 10mm 10mm;
+        size: landscape;
+      }
+      body, article {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #csdn-toolbar,.main_father > *:not(#mainBox), .csdn-side-toolbar, .main_father aside {
+        display: none !important;
+      }
+      .main_father > #mainBox {
+        width: unset
+      }
+      .main_father > #mainBox > main > *:not(.blog-content-box){
+        display: none !important;
+      }
+    }
+  </style> 
+     </div> 
+     <div class="directory-boxshadow-dialog" style="display:none;"> 
+      <div class="directory-boxshadow-dialog-box"> 
+      </div> 
+      <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new"> 
+       <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png"> 
+       <div class="vip-limited-time-top">
+         确定要放弃本次机会？ 
+       </div> 
+       <span class="vip-limited-time-text">福利倒计时</span> 
+       <div class="limited-time-box-new"> 
+        <span class="time-hour"></span> 
+        <i>:</i> 
+        <span class="time-minite"></span> 
+        <i>:</i> 
+        <span class="time-second"></span> 
+       </div> 
+       <div class="limited-time-vip-box"> 
+        <p> <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png"> <span class="def">立减 ¥</span> <span class="active limited-num"></span> </p> 
+        <span class="">普通VIP年卡可用</span> 
+       </div> 
+       <a class="limited-time-btn-new" href="https://mall.csdn.net/vip" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.9621&quot;}" data-report-query="spm=1001.2101.3001.9621">立即使用</a> 
+      </div> 
+     </div> 
+     <div class="more-toolbox-new more-toolbar" id="toolBarBox"> 
+      <div class="left-toolbox"> 
+       <div class="toolbox-left"> 
+        <div class="profile-box"> 
+         <a class="profile-href" target="_blank" href="https://blog.csdn.net/qq_64671439"><img class="profile-img" src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1"> <span class="profile-name"> leaf_leaves_leaf </span> </a> 
+        </div> 
+        <div class="profile-attend"> 
+         <a class="tool-attend tool-bt-button tool-bt-attend" href="javascript:;" data-report-view="{&quot;mod&quot;:&quot;1592215036_002&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;extend1&quot;:&quot;已关注&quot;}">已关注</a> 
+         <a class="tool-item-follow active-animation" style="display:none;">已关注</a> 
+        </div> 
+       </div> 
+       <div class="toolbox-middle"> 
+        <ul class="toolbox-list"> 
+         <li class="tool-item tool-item-size tool-active is-like" id="is-like" data-type="bottom"> <a class="tool-item-href"> <img style="display:none;" id="is-like-imgactive-animation-like" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarThumbUpactive.png" alt=""> <img class="isactive" style="display:none" id="is-like-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like-active.png" alt=""> <img class="isdefault" style="display:block" id="is-like-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like.png" alt=""> <span id="spanCount" class="count "> 66 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">点赞</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-unlike" id="is-unlike"> <a class="tool-item-href"> <img class="isactive" style="margin-right:0px;display:none" id="is-unlike-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike-active.png" alt=""> <img class="isdefault" style="margin-right:0px;display:block" id="is-unlike-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike.png" alt=""> <span id="unlikeCount" class="count "></span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">踩</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-collection "> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_824&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4130&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img style="display:none" id="is-collection-img-collection" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect-active.png" alt=""> <img class="isdefault" id="is-collection-img" style="display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect.png" alt=""> <img class="isactive" id="is-collection-imgactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCollectActive.png" alt=""> <span class="count get-collection " data-num="91" id="get-collection"> 91 </span> </a> 
+          <div class="tool-hover-tip collect"> 
+           <div class="collect-operate-box"> 
+            <span class="collect-text" id="is-collection"> 收藏 </span> 
+           </div> 
+          </div> 
+          <div class="tool-active-list"> 
+           <div class="text">
+             觉得还不错? 
+            <span class="collect-text" id="tool-active-list-collection"> 一键收藏 </span> 
+            <img id="tool-active-list-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/collectionCloseWhite.png" alt=""> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-comment"> 
+          <div class="guide-rr-first"> 
+           <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward01.png" alt=""> 
+           <button class="btn-guide-known">知道了</button> 
+          </div> <a class="tool-item-href go-side-comment" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7009&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/comment.png" alt=""> <span class="count"> 2 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">评论</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-QRcode" data-type="article" id="tool-share"> <a class="tool-item-href" href="javascript:;" data-report-view="{&quot;spm&quot;:&quot;3001.4129&quot;,&quot;extra&quot;:{&quot;type&quot;:&quot;blogdetail&quot;}}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/share.png" alt=""> <span class="count">分享</span> </a> 
+          <div class="QRcode" id="tool-QRcode"> 
+           <div class="share-bg-box"> 
+            <div class="share-content"> 
+             <a id="copyPosterUrl" data-type="link" class="btn-share">复制链接</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="qq">分享到 QQ</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="weibo">分享到新浪微博</a> 
+            </div> 
+            <div class="share-code"> 
+             <div class="share-code-box" id="shareCode"></div> 
+             <div class="share-code-text"> 
+              <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/share/icon-wechat.png" alt="">扫一扫 
+             </div> 
+            </div> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-reward"> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_830&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4237&quot;,&quot;dest&quot;:&quot;&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="isdefault reward-bt" id="rewardBtNew" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">打赏</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-downloadpdf" id="tool-downloadpdf"> <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> </a> 
+          <div class="tool-hover-tip">
+           <span class="text">导出PDF</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-more" id="is-more"> <a class="tool-item-href"> <img class="isdefault" style="margin-right:0px;display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/more.png" alt=""> <span class="count"></span> </a> 
+          <div class="more-opt-box"> 
+           <div class="mini-box"> 
+            <a class="tool-item-href" id="rewardBtNewHide" data-report-click="{&quot;spm&quot;:&quot;3001.4237&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault reward-bt" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+            <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> <span class="count">导出PDF</span> </a> 
+            <a class="tool-item-href" id="toolReportBtnHide"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+           <div class="normal-box"> 
+            <a class="tool-item-href" id="toolReportBtnHideNormal"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+          </div> </li> 
+        </ul> 
+       </div> 
+       <div class="toolbox-right"> 
+        <div class="tool-directory"> 
+         <a class="bt-columnlist-show" data-id="12540921" data-free="true" data-description="" data-subscribe="false" data-title="【强化学习的数学原理-赵世钰】课程笔记" data-img="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" data-url="https://blog.csdn.net/qq_64671439/category_12540921.html" data-sum="10" data-people="244" data-price="0" data-hotrank="0" data-status="true" data-oldprice="0" data-join="false" data-studyvip="true" data-studysubscribe="false" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}">专栏目录</a> 
+        </div> 
+       </div> 
+      </div> 
+     </div>    
+     <a id="commentBox" name="commentBox"></a> 
+    </main> 
+   </div> 
+   <div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div id="recommend-right-concision"> 
+      <div class="flex-column aside-box groupfile" id="groupfileConcision"> 
+       <div class="groupfile-div1"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+  </div> 
+  <div class="mask-dark"></div> 
+  <div class="skin-boxshadow"></div> 
+  <div class="directory-boxshadow"></div> 
+  <div style="display:none;"> 
+   <img src="" onerror="setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){var test=&quot;\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74&quot;}},3000);"> 
+  </div> 
+  <div class="keyword-dec-box" id="keywordDecBox"></div> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css">        
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">                  
+ </body>
+</html>

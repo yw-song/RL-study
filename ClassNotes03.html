@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <link rel="canonical" href="https://blog.csdn.net/qq_64671439/article/details/135317754"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="report" content="{&quot;pid&quot;: &quot;blog&quot;, &quot;spm&quot;:&quot;1001.2101&quot;}"> 
+  <meta name="referrer" content="always"> 
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <link rel="alternate" media="handheld" href="#">  
+  <meta name="applicable-device" content="pc"> 
+  <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"> 
+  <title>【强化学习的数学原理-赵世钰】课程笔记（三）贝尔曼最优公式_bellman optimality equations-CSDN博客</title>   
+  <meta name="keywords" content="bellman optimality equations"> 
+  <meta name="csdn-baidu-search" content="{&quot;autorun&quot;:true,&quot;install&quot;:true,&quot;keyword&quot;:&quot;bellman optimality equations&quot;}"> 
+  <meta name="description" content="文章浏览阅读5.9k次，点赞62次，收藏73次。详细介绍强化学习中的贝尔曼最优公式，包含具体例子和数学原理，会持续更新_bellman optimality equations"> 
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-d4fc849858.min.css">  
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-1024/skin-1024-ecd36efea2.min.css">    
+  <meta name="toolbar" content="{&quot;type&quot;:&quot;0&quot;,&quot;fixModel&quot;:&quot;1&quot;}">    
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css"> 
+  <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>    
+ 	<style>
+	main div.blog-content-box pre {
+		max-height: 100%;
+		overflow-y: hidden;
+	}
+	</style>
+ </head>  
+ <body class="nodata  " style=""> 
+  <div id="toolbarBox" style="min-height: 48px;"></div>    
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css"> 
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css">   
+  <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;"> 
+   <div class="container clearfix container-concision" id="mainBox">  
+    <main>  
+     <div class="blog-content-box"> 
+      <div class="article-header-box"> 
+       <div class="article-header"> 
+        <div class="article-title-box"> 
+         <h1 class="title-article" id="articleContentId">【强化学习的数学原理-赵世钰】课程笔记（三）贝尔曼最优公式</h1> 
+        </div> 
+        <div class="article-info-box"> 
+         <div class="article-bar-top"> 
+          <img class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png" alt=""> 
+          <div class="bar-content"> 
+           <a class="follow-nickName " href="https://blog.csdn.net/qq_64671439" target="_blank" rel="noopener" title="leaf_leaves_leaf">leaf_leaves_leaf</a> 
+           <img class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newUpTime2.png" alt=""> 
+           <span class="time">已于&nbsp;2024-02-09 10:41:50&nbsp;修改</span> 
+           <div class="read-count-box"> 
+            <img class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png" alt=""> 
+            <span class="read-count">阅读量5.9k</span> 
+            <a id="blog_detail_zk_collection" class="un-collection" data-report-click="{&quot;mod&quot;:&quot;popu_823&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="article-collect-img article-heard-img un-collect-status isdefault" style="display:inline-block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" alt=""> <img class="article-collect-img article-heard-img collect-status isactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" alt=""> <span class="name">收藏</span> <span class="get-collection"> 73 </span> </a> 
+            <div class="read-count-box is-like" data-type="top"> 
+             <img class="article-read-img article-heard-img" style="display:none" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" alt=""> 
+             <img class="article-read-img article-heard-img" style="display:block" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" alt=""> 
+             <span class="read-count" id="blog-digg-num">点赞数 62 </span> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="blog-tags-box"> 
+          <div class="tags-box artic-tag-box"> 
+           <span class="label">分类专栏：</span> 
+           <a class="tag-link" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" rel="noopener">【强化学习的数学原理-赵世钰】课程笔记</a> 
+           <span class="label">文章标签：</span> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E7%AC%94%E8%AE%B0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">笔记</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">机器学习</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">学习</a> 
+          </div> 
+         </div> 
+         <div class="up-time">
+          <span>于&nbsp;2024-01-01 21:54:51&nbsp;首次发布</span>
+         </div> 
+         <div class="slide-content-box"> 
+          <div class="article-copyright"> 
+           <div class="creativecommons">
+             版权声明：本文为博主原创文章，遵循
+            <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"> CC 4.0 BY-SA </a>版权协议，转载请附上原文出处链接和本声明。 
+           </div> 
+           <div class="article-source-link">
+             本文链接：
+            <a href="https://blog.csdn.net/qq_64671439/article/details/135317754" target="_blank">https://blog.csdn.net/qq_64671439/article/details/135317754</a> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="operating"> 
+          <a class="href-article-edit slide-toggle">版权</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div id="blogHuaweiyunAdvert"></div> 
+      <div id="blogColumnPayAdvert"> 
+       <div class="column-group"> 
+        <div class="column-group-item column-group0 column-group-item-one"> 
+         <div class="item-l"> 
+          <a class="item-target" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" title="【强化学习的数学原理-赵世钰】课程笔记" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}"> <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt=""> <span class="title item-target"> <span> <span class="tit">【强化学习的数学原理-赵世钰】课程笔记</span> <span class="dec">专栏收录该内容</span> </span> </span> </a> 
+         </div> 
+         <div class="item-m"> 
+          <span>10 篇文章</span> 
+         </div> 
+         <div class="item-r"> 
+          <a class="item-target article-column-bt articleColumnFreeBt" data-id="12540921">订阅专栏</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <article class="baidu_pl"> 
+       <div id="article_content" class="article_content clearfix"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-704d5b9767.css"> 
+        <div id="content_views" class="htmledit_views atom-one-dark"> 
+         <p id="main-toc"><strong>目录</strong></p> 
+         <p id="-toc" style="margin-left:0px;"></p> 
+         <p id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0-toc" style="margin-left:0px;"><a href="#%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0" rel="nofollow">一.内容概述</a></p> 
+         <p id="1.%20%E7%AC%AC%E4%B8%89%E7%AB%A0%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E5%86%85%E5%AE%B9-toc" style="margin-left:40px;"><a href="#1.%20%E7%AC%AC%E4%B8%89%E7%AB%A0%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E5%86%85%E5%AE%B9" rel="nofollow">1. 第三章主要有两个内容</a></p> 
+         <p id="2.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%A4%A7%E7%BA%B2-toc" style="margin-left:40px;"><a href="#2.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%A4%A7%E7%BA%B2" rel="nofollow">2. 第二章大纲</a></p> 
+         <p id="%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89" rel="nofollow">二.激励性实例（Motivating examples）</a></p> 
+         <p id="%E4%B8%89.%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%EF%BC%88optimal%20policy%EF%BC%89%E7%9A%84%E5%AE%9A%E4%B9%89-toc" style="margin-left:0px;"><a href="#%E4%B8%89.%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%EF%BC%88optimal%20policy%EF%BC%89%E7%9A%84%E5%AE%9A%E4%B9%89" rel="nofollow">三.最优策略（optimal policy）的定义</a></p> 
+         <p id="%E5%9B%9B.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E7%AE%80%E4%BB%8B-toc" style="margin-left:0px;"><a href="#%E5%9B%9B.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E7%AE%80%E4%BB%8B" rel="nofollow">四.贝尔曼最优公式（BOE）：简介</a></p> 
+         <p id="%E4%BA%94.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E5%85%AC%E5%BC%8F%E5%8F%B3%E4%BE%A7%E6%B1%82%E6%9C%80%E5%A4%A7%E5%8C%96%E7%9A%84%E6%9C%80%E4%BC%98%E9%97%AE%E9%A2%98-toc" style="margin-left:0px;"><a href="#%E4%BA%94.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E5%85%AC%E5%BC%8F%E5%8F%B3%E4%BE%A7%E6%B1%82%E6%9C%80%E5%A4%A7%E5%8C%96%E7%9A%84%E6%9C%80%E4%BC%98%E9%97%AE%E9%A2%98" rel="nofollow">五.贝尔曼最优公式（BOE）：公式右侧求最大化的最优问题</a></p> 
+         <p id="%E5%85%AD.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E6%94%B9%E5%86%99%E4%B8%BA%20v%20%3D%20f(v)-toc" style="margin-left:0px;"><a href="#%E5%85%AD.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E6%94%B9%E5%86%99%E4%B8%BA%20v%20%3D%20f%28v%29" rel="nofollow">六.贝尔曼最优公式（BOE）：改写为 v = f(v)</a></p> 
+         <p id="%E4%B8%83.%E6%94%B6%E7%BC%A9%E6%98%A0%E5%B0%84%E5%AE%9A%E7%90%86%EF%BC%88Contraction%20mapping%20theorem%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%83.%E6%94%B6%E7%BC%A9%E6%98%A0%E5%B0%84%E5%AE%9A%E7%90%86%EF%BC%88Contraction%20mapping%20theorem%EF%BC%89" rel="nofollow">七.收缩映射定理（Contraction mapping theorem）</a></p> 
+         <p id="%E5%85%AB.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%C2%A0-toc" style="margin-left:0px;"><a href="#%E5%85%AB.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%C2%A0" rel="nofollow">八.贝尔曼最优公式（BOE）：解决方案&nbsp;</a></p> 
+         <p id="1.%E4%BB%8B%E7%BB%8D-toc" style="margin-left:40px;"><a href="#1.%E4%BB%8B%E7%BB%8D" rel="nofollow">1.介绍</a></p> 
+         <p id="2.%E4%BE%8B%E5%AD%90-toc" style="margin-left:40px;"><a href="#2.%E4%BE%8B%E5%AD%90" rel="nofollow">2.例子</a></p> 
+         <p id="%E4%B9%9D.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E8%A7%A3%E7%9A%84%E6%9C%80%E4%BC%98%E6%80%A7-toc" style="margin-left:0px;"><a href="#%E4%B9%9D.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E8%A7%A3%E7%9A%84%E6%9C%80%E4%BC%98%E6%80%A7" rel="nofollow">九.贝尔曼最优公式（BOE）：解的最优性</a></p> 
+         <p id="%E5%8D%81.%E5%88%86%E6%9E%90%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%EF%BC%88Analyzing%20optimal%20policies%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E5%8D%81.%E5%88%86%E6%9E%90%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%EF%BC%88Analyzing%20optimal%20policies%EF%BC%89" rel="nofollow">十.分析最优策略（Analyzing optimal policies）</a></p> 
+         <p id="%E5%8D%81%E4%B8%80.%E6%80%BB%E7%BB%93-toc" style="margin-left:0px;"><a href="#%E5%8D%81%E4%B8%80.%E6%80%BB%E7%BB%93" rel="nofollow">十一.总结</a></p> 
+         <hr id="hr-toc"> 
+         <p></p> 
+         <h2 id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0">一.内容概述</h2> 
+         <h3 id="1.%20%E7%AC%AC%E4%B8%89%E7%AB%A0%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E5%86%85%E5%AE%B9">1. 第三章主要有两个内容</h3> 
+         <p>（1）核心概念：最优状态值（optimal state value）和最优策略（optimal policy），<span style="background-color:#fbd4d0;">强化学习的目的就是寻找最优策略。</span></p> 
+         <ul>
+          <li><strong>最优策略定义：我沿着这个策略能得到最大的状态值</strong>，沿着其他所有策略得到的状态值都没他大。</li>
+         </ul> 
+         <p>（2）基本工具：贝尔曼最优方程/公式（Bellman optimality equation）（BOE）：贝尔曼最优公式和最优策略有关系，使用贝尔曼最优公式分析最优策略，<span style="background-color:#fbd4d0;">贝尔曼最优公式可以求解出最优策略和最优的 state value。</span></p> 
+         <ul>
+          <li>使用不动点原理分析，这个不动点原理告诉我们这个式子两个方面的性质：</li>
+          <li>第一个方面是我<strong>要求解最优策略，最优 state value，那么它们到底是否存在呢</strong>，这种存在性非常重要。虽然存在但是最优的策略不一定是唯一的，但是最优的状态值是唯一的，最优的策略可能是确定性的 deterministic，也可能是随机性的 stochastic；</li>
+          <li>另外一个方面是他能<strong><span style="background-color:#fbd4d0;">给出一个算法求解贝尔曼最优公式，把这个公式求解出来了自然就得到了最优的策略和最优的 state value</span></strong>，强化学习的目标也就达到了</li>
+         </ul> 
+         <h3 id="2.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%A4%A7%E7%BA%B2">2. 第二章大纲</h3> 
+         <p>（1）激励性实例（Motivating examples）</p> 
+         <p>（2）最优状态值（optimal state value）和最优策略（optimal policy）的定义</p> 
+         <p>（3）贝尔曼最优公式（BOE）：简介</p> 
+         <p>（4）贝尔曼最优公式（BOE）：右侧最大化</p> 
+         <p>（5）贝尔曼最优公式（BOE）：改写为 v = f(v)</p> 
+         <p>（6）收缩映射定理（Contraction mapping theorem）</p> 
+         <p>（7）贝尔曼最优公式（BOE）：解决方案</p> 
+         <p>（8）贝尔曼最优公式（BOE）：解的最优性</p> 
+         <p>（9）分析最优策略（Analyzing optimal policies）</p> 
+         <hr> 
+         <h2 id="%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89">二.激励性实例（Motivating examples）</h2> 
+         <p>绿色箭头代表策略 Π</p> 
+         <p class="img-center"><img alt="" height="188" src="https://i-blog.csdnimg.cn/blog_migrate/9d477c396db142d1e6d6664a96eed71c.png" width="203"></p> 
+         <p>贝尔曼公式：</p> 
+         <p class="img-center"><img alt="" height="157" src="https://i-blog.csdnimg.cn/blog_migrate/1193ff6c753a64a876085359ed19e134.png" width="228"></p> 
+         <p>状态值（state value）： 设 γ = 0.9。那么可以计算出：</p> 
+         <p class="img-center"><img alt="" height="49" src="https://i-blog.csdnimg.cn/blog_migrate/3c49745d22689f7d869ddd1f5571b1a6.png" width="404"></p> 
+         <p>动作值（action value）可以通过状态值计算，或者根据第二章公式计算：考虑 s1，s1共有 5 个 action ，每个 action 都有一个 state value&nbsp;</p> 
+         <p class="img-center"><img alt="" height="176" src="https://i-blog.csdnimg.cn/blog_migrate/79282e23a6ce60ea40058d86044464cf.png" width="298"></p> 
+         <p>问题： 当前的策略（policy）不好，因为在 s1 的时候往右走了，进入禁区，那么如何改进？</p> 
+         <p>答案： 我们可以根据动作值（action value）改进策略（policy）。</p> 
+         <p>具体来说，当前策略 π(a|s1) 是</p> 
+         <p class="img-center"><img alt="" height="79" src="https://i-blog.csdnimg.cn/blog_migrate/216ad6087f9874dd6fde3f243e70ecb4.png" width="247"></p> 
+         <p>在这个策略下我们已经计算出来了 action value，观察我们刚才获得的动作值（action value）：</p> 
+         <p class="img-center"><img alt="" height="80" src="https://i-blog.csdnimg.cn/blog_migrate/b8d208f1cb5d54021f64db01e9398a62.png" width="467"></p> 
+         <p>我们发现 a3 对应的动作值（action value）最大，那么能不能选择 a3 作为一个新的策略呢。如果我们选择最大的动作值（action value）呢？那么，新策略（policy）就是：</p> 
+         <p class="img-center"><img alt="" height="104" src="https://i-blog.csdnimg.cn/blog_migrate/01aa2ce12fc076a012a45281b2f88706.png" width="408"></p> 
+         <p class="img-center"><img alt="" height="75" src="https://i-blog.csdnimg.cn/blog_migrate/b5f89e0f737aba77b02cf84043c321df.png" width="238"></p> 
+         <p>其中，a* 对应 action value 最大的那个 action，在这个例子里面是 a3&nbsp;</p> 
+         <hr> 
+         <p>&nbsp;<strong>问题：</strong>为什么选择 action value 最大的 action 这样做能改进策略？</p> 
+         <ul>
+          <li>直觉：动作值（action value）可用于评估动作，动作值本身就代表了 action 的价值，如果选择一个 action ，他的 action value 很大，意味着之后能得到更多的 reward，相应策略也比较好。</li>
+          <li>数学：并不复杂，将在本讲座中介绍。</li>
+          <li>只要我们一遍一遍去做，不断迭代，最后一定会得到一个最优策略。也就是说，首先对每个状态都选择 action value 最大的 action，选择完了一次，然后再来一次迭代得到一个新的策略，再迭代得到一个新的策略，最后那个策略一定会趋向一个最优的策略</li>
+         </ul> 
+         <hr> 
+         <h2 id="%E4%B8%89.%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%EF%BC%88optimal%20policy%EF%BC%89%E7%9A%84%E5%AE%9A%E4%B9%89">三.最优策略（optimal policy）的定义</h2> 
+         <p>状态值（state value）可用于评估策略好或者不好：如果有两个策略 π1 和&nbsp;π2，它们在每个状态都有自己的状态值（state value），如果对所有的状态 s ，π1 得到的&nbsp;state value 都大于&nbsp;π2&nbsp;得到的&nbsp;state value，则 π1 比 π2 "更好"。</p> 
+         <p class="img-center"><img alt="" height="58" src="https://i-blog.csdnimg.cn/blog_migrate/1bee5dab4d56ce3b3cfe28638713ed6d.png" width="291"></p> 
+         <blockquote> 
+          <p>定义：如果对于所有状态 s ，策略&nbsp;π∗ 得到的状态值（state value）相比任何其他策略&nbsp;π 得到的状态值（state value）都要大，即&nbsp;v_π∗ (s) ≥ v_π(s)，则策略&nbsp;π∗ 是最优的。</p> 
+         </blockquote> 
+         <p><img alt="" height="83" src="https://i-blog.csdnimg.cn/blog_migrate/27c02cc6212518e6533c94b0b5189eb5.png" width="797"></p> 
+         <p>这个定义引出了许多问题：</p> 
+         <ul>
+          <li>最优策略是否存在？因为定义里的最优策略非常理想，它比其他所有策略都要好，并且在所有状态上都能打败其它策略，那么是否存在这样的情况，最优策略在某些状态上能打败其它的策略，但是在某些状态上没法打败。</li>
+          <li>最优策略是唯一的吗？</li>
+          <li>最优策略是随机的（stochastic）还是确定的（deterministic）？</li>
+          <li>如何获得最优策略？</li>
+         </ul> 
+         <p>为了回答这些问题，我们研究了贝尔曼最优方程。</p> 
+         <blockquote> 
+          <ul>
+           <li>策略是对应很多不同状态的，如果一个策略只对应一个状态，那么如果想到达target就需要很多策略，这对算力要求非常大</li>
+           <li>策略是智能体在每个状态做不同动作的概率所组成的集合</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <h2 id="%E5%9B%9B.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E7%AE%80%E4%BB%8B">四.贝尔曼最优公式（BOE）：简介</h2> 
+         <p><strong>贝尔曼公式：</strong>（π(a|s) 是给定已知的，依赖于一个给定的 π）</p> 
+         <p><img alt="" height="293" src="https://i-blog.csdnimg.cn/blog_migrate/99aa03a9040f0e1df8002cb8c212e716.png" width="886"></p> 
+         <p>&nbsp;<strong>贝尔曼最优方程（元素形式）：Bellman optimality equation (elementwise form)：</strong></p> 
+         <p>在贝尔曼公式前面加上了 max_π，这时候&nbsp;π 就不再是给定的了，因为这里面嵌套了一个优化问题，<span style="background-color:#fbd4d0;">需要先解决这个优化问题求解出这个 π，再把这个 π 带到这个式子里面去，求解出状态值。</span></p> 
+         <p><img alt="" height="143" src="https://i-blog.csdnimg.cn/blog_migrate/96d765085ff9e981996b1bd452e248f2.png" width="724"></p> 
+         <p>方程中已知与未知的值：p(r|s, a), p(s’&nbsp;|s, a), r, γ 已知；v(s), v(s‘&nbsp;) 未知；π(s) 未知（贝尔曼公式依赖于一个给定的 π，而贝尔曼最优公式的 π 没有给定，需要求解）</p> 
+         <p class="img-center"><img alt="" height="140" src="https://i-blog.csdnimg.cn/blog_migrate/b08618b8a81ec3e7023637b1853b315a.png" width="411"></p> 
+         <hr> 
+         <p><strong>贝尔曼最优方程（矩阵向量形式）Bellman optimality equation (matrix-vector form)：</strong>也是在上一章（第二章）讲的贝尔曼方程的矩阵向量形式前面加上了max_π。<span style="background-color:#fbd4d0;">状态值越大说明策略越好</span></p> 
+         <p class="img-center"><img alt="" height="60" src="https://i-blog.csdnimg.cn/blog_migrate/e20ea78d51caf95914f9b346fa6b4df4.png" width="232"></p> 
+         <p class="img-center"><img alt="" height="127" src="https://i-blog.csdnimg.cn/blog_migrate/3d958203bbae6c371c8775066aa3bb00.png" width="222"></p> 
+         <p>其中与 s 或 s' 对应的元素是</p> 
+         <p class="img-center"><img alt="" height="123" src="https://i-blog.csdnimg.cn/blog_migrate/739e17b2fe847e9400946a48523bdb59.png" width="348"></p> 
+         <p>这里的 max_π 是以元素为单位进行的。</p> 
+         <hr> 
+         <p>贝尔曼最优方程（BOE）既棘手又优雅！</p> 
+         <ul>
+          <li>为什么优雅？它以一种优雅的方式描述了最优策略（optimal policy）和最优状态值（optimal state value）。</li>
+          <li>为什么棘手？因为公式右侧有一个求最大化的最优问题，而如何计算这个最大化可能并不简单。</li>
+         </ul> 
+         <p>本课程将回答以下所有问题：</p> 
+         <ul>
+          <li>算法：如何求解这个方程？</li>
+          <li>存在性：这个方程有解吗？</li>
+          <li>唯一性：这个方程的解是否唯一？</li>
+          <li>最优性（Optimality）：它与最优策略（optimal policy）有何关系？</li>
+         </ul> 
+         <hr> 
+         <h2 id="%E4%BA%94.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E5%85%AC%E5%BC%8F%E5%8F%B3%E4%BE%A7%E6%B1%82%E6%9C%80%E5%A4%A7%E5%8C%96%E7%9A%84%E6%9C%80%E4%BC%98%E9%97%AE%E9%A2%98">五.贝尔曼最优公式（BOE）：公式右侧求最大化的最优问题</h2> 
+         <p><img alt="" height="180" src="https://i-blog.csdnimg.cn/blog_migrate/c8f51823261d6dc383cdf1f9e84f40d4.png" width="754"></p> 
+         <p>在贝尔曼最优公式（BOE）中，有一个式子，却有两个未知量（状态值 v 和策略 π，对任意一个状态都要求出来最优的一个 π），如何求解呢？看如下例子：</p> 
+         <p><img alt="" height="374" src="https://i-blog.csdnimg.cn/blog_migrate/a2ba7eaa9fbaf3a9caf3c49f8abf11a5.png" width="987"></p> 
+         <ul>
+          <li>Regardless the value of x：无论 x 的值是多少。这里的意思是（2x-1-a**）整体最大，所以（-a**）就得取最小。因为a的平方一定大于等于0，因此减去a的平方的那个数想要最大，必须要让a最小，a=0。</li>
+          <li>max_a(f(x,a)) 就是找到一个 a 使 f 最大</li>
+         </ul> 
+         <hr> 
+         <p>根据上面的例子得到启发，可以求解贝尔曼最优公式：</p> 
+         <ul>
+          <li>最初的方程中已知与未知的值：p(r|s, a), p(s’&nbsp;|s, a), r, γ 已知；v(s), v(s‘&nbsp;) 未知；π(s) 未知</li>
+          <li>固定 v(s') 并求解&nbsp;π，即给出 v(s') 的一个初始值，把初始值给定后，v(s') 变成已知的，第一行的大括号内部写成 q(s,a)，是已知的。下面要做的是把&nbsp;π(a|s) 确定下来。</li>
+          <li>这里其实有多个 a，在网格世界中有 5 个 a，q(s, a1)，q(s, a2)，q(s, a3)，q(s, a4)，q(s, a5)</li>
+         </ul> 
+         <p><img alt="" height="255" src="https://i-blog.csdnimg.cn/blog_migrate/1412c9ad96a6070134d5d408c4621976.png" width="954"></p> 
+         <ul>
+          <li>为了求解上述问题，再给出一个例子，假如已知三个 q 值，要解决的问题是求解三个系数或者叫三个权重，使得下面的目标函数（object function）达到最大</li>
+          <li>系数和权重应该满足和为 1 ，并且每个值都大于等于 0，之所以有这样的约束，是因为这个例子里面的系数对应上面的概率&nbsp;π(a|s) ，概率&nbsp;π 满足这样的性质</li>
+          <li>假设 q3 是最大的，最优解是 c3* = 1，c1*=c2*=0</li>
+          <li>下面这个例子的思路可以用在求解贝尔曼最优公式当中</li>
+         </ul> 
+         <p><img alt="" height="386" src="https://i-blog.csdnimg.cn/blog_migrate/c195a07d2a1d74a74d0846228b089201.png" width="987"></p> 
+         <ul>
+          <li>通过上面的例子，我们就知道了如果右边的&nbsp;q(s,a) 确定了，如何求解最优的&nbsp;π(a|s)，最后的结果就是右边这一项的最优值等于最大的&nbsp;q(s,a) 值，这里&nbsp;π(a|s) 的选取应该是对于 a* 等于 1，不是 a* 等于 0，这里 a* 对应最大的 q 值的 action，即 q(s，a*) 是所有 v&nbsp;的取值里最大的</li>
+         </ul> 
+         <p><img alt="" height="966" src="https://i-blog.csdnimg.cn/blog_migrate/265921cefbec0a184c33f1373bf3fa58.png" width="1200"></p> 
+         <hr> 
+         <h2 id="%E5%85%AD.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E6%94%B9%E5%86%99%E4%B8%BA%20v%20%3D%20f(v)">六.贝尔曼最优公式（BOE）：改写为 v = f(v)</h2> 
+         <p>可以把等式右侧写成一个函数 f(v)，之所以这样是因为求解等式右侧最大值 max_π 的方法是先固定 v ，就可以求出一个&nbsp;π，至于这个&nbsp;π 是什么样子，最后得到的最优值是什么我们不用太关心，我们知道右侧肯定是 v 的一个函数。本来右侧是&nbsp;π&nbsp; 和 v 的函数，现在把&nbsp;π 确定下来了，右侧就变成了 v 的函数（与上面第一个例子一样）</p> 
+         <p>弹幕理解</p> 
+         <ul>
+          <li>对每一个v，都能求出一个max，这个max是和v有关的式子。那么把v看成变量，max就是v的函数了，把这个函数定义成f(v)</li>
+          <li>π 是 v 的函数，老师说了，所以右边整体都是v的函数</li>
+          <li>冒号等号代表定义的意思</li>
+          <li>其实就是分两步，第一步求max, 消掉pi; 第二步求出v</li>
+          <li>其实就是pi已知了，要开始求最大的state value</li>
+          <li>贝尔曼方程实际上是一组方程，对每一个状态都有一个贝尔曼方程</li>
+          <li>和选取的动作的概率无关，因为取最大值适合概率是1，所以只需要考虑v的值</li>
+          <li>参考前面向量形式的展开，这里f(v)第s个元素对应的是s下的最大v(s)</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="98" src="https://i-blog.csdnimg.cn/blog_migrate/d5f7731ec7ff65ae489a3f916c7c50da.png" width="458"></p> 
+         <p>这样的话贝尔曼最优公式就化成了：</p> 
+         <p class="img-center"><img alt="" height="133" src="https://i-blog.csdnimg.cn/blog_migrate/4de73e78a50b65960392c09c9ea5f1ce.png" width="470"></p> 
+         <p>这里面的 f(v) 是一个向量，在这个向量中对应状态 s 的元素是</p> 
+         <p class="img-center"><img alt="" height="68" src="https://i-blog.csdnimg.cn/blog_migrate/e420f8df767d463911bec666191bc503.png" width="369"></p> 
+         <p>下面我们求解贝尔曼最优公式就求解 v = f(v) 即可</p> 
+         <hr> 
+         <h2 id="%E4%B8%83.%E6%94%B6%E7%BC%A9%E6%98%A0%E5%B0%84%E5%AE%9A%E7%90%86%EF%BC%88Contraction%20mapping%20theorem%EF%BC%89">七.收缩映射定理（Contraction mapping theorem）</h2> 
+         <p>在求解 v = f(v) 之前，先介绍一个&nbsp;&nbsp;Contraction mapping theorem，</p> 
+         <p><strong>一些概念：</strong></p> 
+         <ul>
+          <li><strong>不动点（Fixed point）：</strong>点 x 属于集合 X，f 是一个映射（或者叫函数），如果满足 f(x) = x，则 x 就被称为一个不动点</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="71" src="https://i-blog.csdnimg.cn/blog_migrate/c114b6f996d2150e9bc2624253dae12e.png" width="320"></p> 
+         <ul>
+          <li><strong>收缩映射Contraction mapping（或收缩函数contractive function）（mapping 和 function其实是一回事）：</strong>f 是收缩映射（contraction mapping），如果满足：（伽马可以自由选择的，只要在0到1之间）</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="161" src="https://i-blog.csdnimg.cn/blog_migrate/760bf3a8b43035a0d22f514265593a65.png" width="516"></p> 
+         <p>考虑一个一维的例子：</p> 
+         <p class="img-center"><img alt="" height="89" src="https://i-blog.csdnimg.cn/blog_migrate/c8e09430b0157953da3c7e2769074396.png" width="228"></p> 
+         <hr> 
+         <p>给一些例子解释上面的概念（伽马取值要求是0到1，但是这个contraction mapping成立是要求能够在0-1之间找到一个适合的伽马，因此在0.5-1之间的伽马当然符合定义）</p> 
+         <p><img alt="" height="1005" src="https://i-blog.csdnimg.cn/blog_migrate/36af67d254f62e5a499c7609b40578c6.png" width="1200"></p> 
+         <hr> 
+         <p><strong>Contraction mapping theorem定理：</strong></p> 
+         <p>对于任何形式为 x = f(x) 的方程，如果 f 是收缩映射，那么满足</p> 
+         <ul>
+          <li>存在性：存在一个满足 f(x*) = x* 的不动点（fixed point） x*。我们不太关心 f 的表达式究竟是什么，只只要它是一个&nbsp;Contraction mapping，就一定存在一个不动点（fixed point）满足 f(x*) = x*</li>
+          <li>唯一性：不动点（fixed point） x* 是唯一存在的</li>
+          <li>算法（求解这样的一个不动点（fixed point）的算法）： 考虑一个序列 {xk}，其中 xk+1 = f(xk) （迭代算法），则当&nbsp;k → ∞ 时，&nbsp;xk → x*（即 xk 会收敛到 x*） 。此外，收敛速度是指数级的，非常快。（先给一个 x0，x1=f(x0) 求出 x1；再用 x2=f(x1)求出 x2，以此类推，求出的&nbsp;xk 会收敛到 x*）&nbsp;&nbsp;</li>
+         </ul> 
+         <p><img alt="" height="364" src="https://i-blog.csdnimg.cn/blog_migrate/2e68c563f08f193019b4981910b24033.png" width="989"></p> 
+         <hr> 
+         <p><strong>例子：</strong></p> 
+         <p><img alt="" height="945" src="https://i-blog.csdnimg.cn/blog_migrate/74f0494f4c3ad0775192dd2d43632cf6.png" width="1200"></p> 
+         <hr> 
+         <h2 id="%E5%85%AB.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%C2%A0">八.贝尔曼最优公式（BOE）：解决方案&nbsp;</h2> 
+         <h3 id="1.%E4%BB%8B%E7%BB%8D">1.介绍</h3> 
+         <p>让我们再回到贝尔曼最优方程：v = f(v)，这个就是 Contraction mapping 要解决的那一类问题</p> 
+         <p class="img-center"><img alt="" height="53" src="https://i-blog.csdnimg.cn/blog_migrate/6c2c84664af8e24b802c5f96c57e103b.png" width="256"></p> 
+         <p>为了应用&nbsp;Contraction mapping theorem ，我们首先要证明贝尔曼最优公式里面的 f(v) 是一个&nbsp;Contraction mapping：（下面定理的证明可以看赵老师写的书，这里不再详细介绍）</p> 
+         <p><img alt="" height="251" src="https://i-blog.csdnimg.cn/blog_migrate/2a8f16edc9817eb9a9ec20d6ec543596.png" width="993"></p> 
+         <p>我们知道了 f(v) 是一个&nbsp;Contraction mapping，那么贝尔曼最优公式就可以立刻用收缩映射定理（Contraction mapping theorem）来求解出来，可以得到以下结果：</p> 
+         <p><img alt="" height="776" src="https://i-blog.csdnimg.cn/blog_migrate/c3dbe87ec558e1029504fe77b73da6ce.png" width="1200"></p> 
+         <p>重要：（1）中的算法称为值迭代算法。我们将在下一讲对其进行分析！本讲座更侧重于基本性质。</p> 
+         <hr> 
+         <p><strong>下面详细解析一下由&nbsp;Contraction mapping theorem 给出的迭代算法：</strong></p> 
+         <p>迭代算法矩阵向量形式（Matrix-vector form）：</p> 
+         <p class="img-center"><img alt="" height="55" src="https://i-blog.csdnimg.cn/blog_migrate/830dfe7af7a632df94bed42c04723e26.png" width="289"></p> 
+         <p>化成元素形式（Elementwise form）：即对于某一个具体的 s 状态这个算法是怎么运行的</p> 
+         <p class="img-center"><img alt="" height="141" src="https://i-blog.csdnimg.cn/blog_migrate/23f08e9f6158d16716af8ec9825d9c5d.png" width="476"></p> 
+         <hr> 
+         <p><strong>下面再详细总结一下这个过程（Procedure summary）：</strong></p> 
+         <ul>
+          <li>对任意状态 s，即当前我们对解 v*(s) 有一个估计，这个估计是 v_k(s)，最开始可以是 v_0(s)，这个可以是任意的一个值</li>
+          <li>对任意状态 s 下的每一个 action，求解 q_k(s,a) ， v_k(s’) 是刚才第一步给定的（s' 是用来遍历的变量？？）</li>
+          <li>计算 s 的贪婪策略 πk+1 如下：基于&nbsp;q_k(s,a) 我们得到一个新的策略，这个策略是&nbsp;π_k+1(a|s) 会选择最大的 q_k(s,a) 对应的 a_k*（与第五部分思想一样）</li>
+          <li>计算 v_k+1(s) = max_a q_k(s, a)&nbsp;</li>
+         </ul> 
+         <p style="text-align:center;"><img alt="" height="519" src="https://i-blog.csdnimg.cn/blog_migrate/c0442777aeec9ede9ea299016ce357e2.png" width="788"></p> 
+         <p><span style="background-color:#fbd4d0;">上述算法实际上就是下一讲中讨论的</span><strong><span style="background-color:#fbd4d0;">值迭代算法（value iteration algorithm），这个算法其实计算由&nbsp;Contraction mapping theorem 给出来的算法，只不过在下节课中我们会把它放到强化学习的一个上下文情境中去</span></strong><span style="background-color:#fbd4d0;">。</span></p> 
+         <hr> 
+         <h3 id="2.%E4%BE%8B%E5%AD%90">2.例子</h3> 
+         <p class="img-center"><img alt="" height="136" src="https://i-blog.csdnimg.cn/blog_migrate/16f0cc3c9a3f5d3ef839c60bee728ba9.png" width="344"></p> 
+         <p>举例说明： 手动解决 BOE 问题。</p> 
+         <ul>
+          <li>为什么要手动？可以更好地理解。</li>
+          <li>为什么例子这么简单？可以手动计算，方便大家更好理解。</li>
+         </ul> 
+         <p>动作：a_l、a_0、a_r 代表向左走、保持不变、向右走。<br> 奖励：进入目标区域： +1；尝试走出边界：-1；其他：0</p> 
+         <p class="img-center"><img alt="" height="65" src="https://i-blog.csdnimg.cn/blog_migrate/396bf06c92a4f3bacb5373e1362f7126.png" width="564"></p> 
+         <p>q(s, a) 的值（建立 q-value 的一个表 table）（这里的 q 是第五部分那个非常长的一串可以缩写成这样的一个 q）</p> 
+         <blockquote> 
+          <p>q-value 其实可以理解为state value的一个action下的值，这里的 q-value 就是 action value</p> 
+         </blockquote> 
+         <p class="img-center"><img alt="" height="122" src="https://i-blog.csdnimg.cn/blog_migrate/b7007266a543fb8d8386dabbcef1d19a.png" width="429"></p> 
+         <p>考虑 γ = 0.9</p> 
+         <p><span style="background-color:#fbd4d0;">我们的目标是找到 v*(s_i) 和&nbsp;π*（此时我们还没有将 v* 和 π*究竟是什么，我们只知道它是能够求解出贝尔曼最优公式对应的值和策略，之后我们会知道它们就是最优的状态值 state value 和最优的策略）</span></p> 
+         <p>初始化v空间-&gt;找到各s处使v最大的a（得到policy）-&gt;更新v，重复</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/a0863dfc91044b1e762c0697fef3b9ce.png" width="1200"></p> 
+         <p>这个策略已经不错了，画出图后发现可以到达目标状态，已经达到了最优策略，但是 v 还没有达到贝尔曼最优公式的最优的解，所以还要继续迭代算下去，在考虑下一个 interation</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/f1142a6333711329a6771a1e23d1511d.png" width="1200"></p> 
+         <p>可以无限迭代下去，如果要编程实现，可以写一个迭代终止条件，两者之差若小于一个很小的数字，我们任务再去迭代也没什么太大变化了，可以停下，认为 v_k 达到了贝尔曼最优公式的解</p> 
+         <p class="img-center"><img alt="" height="63" src="https://i-blog.csdnimg.cn/blog_migrate/d7d722c11cb1d56bbb7c7da853a42cc4.png" width="208"></p> 
+         <h2 id="%E4%B9%9D.%E8%B4%9D%E5%B0%94%E6%9B%BC%E6%9C%80%E4%BC%98%E5%85%AC%E5%BC%8F%EF%BC%88BOE%EF%BC%89%EF%BC%9A%E8%A7%A3%E7%9A%84%E6%9C%80%E4%BC%98%E6%80%A7">九.贝尔曼最优公式（BOE）：解的最优性</h2> 
+         <p>假设 v* 是贝尔曼最优方程（BOE）的解，可以用刚才介绍的算法求解出来。它满足：</p> 
+         <p class="img-center"><img alt="" height="52" src="https://i-blog.csdnimg.cn/blog_migrate/d1acf8baa201289bb0a846bc004abfe5.png" width="236"></p> 
+         <p>假设：</p> 
+         <p class="img-center"><img alt="" height="52" src="https://i-blog.csdnimg.cn/blog_migrate/1a8e24a2f1fda4f5b968bdff6566e57c.png" width="264"></p> 
+         <p>π* 是对应 v* 的一个最优的策略，也就是把 v* 固定住，可以求解出来一个&nbsp;π ，这个&nbsp;π 我们用&nbsp;π*&nbsp; 来表示，那么把公式 2 代入公式 1，公式 1 可以化成下面的式子，也就是把前面的 max_π 去掉了，把它改成了&nbsp;π*&nbsp;</p> 
+         <p class="img-center"><img alt="" height="45" src="https://i-blog.csdnimg.cn/blog_migrate/942b0106cffc693e30e65ed38d390bdd.png" width="175"></p> 
+         <p>上面的公式 3 其实就是一个贝尔曼公式，因为贝尔曼公式一定是对应一个策略，那么上式就是对应&nbsp;π* 的一个贝尔曼公式，这里的 v* = v_&nbsp;π*，也就是&nbsp;π* 对应的 state value，<span style="background-color:#fbd4d0;">所以贝尔曼最优公式是一个特殊的贝尔曼公式，贝尔曼最优公式中对应的策略比较特殊，是一个最优的策略</span></p> 
+         <p><img alt="" height="130" src="https://i-blog.csdnimg.cn/blog_migrate/f62d148c191638bd4572878329564395.png" width="964"></p> 
+         <hr> 
+         <p>那么这个策略究竟是不是最优的，这个 state value&nbsp; v* = v_&nbsp;π* 是不是最大的，下面的结论可以来证明：（只给结论，具体证明看书）</p> 
+         <p>对于贝尔曼最优公式的解&nbsp;v*，它是最大的 state value，对于任何一个其他的策略（policy）π，所得到的状态值（state value）v_&nbsp;π 都没有&nbsp;v* 大。那么相应的&nbsp;π* 肯定是一个最优的策略，因为&nbsp;π* 所对应的&nbsp;v* 就是&nbsp;v_&nbsp;π*，它对应的&nbsp;state value 达到最大。</p> 
+         <p><img alt="" height="269" src="https://i-blog.csdnimg.cn/blog_migrate/36285bd2037d40e4332ab21fe84683b3.png" width="1019"></p> 
+         <p>现在我们明白为什么要研究贝尔曼最优公式（BOE）了。这是因为它描述了最优状态值（optimal state value）和最优策略（optimal policy）。</p> 
+         <hr> 
+         <p><strong>那么&nbsp;π* 长什么样子？</strong>之前讲过，我们应该不陌生，也就是在状态 s 的时候<strong>&nbsp;</strong>π* 会选择 a*，也就是在状态 s 对应的 action value 最大的那个 action，对这个 action 概率是 1，对其他 action 概率是 0.所以它是确定性 deterministic 的，也是贪婪 greedy 的，就是不论什么，反正就选择最大的。</p> 
+         <p><img alt="" height="655" src="https://i-blog.csdnimg.cn/blog_migrate/346dd3c91524bfce74a31351051e1dac.png" width="1028"></p> 
+         <hr> 
+         <h2 id="%E5%8D%81.%E5%88%86%E6%9E%90%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%EF%BC%88Analyzing%20optimal%20policies%EF%BC%89">十.分析最优策略（Analyzing optimal policies）</h2> 
+         <p><strong>哪些因素决定了最优策略（optimal policy）？</strong></p> 
+         <p>从下面的贝尔曼最优公式（BOE）可以清晰地看到：</p> 
+         <p class="img-center"><img alt="" height="85" src="https://i-blog.csdnimg.cn/blog_migrate/560ced706bd0dccf95709601440edbda.png" width="530"></p> 
+         <p><span style="background-color:#fbd4d0;">我们要做的是求出黑色字体的变量，它们分别对应了最优的策略和最优的 state value ；我们已知的是这些红色字体的变量，</span><strong><span style="background-color:#fbd4d0;">它们分别对应了概率，这个概率就代表了系统的模型</span></strong><span style="background-color:#fbd4d0;">；r 是我们设计的奖励（reward）；γ 是折扣因子。</span></p> 
+         <p><span style="background-color:#fbd4d0;">求解贝尔曼最优公式就是在已知红色的量的时候求出黑色的量，那么显然最优的策略和最优的 state value 就是由这些红色的量来决定：他们分别是怎么设计 r，怎么选择 γ，还有系统模型是什么样的</span></p> 
+         <p class="img-center"><img alt="" height="159" src="https://i-blog.csdnimg.cn/blog_migrate/7e2fae45530472c82e103e668dd28dbc.png" width="483"></p> 
+         <p>接下来，我们用实例来说明当我们改变 r 和 γ 的时候，最优策略会发生什么样的改变（因为系统模型一般很难改变，所以我们不考虑这个）</p> 
+         <hr> 
+         <p><strong>举例：</strong></p> 
+         <p>通过求解贝尔曼最优公式（BOE），可以得到最优策略（左图绿色箭头）和相应的最优状态值（state value）（右图格子上的数字）。</p> 
+         <p class="img-center"><img alt="" height="267" src="https://i-blog.csdnimg.cn/blog_migrate/6916ae96ab18f963ceb4a684980c0f38.png" width="484"></p> 
+         <p>观察最优策略可以看出，最优策略没有绕开禁区（forbidden area），因为它发现进入禁区虽然暂时得到一个负数的惩罚，但是从长远来看我进入禁区到达目标所得到的回报（return）比绕一大圈再到达目标获得的回报（return）更大。最优策略敢于冒险：进入禁区！！</p> 
+         <p>如果我们将 γ = 0.9 改为 γ = 0.5（其他参数不变，即设计的奖励 r 不变）</p> 
+         <p class="img-center"><img alt="" height="254" src="https://i-blog.csdnimg.cn/blog_migrate/7470df1b38223fc8e2d9a74d88101ae5.png" width="501"></p> 
+         <p>由左图绿色箭头可以看出，最优策略已经发生改变，(a) 的最优策略是进入禁区到达目标，而 (b) 的最优策略是绕一大圈到达目标，因为它衡量发现绕一大圈再到达目标获得的回报（return）比进入禁区到达目标所得到的回报（return）更大。最优策略变得目光短浅！避开所有禁区！</p> 
+         <blockquote> 
+          <p>之所以这样是因为当&nbsp;γ 比较大的时候，智能体比较远视，它会比较重视未来的 reward；当&nbsp;γ 比较小的时候，智能体比较近视，return 里所得到的值的大小主要由近期所得到的&nbsp;reward 来决定，&nbsp;γ 比较小它的幂次方就小，未来的 reward 会被打折的很厉害</p> 
+         </blockquote> 
+         <p>如果我们将 γ 改为 0</p> 
+         <p class="img-center"><img alt="" height="266" src="https://i-blog.csdnimg.cn/blog_migrate/4b4deb6ee2efd6b0a5b9683fdb846a0e.png" width="484"></p> 
+         <p>最优策略变得极其短视！同时，只选择即时奖励（immediate reward）最大的动作！从很多状态出发根本无法达到目标！</p> 
+         <p class="img-center"><img alt="" height="59" src="https://i-blog.csdnimg.cn/blog_migrate/3e9989053f356405f6415c31182993a8.png" width="238"></p> 
+         <p>如果我们在进入禁区时加大惩罚力度<strong>（γ = 0.9）&nbsp;</strong></p> 
+         <p class="img-center"><img alt="" height="285" src="https://i-blog.csdnimg.cn/blog_migrate/9fbdaafe065712beae7045efdffa1ac4.png" width="500"></p> 
+         <p>最优策略也绕开了禁区</p> 
+         <hr> 
+         <p>如果我们改变 r → ar + b，最优策略（optimal policy）会怎样呢？</p> 
+         <p>例如：（给所有 r 全部 +1）</p> 
+         <p class="img-center"><img alt="" height="190" src="https://i-blog.csdnimg.cn/blog_migrate/669df3b326d3712270ee33d5818663c3.png" width="540"></p> 
+         <blockquote> 
+          <p><span style="background-color:#fbd4d0;">最优策略保持不变！因为重要的不是奖励（reward）的绝对值（absolute reward values）！而是它们的相对值（relative values）！</span></p> 
+         </blockquote> 
+         <p>证明：（各位同学：应该满足a&gt;0，否则最优对应求最小）</p> 
+         <p><img alt="" height="1139" src="https://i-blog.csdnimg.cn/blog_migrate/61f487ce8cb191fcf822afa6ba77501b.png" width="1200"></p> 
+         <hr> 
+         <p><strong>举例：</strong></p> 
+         <p>毫无意义的绕行？</p> 
+         <p>通过求解贝尔曼最优公式可以得到图 (a) 左图的最优策略（绿色箭头）和右图的最优状态值（optimal state value）</p> 
+         <p class="img-center"><img alt="" height="155" src="https://i-blog.csdnimg.cn/blog_migrate/9ad1d65e39965c6421ca9b60e894b898.png" width="545"></p> 
+         <p>(a) 中的策略是最优的，(b) 中的策略不是。</p> 
+         <p><strong>问题：</strong>为什么最优策略不是（b）？为什么最优策略不走毫无意义的弯路？我们定义从一个白色格子到另一个白色格子的 r=0，即走弯路不会受到惩罚。那么为什么最优策略不走毫无意义的弯路？</p> 
+         <p><strong>答案：</strong>因为折扣因子 γ&nbsp;&nbsp;</p> 
+         <ul>
+          <li>自己的理解就是随着这一次没有惩罚，但是随着尝试次数变多，discount rate&lt;1，后边获得相应的奖励就会变少。</li>
+         </ul> 
+         <p><img alt="" height="150" src="https://i-blog.csdnimg.cn/blog_migrate/aa21fadb5d25a476df62fdec18b03d24.png" width="911"></p> 
+         <blockquote> 
+          <p><span style="background-color:#fbd4d0;">由上面的例子得到的启发：在设计 reward 的时候，很多人可能会觉得每走一步应该给一个惩罚 r=-1，r=-1 代表能量的消耗，这样它就不会绕远路，就会尽可能走最短的路径到达目标，如果 r=0，没有 r=-1 好像就会绕远路，其实不是这样的，</span><strong><span style="background-color:#fbd4d0;">因为除了 r 来约束它不要绕远路之外，还有 γ，因为越绕远路我们得到到达目标的奖励越晚，越晚那时候对应的 γ 的次方越小，奖励打折会很厉害，所有它自然会找一个最短的路径过去</span></strong></p> 
+         </blockquote> 
+         <hr> 
+         <h2 id="%E5%8D%81%E4%B8%80.%E6%80%BB%E7%BB%93">十一.总结</h2> 
+         <p><img alt="" height="438" src="https://i-blog.csdnimg.cn/blog_migrate/97f7a5927134fb58a0acabe8f58a7f6b.png" width="1028"></p> 
+         <p><strong>有关贝尔曼最优方程的问题：</strong></p> 
+         <ul>
+          <li>存在性：这个方程有解吗？</li>
+          <li>有，根据收缩映射定理</li>
+          <li>唯一性：这个方程的解是否唯一？</li>
+          <li>是，根据收缩映射定理（最优状态值 optimal state value 这个解是唯一的，但是对应 optimal state value 的最优策略 π 不一定是唯一的）</li>
+          <li>算法：如何求解这个方程，如何求解最优策略和最优解？</li>
+          <li>根据收缩映射定理提出的迭代算法</li>
+          <li>最优性：我们为什么要研究这个方程</li>
+          <li>因为贝尔曼最优公式的解对应于最优状态值（state value）和最优策略（opyimal policy）</li>
+         </ul> 
+         <p>最后，我们明白了研究BOE的重要性！</p> 
+         <p><img alt="" height="609" src="https://i-blog.csdnimg.cn/blog_migrate/c1aab82201ffcfd680d24c0f2e960b52.png" width="975"></p> 
+         <p></p> 
+        </div> 
+       </div> 
+      </article>   
+      <img src="https://img-home.csdnimg.cn/images/20211209110851.png" alt="pdf_watermark" width="0" height="0" style="display: none"> 
+      <div class="print_watermark"></div> 
+      <div class="print_watermark_info"> 
+       <p>内容来源：csdn.net</p> 
+       <p>作者昵称：leaf_leaves_leaf</p> 
+       <p>原文链接：https://blog.csdn.net/qq_64671439/article/details/135317754</p> 
+       <p>作者主页：https://blog.csdn.net/qq_64671439</p> 
+      </div> 
+      <style>
+    .print_watermark, .print_watermark_info {
+      display: none
+    }
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact; /* Chrome, Safari */
+        color-adjust: exact; /* Firefox */
+        background-image: none !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact;
+      }
+      .blog-content-box {
+        padding: 0;
+      }
+      .blog-content-box .article-header .article-info-box > div:not(.article-bar-top){
+        display: none !important;
+      }
+      .blog-content-box .article-header .article-info-box  .article-bar-top img{
+          display:none
+      }
+      .blog-content-box .article-header .article-info-box > .article-bar-top .bar-content > *:not(.follow-nickName):not(.time){
+          display: none !important;
+      }
+      .print_watermark {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 999;
+        background-image: url('https://img-home.csdnimg.cn/images/20211209110851.png');
+        background-size: 180px auto;
+        background-repeat: repeat;
+      }
+      .print_watermark_info {
+        display: block;
+        position: fixed;
+        bottom: 16px;
+        right: 0;
+        z-index: 1000;
+        color: #e8e8ed;
+        font-size: 12px;
+        ocapity: .5
+      }
+      @page {
+        margin: 0 10mm 10mm;
+        size: landscape;
+      }
+      body, article {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #csdn-toolbar,.main_father > *:not(#mainBox), .csdn-side-toolbar, .main_father aside {
+        display: none !important;
+      }
+      .main_father > #mainBox {
+        width: unset
+      }
+      .main_father > #mainBox > main > *:not(.blog-content-box){
+        display: none !important;
+      }
+    }
+  </style> 
+     </div> 
+     <div class="directory-boxshadow-dialog" style="display:none;"> 
+      <div class="directory-boxshadow-dialog-box"> 
+      </div> 
+      <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new"> 
+       <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png"> 
+       <div class="vip-limited-time-top">
+         确定要放弃本次机会？ 
+       </div> 
+       <span class="vip-limited-time-text">福利倒计时</span> 
+       <div class="limited-time-box-new"> 
+        <span class="time-hour"></span> 
+        <i>:</i> 
+        <span class="time-minite"></span> 
+        <i>:</i> 
+        <span class="time-second"></span> 
+       </div> 
+       <div class="limited-time-vip-box"> 
+        <p> <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png"> <span class="def">立减 ¥</span> <span class="active limited-num"></span> </p> 
+        <span class="">普通VIP年卡可用</span> 
+       </div> 
+       <a class="limited-time-btn-new" href="https://mall.csdn.net/vip" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.9621&quot;}" data-report-query="spm=1001.2101.3001.9621">立即使用</a> 
+      </div> 
+     </div> 
+     <div class="more-toolbox-new more-toolbar" id="toolBarBox"> 
+      <div class="left-toolbox"> 
+       <div class="toolbox-left"> 
+        <div class="profile-box"> 
+         <a class="profile-href" target="_blank" href="https://blog.csdn.net/qq_64671439"><img class="profile-img" src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1"> <span class="profile-name"> leaf_leaves_leaf </span> </a> 
+        </div> 
+        <div class="profile-attend"> 
+         <a class="tool-attend tool-bt-button tool-bt-attend" href="javascript:;" data-report-view="{&quot;mod&quot;:&quot;1592215036_002&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;extend1&quot;:&quot;已关注&quot;}">已关注</a> 
+         <a class="tool-item-follow active-animation" style="display:none;">已关注</a> 
+        </div> 
+       </div> 
+       <div class="toolbox-middle"> 
+        <ul class="toolbox-list"> 
+         <li class="tool-item tool-item-size tool-active is-like" id="is-like" data-type="bottom"> <a class="tool-item-href"> <img style="display:none;" id="is-like-imgactive-animation-like" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarThumbUpactive.png" alt=""> <img class="isactive" style="display:none" id="is-like-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like-active.png" alt=""> <img class="isdefault" style="display:block" id="is-like-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like.png" alt=""> <span id="spanCount" class="count "> 62 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">点赞</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-unlike" id="is-unlike"> <a class="tool-item-href"> <img class="isactive" style="margin-right:0px;display:none" id="is-unlike-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike-active.png" alt=""> <img class="isdefault" style="margin-right:0px;display:block" id="is-unlike-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike.png" alt=""> <span id="unlikeCount" class="count "></span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">踩</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-collection "> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_824&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4130&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img style="display:none" id="is-collection-img-collection" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect-active.png" alt=""> <img class="isdefault" id="is-collection-img" style="display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect.png" alt=""> <img class="isactive" id="is-collection-imgactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCollectActive.png" alt=""> <span class="count get-collection " data-num="73" id="get-collection"> 73 </span> </a> 
+          <div class="tool-hover-tip collect"> 
+           <div class="collect-operate-box"> 
+            <span class="collect-text" id="is-collection"> 收藏 </span> 
+           </div> 
+          </div> 
+          <div class="tool-active-list"> 
+           <div class="text">
+             觉得还不错? 
+            <span class="collect-text" id="tool-active-list-collection"> 一键收藏 </span> 
+            <img id="tool-active-list-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/collectionCloseWhite.png" alt=""> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-comment"> 
+          <div class="guide-rr-first"> 
+           <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward01.png" alt=""> 
+           <button class="btn-guide-known">知道了</button> 
+          </div> <a class="tool-item-href go-side-comment" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7009&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/comment.png" alt=""> <span class="count"> 3 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">评论</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-QRcode" data-type="article" id="tool-share"> <a class="tool-item-href" href="javascript:;" data-report-view="{&quot;spm&quot;:&quot;3001.4129&quot;,&quot;extra&quot;:{&quot;type&quot;:&quot;blogdetail&quot;}}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/share.png" alt=""> <span class="count">分享</span> </a> 
+          <div class="QRcode" id="tool-QRcode"> 
+           <div class="share-bg-box"> 
+            <div class="share-content"> 
+             <a id="copyPosterUrl" data-type="link" class="btn-share">复制链接</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="qq">分享到 QQ</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="weibo">分享到新浪微博</a> 
+            </div> 
+            <div class="share-code"> 
+             <div class="share-code-box" id="shareCode"></div> 
+             <div class="share-code-text"> 
+              <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/share/icon-wechat.png" alt="">扫一扫 
+             </div> 
+            </div> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-reward"> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_830&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4237&quot;,&quot;dest&quot;:&quot;&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="isdefault reward-bt" id="rewardBtNew" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">打赏</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-downloadpdf" id="tool-downloadpdf"> <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> </a> 
+          <div class="tool-hover-tip">
+           <span class="text">导出PDF</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-more" id="is-more"> <a class="tool-item-href"> <img class="isdefault" style="margin-right:0px;display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/more.png" alt=""> <span class="count"></span> </a> 
+          <div class="more-opt-box"> 
+           <div class="mini-box"> 
+            <a class="tool-item-href" id="rewardBtNewHide" data-report-click="{&quot;spm&quot;:&quot;3001.4237&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault reward-bt" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+            <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> <span class="count">导出PDF</span> </a> 
+            <a class="tool-item-href" id="toolReportBtnHide"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+           <div class="normal-box"> 
+            <a class="tool-item-href" id="toolReportBtnHideNormal"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+          </div> </li> 
+        </ul> 
+       </div> 
+       <div class="toolbox-right"> 
+        <div class="tool-directory"> 
+         <a class="bt-columnlist-show" data-id="12540921" data-free="true" data-description="" data-subscribe="false" data-title="【强化学习的数学原理-赵世钰】课程笔记" data-img="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" data-url="https://blog.csdn.net/qq_64671439/category_12540921.html" data-sum="10" data-people="244" data-price="0" data-hotrank="0" data-status="true" data-oldprice="0" data-join="false" data-studyvip="true" data-studysubscribe="false" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}">专栏目录</a> 
+        </div> 
+       </div> 
+      </div> 
+     </div>    
+     <a id="commentBox" name="commentBox"></a> 
+    </main> 
+   </div> 
+   <div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div id="recommend-right-concision"> 
+      <div class="flex-column aside-box groupfile" id="groupfileConcision"> 
+       <div class="groupfile-div1"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+  </div> 
+  <div class="mask-dark"></div> 
+  <div class="skin-boxshadow"></div> 
+  <div class="directory-boxshadow"></div> 
+  <div style="display:none;"> 
+   <img src="" onerror="setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){var test=&quot;\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74&quot;}},3000);"> 
+  </div> 
+  <div class="keyword-dec-box" id="keywordDecBox"></div> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css">        
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">                  
+ </body>
+</html>

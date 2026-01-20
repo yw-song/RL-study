@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <link rel="canonical" href="https://blog.csdn.net/qq_64671439/article/details/137026601"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="report" content="{&quot;pid&quot;: &quot;blog&quot;, &quot;spm&quot;:&quot;1001.2101&quot;}"> 
+  <meta name="referrer" content="always"> 
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <link rel="alternate" media="handheld" href="#">  
+  <meta name="applicable-device" content="pc"> 
+  <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"> 
+  <title>【强化学习的数学原理-赵世钰】课程笔记（九）策略梯度方法（Policy Gradient Method）-CSDN博客</title>   
+  <meta name="keywords" content="policy gradient method"> 
+  <meta name="csdn-baidu-search" content="{&quot;autorun&quot;:true,&quot;install&quot;:true,&quot;keyword&quot;:&quot;policy gradient method&quot;}"> 
+  <meta name="description" content="文章浏览阅读4k次，点赞33次，收藏42次。本文深入解析策略梯度方法，包括其基本思路、定义最优策略的度量标准、目标函数梯度计算及梯度上升算法REINFORCE，阐述了如何通过优化策略参数实现策略提升。"> 
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-6fdc7e4913.min.css">  
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-1024/skin-1024-ecd36efea2.min.css">    
+  <meta name="toolbar" content="{&quot;type&quot;:&quot;0&quot;,&quot;fixModel&quot;:&quot;1&quot;}">   
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css"> 
+  <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>      
+ 	<style>
+	main div.blog-content-box pre {
+		max-height: 100%;
+		overflow-y: hidden;
+	}
+	</style>
+ </head>  
+ <body class="nodata  " style=""> 
+  <div id="toolbarBox" style="min-height: 48px;"></div>    
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css"> 
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css">   
+  <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;"> 
+   <div class="container clearfix container-concision" id="mainBox">  
+    <main>  
+     <div class="blog-content-box"> 
+      <div class="article-header-box" id="article-header-box"> 
+       <div class="article-header"> 
+        <div class="article-title-box"> 
+         <h1 class="title-article" id="articleContentId">【强化学习的数学原理-赵世钰】课程笔记（九）策略梯度方法（Policy Gradient Method）</h1> 
+        </div>  
+       </div> 
+      </div> 
+      <div id="blogHuaweiyunAdvert" class="active-padding"></div> 
+      <div id="blogColumnPayAdvert" class="active-padding"> 
+       <div class="column-group"> 
+        <div class="column-group-item column-group0 column-group-item-one"> 
+         <div class="item-l"> 
+          <a class="item-target" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" title="【强化学习的数学原理-赵世钰】课程笔记" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}"> <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt=""> <span class="title item-target"> <span> <span class="tit">【强化学习的数学原理-赵世钰】课程笔记</span> <span class="dec">专栏收录该内容</span> </span> </span> </a> 
+         </div> 
+         <div class="item-m"> 
+          <span>10 篇文章</span> 
+         </div> 
+         <div class="item-r"> 
+          <a class="item-target article-column-bt articleColumnFreeBt" data-id="12540921">订阅专栏</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="ai-abstract-box"> 
+       <div class="ai-abstract"> 
+        <div class="abstract-content"> 
+         <img class="lock-img" src="https://img-home.csdnimg.cn/images/20240711042549.png" alt=""> 本文深入解析策略梯度方法，包括其基本思路、定义最优策略的度量标准、目标函数梯度计算及梯度上升算法REINFORCE，阐述了如何通过优化策略参数实现策略提升。 
+        </div> 
+        <p> 摘要生成于 <a href="https://ai.csdn.net?utm_source=cknow_pc_ai_abstract" data-report-query="spm=3001.10128" data-report-view="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;}}" data-report-click="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;,&quot;text&quot;:&quot;C知道&quot;}}" target="_blank"> C知道</a> ，由 DeepSeek-R1 满血版支持， <a href="https://ai.csdn.net?utm_source=cknow_pc_ai_abstract" data-report-query="spm=3001.10128" data-report-click="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;,&quot;text&quot;:&quot;前往体验&quot;}}" target="_blank"> 前往体验 &gt;</a></p> 
+       </div> 
+      </div> 
+      <article class="baidu_pl"> 
+       <div id="article_content" class="article_content clearfix"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-8d6d398833.css"> 
+        <div id="content_views" class="htmledit_views atom-one-dark"> 
+         <p id="main-toc"><strong>目录</strong></p> 
+         <p id="%E4%B8%80.policy%20gradient%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF%EF%BC%88Basic%20idea%20of%20policy%20gradient%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%80.policy%20gradient%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF%EF%BC%88Basic%20idea%20of%20policy%20gradient%EF%BC%89" rel="nofollow">一.policy gradient 的基本思路（Basic idea of policy gradient）</a></p> 
+         <p id="%E4%BA%8C.%E5%AE%9A%E4%B9%89%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%E7%9A%84%20metrics%EF%BC%8C%E4%B9%9F%E5%B0%B1%E6%98%AF%20objective%20function%20%E6%98%AF%E4%BB%80%E4%B9%88-toc" style="margin-left:0px;"><a href="#%E4%BA%8C.%E5%AE%9A%E4%B9%89%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%E7%9A%84%20metrics%EF%BC%8C%E4%B9%9F%E5%B0%B1%E6%98%AF%20objective%20function%20%E6%98%AF%E4%BB%80%E4%B9%88" rel="nofollow">二.定义最优策略的 metrics，也就是 objective function 是什么</a></p> 
+         <p id="%E4%B8%89.objective%20function%20%E7%9A%84%20gradient-toc" style="margin-left:0px;"><a href="#%E4%B8%89.objective%20function%20%E7%9A%84%20gradient" rel="nofollow">三.objective function 的 gradient</a></p> 
+         <p id="%E5%9B%9B.%E6%A2%AF%E5%BA%A6%E4%B8%8A%E5%8D%87%E7%AE%97%E6%B3%95%EF%BC%88REINFORCE%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E5%9B%9B.%E6%A2%AF%E5%BA%A6%E4%B8%8A%E5%8D%87%E7%AE%97%E6%B3%95%EF%BC%88REINFORCE%EF%BC%89" rel="nofollow">四.梯度上升算法（REINFORCE）</a></p> 
+         <p id="%E4%BA%94.%E6%80%BB%E7%BB%93-toc" style="margin-left:0px;"><a href="#%E4%BA%94.%E6%80%BB%E7%BB%93" rel="nofollow">五.总结</a></p> 
+         <hr id="hr-toc"> 
+         <p></p> 
+         <ul>
+          <li>上节课介绍了 value function approximation，也就是 action value 或者是&nbsp; state value 从表格形式变成函数形式来表达</li>
+          <li>这节课思想有些类似，之前我们用表格表达策略，现在我们也可以用函数表达策略</li>
+          <li>上节课到这节课有一个跳跃，之前所有的方法都被称为 value-based，这次以及下节课介绍的方法都是 policy-based，value-based 就是以 value 为核心，比如我估计一个策略他的 action value，这个就是 policy evaluation，在这个基础上我选择更好的策略，再去进行采样然后不断地迭代循环，这个过程中 value 发挥了重要作用。<span style="background-color:#fbd4d0;">policy-based 方法是直接建立一个目标函数，这个目标函数是策略的函数，我通过优化这个目标函数就可以直接得到最优的策略</span></li>
+          <li>下节课介绍的 actor-critic 方法是把 policy gradient 和基于 value function approximation 这两种方法结合起来了</li>
+         </ul> 
+         <p><img alt="" height="135" src="https://i-blog.csdnimg.cn/blog_migrate/1111fb6fceaa898bf390ac1f2937c3b0.png" width="607"></p> 
+         <hr> 
+         <p>课程大纲：</p> 
+         <p>1.policy gradient 的基本思路（Basic idea of policy gradient）</p> 
+         <p>2.确定最优策略的衡量标准，metics 可以定义什么样的策略是最优的（Metrics to define optimal policies）</p> 
+         <p>3.计算 metric 对应的梯度（Gradients of the metrics）&nbsp; &nbsp;<span style="background-color:#fbd4d0;">metric 就是 objective function</span></p> 
+         <p>4.梯度上升算法，REINFORCE，是非常早期的 policy gradient 方法，但是很经典，在此基础上做推广：有了 metric 就可以做优化，最简单的方法是梯度上升，这里要最大化这个 metric，所以梯度上升。（Gradient-ascent algorithm (REINFORCE)）</p> 
+         <p>5.总结（summary）</p> 
+         <hr> 
+         <h3 id="%E4%B8%80.policy%20gradient%20%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF%EF%BC%88Basic%20idea%20of%20policy%20gradient%EF%BC%89" style="background-color:transparent;">一.policy gradient 的基本思路（Basic idea of policy gradient）</h3> 
+         <p>到目前位置，policy 是用表格来表示的：</p> 
+         <ul>
+          <li>- 所有状态的行动概率都存储在一个表 π(a|s) 中。表中的每个条目都以状态和行动为索引，每个 state 对应一行，每个 action 对应一列。直接去表格找每个状态下 take action a几 的概率即可</li>
+          <li>通过索引即可访问或改变一个量</li>
+         </ul> 
+         <p><img alt="" height="461" src="https://i-blog.csdnimg.cn/blog_migrate/e74be1db6d298749106a8c12f0e61737.png" width="1015"></p> 
+         <p>&nbsp;现在，policy 可以用参数化的函数来表示：</p> 
+         <p><img alt="" height="215" src="https://i-blog.csdnimg.cn/blog_migrate/949c8fe5e8c9a2111157a68c58de70c5.png" width="820"></p> 
+         <p>θ 是一个向量，可以用来表示&nbsp;π 这个函数里面的参数</p> 
+         <ul>
+          <li>- 例如，该函数可以是一个神经网络，现在用的最广泛的函数形式是神经网络。其输入为 s，输出为采取每个行动的概率（假如有 5 个行动），参数为 θ。</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="144" src="https://i-blog.csdnimg.cn/blog_migrate/8974a834062557401a01a6586b782c85.png" width="325"></p> 
+         <p>之前介绍 value function approximation 的时候，value function 的参数用 w 表示，policy 函数的时候参数用&nbsp;θ 表示</p> 
+         <ul>
+          <li>- 优点：当状态空间较大时，表格表示法的<strong>存储和泛化效率</strong>较低。（泛化的意思是假如要更新 π(a|s)，如果用表格的话，我必须访问到 s 和 a 我才能去更新这个 π(a|s)，如果用函数的话就不需要，我访问了 (s,a) 旁边的那个 (s,a)&nbsp; 也可以，因为那个 (s,a) 我更改了这个函数的参数也会导致当前我感兴趣的&nbsp;(s,a) 被改掉，也就是我用更少的数据就能得到一个比较好的结果）</li>
+          <li>- <span style="background-color:#fbd4d0;">函数表示法，也就是 π 的形式可以有多种，有时也写成 π(a,s,θ)、π_θ(a|s)或 π_θ(a,s)。</span></li>
+         </ul> 
+         <blockquote> 
+          <p>选q值大的策略，那么不就直接将pi(a|s,theta)等价于q(s,a,w)？</p> 
+         </blockquote> 
+         <hr> 
+         <p><strong>表格表示法和函数表示法的区别：</strong></p> 
+         <p><strong>1.首先，如何定义最优策略？</strong></p> 
+         <ul>
+          <li>- 用表格表示时，如果策略&nbsp;π 能使每个状态值最大化，那么它就是最优的。最优策略&nbsp;π* 的 state value 要比其它所有策略的 state value 都要大</li>
+         </ul> 
+         <p><img alt="" height="222" src="https://i-blog.csdnimg.cn/blog_migrate/c67fb2e53ae8ed951fb49663d46cdba3.png" width="1200"></p> 
+         <ul>
+          <li>- 用函数表示时，我们会定义一个 scalar metric，一个标量的目标函数，然后我们去优化这个目标函数，如果策略&nbsp;π 能使这个标量指标最大化，那么它就是最优的。</li>
+         </ul> 
+         <p><img alt="" height="320" src="https://i-blog.csdnimg.cn/blog_migrate/9af69a5b0d185d7c0f7c7635040174ab.png" width="982"></p> 
+         <p><strong>2.第二，如何获取一个 action 的 probability</strong></p> 
+         <ul>
+          <li>- 在表格的情况下，可以通过查找表格策略直接获取在 s 处取 a 的概率 π(a|s)。</li>
+          <li>- 在函数表示的情况下，我们不能直接获取，要算一下，需要根据函数结构和参数来计算 π(a|s,θ) 的值。比如是一个神经网络，我得把 s 输进去，让它向前传播一次计算一次，得到它的输出&nbsp;π(a1|s,θ)，...，π(a5|s,θ)，才能知道概率</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="148" src="https://i-blog.csdnimg.cn/blog_migrate/7bf7f2ef9e207629820f5f2d76b08911.png" width="363"></p> 
+         <p><strong>3.第三，如何去更新 policy</strong></p> 
+         <ul>
+          <li>- 用表格表示时，可通过直接更改表格中的条目 π(a|s) 来更新策略 π。</li>
+          <li>- 当用参数化函数表示时，就不能再用这种方式更新策略 π 了。相反，只能通过改变参数 θ 来更新，因为函数是用 θ 表示的。</li>
+         </ul> 
+         <hr> 
+         <p>policy gradient 的基本思想很简单：</p> 
+         <ul>
+          <li>- 首先，定义最优策略的度量（或<strong>目标函数</strong>）： J(θ)，它可以定义最优策略。θ 是策略对应的参数，不同的策略有不同的参数也就是有不同的 J(θ) 值，我们希望&nbsp;θ 能被最大化，最优策略&nbsp;θ* 应该对应 maxJ(θ)</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="77" src="https://i-blog.csdnimg.cn/blog_migrate/5f2df805422779687a4c92242fd4a5b6.png" width="269"></p> 
+         <ul>
+          <li>- 第二，有了目标函数就应该做优化，基于梯度的优化算法来搜索最优策略：</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="82" src="https://i-blog.csdnimg.cn/blog_migrate/e8715b98dbad5568efc4add8b599f79f.png" width="336"></p> 
+         <p><img alt="" height="381" src="https://i-blog.csdnimg.cn/blog_migrate/42821e87d69b629f26ae01dfa18b318e.png" width="1022"></p> 
+         <blockquote> 
+          <p>阿尔法是不是就是学习率啊？换个字母差点不认识了</p> 
+         </blockquote> 
+         <p>尽管想法很简单，但当我们试图回答以下问题时，复杂性就显现出来了。</p> 
+         <ul>
+          <li>- 应该使用什么合适的度量标准（metrics）？也就是如何取目标函数</li>
+          <li>- 如何计算度量（metrics）的梯度？也就是如何计算目标函数对应的 gradient，到时候会出现 policy gradient 定理</li>
+         </ul> 
+         <p>本讲座将详细解答这些问题。</p> 
+         <hr> 
+         <h3 id="%E4%BA%8C.%E5%AE%9A%E4%B9%89%E6%9C%80%E4%BC%98%E7%AD%96%E7%95%A5%E7%9A%84%20metrics%EF%BC%8C%E4%B9%9F%E5%B0%B1%E6%98%AF%20objective%20function%20%E6%98%AF%E4%BB%80%E4%B9%88">二.定义最优策略的 metrics，也就是 objective function 是什么</h3> 
+         <p><strong>有两个 metrics。metrics 是评价一个策略好坏的函数</strong><br><strong>第一个 metric 是平均状态值（average state value），简称平均值（average value）</strong>，其实就是 <span style="background-color:#fbd4d0;">state value 的加权平均</span>。具体来说，该指标定义为</p> 
+         <p><img alt="" height="277" src="https://i-blog.csdnimg.cn/blog_migrate/0f2cd53645d60ae8e43c59862ebe0e49.png" width="974"></p> 
+         <p>v_π(s) 对应 s 的 state value，d(s) 是给 s 的权重，这个权重是大于等于 0 的，并且所有权重之和等于 1，按照上式加起来就是&nbsp;v_π(s) 的一个加权平均，得到的数就认为是 metric，用&nbsp;v_π bar 表示，上面的横线代表平均的意思</p> 
+         <p><span style="background-color:#fbd4d0;">&nbsp;v_π bar 是策略的函数，不同的策略对应它的值也不同，所以就可以去优化，找到一个最优的策略让这个值达到最大</span></p> 
+         <p><img alt="" height="376" src="https://i-blog.csdnimg.cn/blog_migrate/d8fb40aefba920d05d308ac09b9ada4d.png" width="849"></p> 
+         <ul>
+          <li>v¯π 是 state value 的加权平均。</li>
+          <li>d(s) ≥ 0 是状态 s 的权重。</li>
+          <li><span style="background-color:#fbd4d0;">所有的&nbsp;d(s) 之和为 1，这时候&nbsp;d(s) 不仅可以理解为权重，也可以理解是 probability distribution，也就是&nbsp;d(s) 代表了状态 s 被选中的概率，在这种情况下，刚才的 objective function 可以被写成下面这个样子：</span></li>
+         </ul> 
+         <p class="img-center"><img alt="" height="136" src="https://i-blog.csdnimg.cn/blog_migrate/5a3642adcf2f5c86349b9c44220dc97a.png" width="372"></p> 
+         <hr> 
+         <p>矢量乘积形式：</p> 
+         <p><img alt="" height="479" src="https://i-blog.csdnimg.cn/blog_migrate/fbab35e2ab2260d23f68a18776f696a2.png" width="914"></p> 
+         <p>相乘再相加得式子可以写成两个向量的内积，d 和 v_π 对应两个向量，它们当中的每一个元素都对应一个状态，d(s) 对应状态 s 的权重或者说概率，v_π(s) 对应的是 s 的 state value</p> 
+         <p><span style="background-color:#fbd4d0;">当我们分析如何求解 v_π bar 的梯度时，这个简介的表达式特别有用。</span></p> 
+         <hr> 
+         <p><strong>如何选择分布 d(s)？ 有两种情况。</strong><br><strong>第一种情况是 d(s)&nbsp;与策略&nbsp;π 无关</strong>。</p> 
+         <ul>
+          <li>这种情况比较简单，因为好求梯度。如果 d 和&nbsp;π 无关，那我待会求它的梯度的时候，这个 d 不涉及到任何的梯度，我只需要求一个 v_π&nbsp; 的梯度&nbsp;</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="104" src="https://i-blog.csdnimg.cn/blog_migrate/f98f37c466ba247c8516157a4cb0f5f1.png" width="245"></p> 
+         <ul>
+          <li>如果 d 和&nbsp;π 有关，那么求梯度的时候也要求这个&nbsp;d 关于 π 的梯度，会更麻烦</li>
+          <li>在这种情况下，为了表明 d 和&nbsp;π 无关，把 d 写成 d0，v_π bar 写成&nbsp;v_π bar 0</li>
+         </ul> 
+         <p><img alt="" height="271" src="https://i-blog.csdnimg.cn/blog_migrate/5833938b58b56ae79df376ab40abf448.png" width="947"></p> 
+         <blockquote> 
+          <p>这里取期望应该是类比tabular form里的任意state，因为这里是function form，没办法遍历所有的state，所以用了期望，表示一个policy总体意义上优于另一个</p> 
+         </blockquote> 
+         <p>如何选择 d0?</p> 
+         <ul>
+          <li>- 一种微不足道的方法是将所有状态同等对待，每个状态我给它的权重或者是概率都是相同的，因此选择 d0(s) = 1/|S|，|S|=n 也就是状态的个数。</li>
+          <li>- 另一种重要的情况是，我们只对特定的状态 s0 感兴趣。例如，某些任务中的 episodes 总是从相同的状态 s0 开始。那么，从那出发我希望我得到的 reward 越大越好，我们只关心从 s0 开始的长期回报。在这种情况下，我们对一些状态有所偏好。在这种情况下，我之关心 s0，从 s0 出发我所得到的 reward 越大越好：</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="131" src="https://i-blog.csdnimg.cn/blog_migrate/47a8681015c844cdf9edd865146a0366.png" width="481"></p> 
+         <p>给 s0 的权重是 1，不是 s0 的权重是 0，我最大化&nbsp;&nbsp;v_π bar 其实就是最大化我从 s0 出发能得到多大的 return</p> 
+         <hr> 
+         <p><strong>第二种情况是 d(s)&nbsp;与策略&nbsp;π 有关</strong></p> 
+         <p><strong>把 d 写成 d_π，d_π 是依赖于&nbsp;π 的一个分布</strong></p> 
+         <p>平稳分布，就是我有一个策略，然后我跟随那个策略去不断地和环境进行交互，当我执行那个策略很多很多次后，我就可以预测 agent 在某一个状态的概率是多少，那时候会逐渐达到一个平稳的状态，而且这个概率其实可以直接通过式子给计算出来：</p> 
+         <p class="img-center"><img alt="" height="96" src="https://i-blog.csdnimg.cn/blog_migrate/fc04db41d9a93f6788d47a88fa6396ab.png" width="206"></p> 
+         <p><img alt="" height="491" src="https://i-blog.csdnimg.cn/blog_migrate/ff7e35adbae4adb812a0492c28c66f98.png" width="1003"></p> 
+         <p>也就是知道 Pπ 之后我可以直接把 d_π 给求解出来。d_π 是依赖于&nbsp;π 的一个 distribution</p> 
+         <blockquote> 
+          <p>不是的，d是稳定下来之后每一个在每一个state的概率，用来算平均reward的</p> 
+         </blockquote> 
+         <p>这时候我根据一个策略去执行，肯定有的状态我访问的多一些，有的状态访问的少一些，访问多的那个状态它对应的&nbsp;d_π(s) 相对来说会更大，我给他的权重也会大一些，访问少的那些状态它的权重会少一些</p> 
+         <p><img alt="" height="213" src="https://i-blog.csdnimg.cn/blog_migrate/b6d1702908f1c15abaef0c13d32b3d58.png" width="856"></p> 
+         <p>选择 dπ 的解释如下。</p> 
+         <ul>
+          <li>如果一个状态在长期内经常被访问，那么它就更重要，权重更高。</li>
+          <li>如果一个状态很少被访问，那么我们就会降低它的权重。</li>
+         </ul> 
+         <hr> 
+         <p><strong>第二个 metric 是平均一步奖励（average one-step reward）或简称平均奖励（average reward）</strong>。具体来说，该 metric 是</p> 
+         <p><img alt="" height="271" src="https://i-blog.csdnimg.cn/blog_migrate/976294e64adaf165afaed702fc7d63a5.png" width="956"></p> 
+         <p>r_π(s) 是我从 s 出发所得到的单步的，就是 immediate reward 的一个平均值，d_π(s) 是 s 对应的权重，从下标可以看出，它是一个 stationary distribution，它是依赖于策略&nbsp;π 的</p> 
+         <p>把&nbsp;r_π(s) 做一个加权平均就得到了第二个 metric&nbsp;r_π bar，bar 代表平均。因为&nbsp;d_π(s) 是一个概率分布，就可以把和式写成一个 expectation 的形式</p> 
+         <p><img alt="" height="1041" src="https://i-blog.csdnimg.cn/blog_migrate/3493d85d00240880a1468a6c1fb222a1.png" width="1200"></p> 
+         <p>r(s,a) 是我在（s,a）得到的 immediate reward，我对这个 a 求加权平均或者求 expectation 就可以得到&nbsp;r_π(s)，这个是在 s 我所得到的 immediate reward 的一个平均值，然后我在对 s 求加权平均就得到了&nbsp;r_π bar，就是第二个 metric</p> 
+         <blockquote> 
+          <p>（s,a）对应的奖励也是不确定的吗</p> 
+          <ul>
+           <li>是不确定的，就是reward probability，只不过前面的例子的reward都是确定的即为1</li>
+           <li>不是不确定，是因为我们只有数据，所以只能通过数据的分布拿到一个expection来代表reward</li>
+           <li>action是随机的，所以reward也是随机的。比如网格那个问题，即使往目标走一定是最优的，但policy还是会给其他方向一定的小概率</li>
+           <li>不确定的，因为从当前状态做出行动到下个状态是不确定的</li>
+           <li>reward是确定的</li>
+          </ul> 
+          <p>采取一个action不是只有一个reward吗 这就很尬</p> 
+          <ul>
+           <li>采取一个a，可能转移到不同的s'，自然奖励不一样。再说即使转移到相同的s'，也可以有多种奖励</li>
+           <li>前面的同学，r given s, a存在不固定的情况；因为s也许没包含这个世界所有的信息</li>
+           <li>也就是说你所求的那个状态的s本身也是不确定的，并且你在状态s采取的action也是不确定的。再而且你采取action后的奖励也是不确定的</li>
+           <li>这里的formula都是最generalized的形式，之前的example都是非常简单的、s和a确定后r也确定的形式</li>
+          </ul> 
+         </blockquote> 
+         <ul>
+          <li>- 权重 dπ 是静态分布。</li>
+          <li>- 顾名思义，r¯π 只是一步即时奖励的加权平均值。</li>
+         </ul> 
+         <hr> 
+         <p>下面要给第二个 reward 的另外一种形式，在论文和书籍中经常遇到，等价定义如下：<br> - 假设一个 agent 遵循给定的策略并生成一条轨迹，沿着这个 trajectory得到了很多的奖励 reward 为 (Rt+1，Rt+2，......)。<br> - 沿着这条轨迹的平均单步奖励为</p> 
+         <p><img alt="" height="956" src="https://i-blog.csdnimg.cn/blog_migrate/f6d59e9797e5c7351222d7b9c6261c43.png" width="1200"></p> 
+         <p>这个就代表我从某一个状态出发，跑无穷多步，但这时候不是求所有 reward 的和，而是跑无穷多步 reward 的平均</p> 
+         <blockquote> 
+          <ul>
+           <li>我大概明白意思了，因为dpi是和状态s根据策略被访问的频率有关，所以随机漫步的时候求和正好就隐含了频率这个因数，频率越高被累加的频次也越高</li>
+           <li>感觉像是因为对n个随机变量R之和求期望，所以要除以n</li>
+           <li>sorry，我错了，不是dpi，而是策略的p_pi</li>
+           <li>不加n就是和的期望，加n就是单步的</li>
+          </ul> 
+         </blockquote> 
+         <p><img alt="" height="1169" src="https://i-blog.csdnimg.cn/blog_migrate/14af7aa667048aafdce863ae75eec2a3.png" width="1200"></p> 
+         <blockquote> 
+          <p>这里为什么要乘n分之1啊，期望E不是就平均了吗</p> 
+          <ul>
+           <li>那是n个随机变量的和的期望，不是一个随机变量的期望</li>
+           <li>把期望符号写到求和号内就好理解了</li>
+           <li>E是对每个状态的期望</li>
+           <li>R是随机变量，每一个新时刻获得的r都是服从概率分布的，E是求R在每一时刻的均值（它们有大有小），再求和。这里除以n是求每一步（时刻）r的平均</li>
+           <li>就像上学经常走过的一条路(不要太宽，平稳的），走的次数多了，时间上平均大致为中线，统计上对这条路而言，也是中线</li>
+           <li>平均的是n步的return，这个return在n趋向无穷的时候，是趋向无穷的，除以n就是一个可以衡量的标量了</li>
+           <li>平稳随机过程的各态历经性： 时间平均等于统计平均</li>
+           <li>里面是n个随机变量，所以要乘以n/1</li>
+           <li>因为平稳分布下的均值就是执行无穷多步后的平均呀</li>
+           <li>这不就是stationnary distribution吗 呜呜呜</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <p><strong>关于 metric 的备注 1：</strong></p> 
+         <ul>
+          <li><span style="background-color:#fbd4d0;">- 所有这些 metric 都是策略 π 的函数，无论是 v_π bar 还是 r_π bar。</span></li>
+          <li><span style="background-color:#fbd4d0;">- 策略 π 的参数是 θ，由于 π 由 θ 参数化，因此这些 metric 是 θ 的函数，无论是 v_π bar 还是 r_π bar 都是 θ 的函数。那么不同的&nbsp;θ 就会得到不同的 metric 的值，里面就会有一个最优的，我希望能够去优化然后找到这个最优的&nbsp;θ 去最大化这些 metric</span></li>
+          <li>- 换句话说，不同的 θ 值会产生不同的 metric 值。</li>
+          <li>- 因此，我们可以寻找最优的 θ 值，使这些 metrics 最大化。</li>
+         </ul> 
+         <p>这就是策略梯度法（policy gradient methods）的基本思想。</p> 
+         <p><img alt="" height="449" src="https://i-blog.csdnimg.cn/blog_migrate/1e5706af7052e53c9389d3db593b2c64.png" width="1005"></p> 
+         <hr> 
+         <p><strong>关于 metric 的备注 2：</strong></p> 
+         <ul>
+          <li>- 一个复杂的问题是，metric 既可以在&nbsp;discounted rate&nbsp;γ∈ (0, 1) 的 discounted case 情况下定义，也可以在 γ = 1 的 undiscounted case 情况下定义。</li>
+          <li>- 我们在本书中只考虑 discounted case 情况，之所以会出现 undiscounted case，是因为刚才我们介绍的 r_π bar 这个 metric，它是对 immediate reward 求一个平均，它不是对 return 求平均，不求 return 那所有我也不需要考虑这个 discounted rate，所以 r_π bar 对 discounted case&nbsp;和 undiscounted case 都成立。有关 undiscounted case 情况的详细信息，请参阅本书。</li>
+         </ul> 
+         <p><img alt="" height="328" src="https://i-blog.csdnimg.cn/blog_migrate/38d2ad93eb549a048a8f67fab89b0dcb.png" width="968"></p> 
+         <hr> 
+         <p><strong>关于 metric 的备注 3：</strong></p> 
+         <p><img alt="" height="422" src="https://i-blog.csdnimg.cn/blog_migrate/adb8995e55ae8b62a11248b66021a091.png" width="995"></p> 
+         <ul>
+          <li>- 从直观上看，r¯π 更为短视，因为它只考虑了即时回报，而 v¯π 则考虑了整个步骤的总回报。</li>
+          <li>- 其实，这两个指标是等价的。等价不是说相等，而是满足下面这个等式，在 γ &lt; 1 的 discounted case 情况下，可以认为</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="86" src="https://i-blog.csdnimg.cn/blog_migrate/e4349791248992b427a4bb5879026e5f.png" width="256"></p> 
+         <p>我对其中一个做优化的时候，另一个也达到了极值</p> 
+         <hr> 
+         <p>练习：</p> 
+         <p>你会在文献中经常看到下面的指标：</p> 
+         <p><img alt="" height="964" src="https://i-blog.csdnimg.cn/blog_migrate/2c726f583086ae0deb3fe2e1a3fc0951.png" width="1200"></p> 
+         <p>它与我们刚才介绍的指标有什么关系？</p> 
+         <p><img alt="" height="1178" src="https://i-blog.csdnimg.cn/blog_migrate/27e811f2ac0680f6d93373f834276c3d.png" width="1200"></p> 
+         <hr> 
+         <h3 id="%E4%B8%89.objective%20function%20%E7%9A%84%20gradient" style="background-color:transparent;">三.objective function 的 gradient</h3> 
+         <p>objective function（metrics）对应的 gradient 是什么</p> 
+         <p><img alt="" height="588" src="https://i-blog.csdnimg.cn/blog_migrate/78ac3b4c67a91f379c04a6bac5964619.png" width="988"></p> 
+         <p>给定一个 metric，我们接下来</p> 
+         <ul>
+          <li>- 得出其梯度</li>
+          <li>- 然后，运用基于梯度的方法优化 metric</li>
+         </ul> 
+         <p>梯度计算是策略梯度法中最复杂的部分之一，梯度计算是最复杂的部分之一！这是因为：</p> 
+         <ul>
+          <li>- 首先，我们需要区分不同的 metric&nbsp;&nbsp;v¯π、r¯π、v¯π0，v_π bar 0 指的是 s 的分布与&nbsp;π 无关，它是&nbsp;v_π bar 的一个特殊情况</li>
+          <li>- 其次，我们需要区分 discounted and undiscounted cases 情况。</li>
+         </ul> 
+         <p>不同的目标函数和不同的情况排列组合一下，每种情况计算 gradient 都是不同的&nbsp;</p> 
+         <p>梯度的计算：</p> 
+         <ul>
+          <li>- 我们将不在本讲座中讨论细节，只作简要介绍，只给出一个公式。</li>
+          <li>- 有兴趣的读者可以参阅我的著作。</li>
+         </ul> 
+         <hr> 
+         <p>梯度的结果：</p> 
+         <p><img alt="" height="904" src="https://i-blog.csdnimg.cn/blog_migrate/d81729816a0d642c3c48ff4391cb40e5.png" width="1200"></p> 
+         <p>以上所有的情况求出来的 gradient 大同小异，所以就用上面这一个式子标识出来了</p> 
+         <p>书里有详细推导，在此简单讲解：</p> 
+         <p><img alt="" height="1062" src="https://i-blog.csdnimg.cn/blog_migrate/8b91dfcf5fa418d56ed939c4e475be6a.png" width="1200"></p> 
+         <hr> 
+         <p>一种简洁实用的梯度形式：</p> 
+         <p><img alt="" height="1112" src="https://i-blog.csdnimg.cn/blog_migrate/694ed4fb3b8a7c62aa7dadec82b67f97.png" width="1200"></p> 
+         <p><strong>为什么需要这个式子？</strong>&nbsp;</p> 
+         <ul>
+          <li><span style="background-color:#fbd4d0;">因为这是一个真实的梯度，这个真实的梯度里含有 expectation，我不知道 expectation，就可以用采样来近似 expectation，这个就是 stochastic gradient descent 或者是 ascent 基本的思路，待会就会用 stochastic gradient 来做优化</span></li>
+          <li>因为我们可以用样本来逼近梯度</li>
+         </ul> 
+         <p><strong>如何得到这个式子？证明&nbsp;</strong></p> 
+         <p><img alt="" height="908" src="https://i-blog.csdnimg.cn/blog_migrate/ce3b8bff2b2d97280c0f558aa58eebdc.png" width="1200"></p> 
+         <p><img alt="" height="792" src="https://i-blog.csdnimg.cn/blog_migrate/8ee12ae0df45b276d00ed0c1dd7d1d7b.png" width="1200"></p> 
+         <hr> 
+         <p>要想使用 ln，π 必须是大于 0 的，我们之前介绍了很多 greedy policy 或者 deterministic policy，它们对于某些 action 的&nbsp;π 等于 0，在这里面不能这样，那么如何确保所有的&nbsp;π 对所有的 a 都大于 0 呢？</p> 
+         <p>这可以通过使用 softmax function 来归一化，该函数可以将（-∞，+∞）上的一些数归一化为（0，1）区间，该函数可以将向量中的条目从（-∞，+∞）归一化为（0，1）。</p> 
+         <p><img alt="" height="1114" src="https://i-blog.csdnimg.cn/blog_migrate/b1df20feb7ce68b716e014824f649c73.png" width="1200"></p> 
+         <p>h 是另外一个函数，类似于之前介绍 value function approximation 中的 feature vector，也就是对应（s,a）它有一个 feature function，之前选取 feature function 很麻烦，现在全都是神经网络</p> 
+         <blockquote> 
+          <ul>
+           <li>softmax激活函数</li>
+           <li>最后一层网络用softmax()函数</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <p><img alt="" height="439" src="https://i-blog.csdnimg.cn/blog_migrate/9852ef9af08a23e5bdeeb9c47ef0530c.png" width="991"></p> 
+         <p>也就是假如有一个神经网络，输入为 s，参数为 θ，这个神经网络直接就可以把&nbsp;π(a1|s,θ)，π(a2|s,θ)，...，π(a5|s,θ) 输出出来（如果有 5 个 action），它的输出层要用 softmax，那么自然得到的所有的这些数都是在 （0，1）区间，并且相加等于 1</p> 
+         <p class="img-center"><img alt="" height="160" src="https://i-blog.csdnimg.cn/blog_migrate/a3161db7c953df0d8f20011db93da78f.png" width="404"></p> 
+         <ul>
+          <li>这种基于 softmax 函数的形式可以通过一个神经网络来实现，该网络的输入为 s，参数为 θ。该网络有 |A| 个输出，每个输出对应一个动作 a 的 π(a|s,θ)。&nbsp;输出层的激活函数应为 softmax。</li>
+          <li><span style="background-color:#fbd4d0;">因为策略对每一个 a 都大于 0，所以这个策略是 stochastic 的，自然也是探索性的</span></li>
+          <li>下节课会介绍 deterministic policy 的方法，那时候就不需要这个条件了，它也有优势，刚才我们要输出每一个 action 对应的 action 的&nbsp;π，那么如果 action 是无穷多个怎么办呢？这时候这种方法就不行了，但是 deterministic 方法可以</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="117" src="https://i-blog.csdnimg.cn/blog_migrate/bde846bde1855d416391c1edbd4b4402.png" width="151"></p> 
+         <blockquote> 
+          <p>&nbsp;无穷多个action意思就是连续的action space了吧？</p> 
+         </blockquote> 
+         <h3 id="%E5%9B%9B.%E6%A2%AF%E5%BA%A6%E4%B8%8A%E5%8D%87%E7%AE%97%E6%B3%95%EF%BC%88REINFORCE%EF%BC%89">四.梯度上升算法（REINFORCE）</h3> 
+         <p>怎么用这个 gradient 做优化得到最优的策略</p> 
+         <p>在这一节我们会把梯度带入梯度上升的算法中去优化，然后会给出第一个，最简单的 policy gradient 的算法，叫 REINFORCE</p> 
+         <p>现在，我们准备介绍第一种策略梯度算法，以找到最优策略！</p> 
+         <p>最大化 J(θ) 的梯度上升算法是：</p> 
+         <p><img alt="" height="347" src="https://i-blog.csdnimg.cn/blog_migrate/b4f8ddd3e4d2d7f197af5c367efb9c12.png" width="975"></p> 
+         <p>这个在实际当中不能用，因为有一个 expectation，这就涉及到了状态的分布，如果知道了所有的信息，这个分布就可以确定下来，但是环境的模型等等我们都不知道，这时候无法计算 expectation，所以我们要用随机的梯度代替真实的梯度</p> 
+         <p><img alt="" height="156" src="https://i-blog.csdnimg.cn/blog_migrate/c6bb09e9ca8e7379b4dcbcf34b1e9c1c.png" width="791"></p> 
+         <p>这个式子其实也不能用，因为里面有一个&nbsp;q_π，是策略&nbsp;π 对应的真实的 action value，那怎么办呢？我们用一个方法来近似或对&nbsp;q_π 进行采样，把&nbsp;q_π 换成&nbsp;q_t</p> 
+         <p><img alt="" height="160" src="https://i-blog.csdnimg.cn/blog_migrate/97c133213c4ecbe89d18e9d99644a898.png" width="822"></p> 
+         <p>那怎么来来近似或对&nbsp;q_π 进行采样呢？有几种方法：</p> 
+         <ul>
+          <li>第一种方法是基于蒙特卡洛的方法，也是最直观的，我要估计&nbsp;q_π(s,a)，那我就从&nbsp;(s,a) 出发得到一个 episode，我计算这个 episode 的 return 为 g，这个 g 其实就是&nbsp;q_t(s,a)，我就用这个来近似&nbsp;q_π。基于这个方法并且和 policy gradient 算法相结合就得到一个算法叫 REINFORCE</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="142" src="https://i-blog.csdnimg.cn/blog_migrate/6ca638a347fd7924eab77e6d63d8736a.png" width="464"></p> 
+         <ul>
+          <li>除了这个方法，还有一些其它算法，比如 TD，这就引出了 actor-critic 一系列算法，会在下一节课介绍</li>
+         </ul> 
+         <p><img alt="" height="179" src="https://i-blog.csdnimg.cn/blog_migrate/bcb78ed251354c5932746385dc0f30c9.png" width="822"></p> 
+         <blockquote> 
+          <p>但是如果都要用MC或者TD为什么不直接value base？</p> 
+          <ul>
+           <li>&nbsp;因为这样交替迭代收敛会更快吧</li>
+           <li>本节一开始就讲了呀，该类方法优势在于可缓解"pi表格"高维的问题</li>
+           <li>value based的主要问题是策略的泛化性不好。虽然在这里也需要估计q，但是只是在更新策略梯度时计算而已</li>
+           <li>直接更新策略,更快</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <p><strong>备注 1：如何进行采样？</strong></p> 
+         <p><img alt="" height="996" src="https://i-blog.csdnimg.cn/blog_migrate/7d4718264ebc546c497e61ed8bcbf87d.png" width="1200"></p> 
+         <p>如何采样 S？</p> 
+         <ul>
+          <li><span style="background-color:#fbd4d0;">S 服从 d 分布 或者说是 </span><img alt="\eta" class="mathcode" src="https://latex.csdn.net/eq?%5Ceta"><span style="background-color:#fbd4d0;">&nbsp;分布</span>，这个分布代表了一种长期，就是我跑了很久之后我所得到的一种对 S 的分布，但是在实际中我们不会这么做，因为有数据就不错了，我们不会说要采很久之后等他达到那个平稳的状态如何再去用这个数据，所以这个我们在实际中不太考虑，不用在意</li>
+         </ul> 
+         <p>如何采样 A？</p> 
+         <ul>
+          <li>根据理论上的要求，A 应该服从&nbsp;π，所以我在 st 应该根据当前的这个&nbsp;π 采这个 a</li>
+          <li>所以，policy gradient 在这里应该是 on policy 的算法，因为它的 behavior policy 是&nbsp;π(θt)，target policy 也是&nbsp;π(θt)，因为它在不断改进，改进完了后立刻用它生成新的数据然后再改进我自己</li>
+          <li>也有 off policy 的情况，但是需要额外技巧，在下节课会介绍</li>
+         </ul> 
+         <hr> 
+         <p><strong>备注 2：如何理解算法？</strong></p> 
+         <p><img alt="" height="1043" src="https://i-blog.csdnimg.cn/blog_migrate/3b9e5288d456b27e9b4fb30c7b301b3a.png" width="1200"></p> 
+         <p><img alt="" height="1144" src="https://i-blog.csdnimg.cn/blog_migrate/c3063ddb730bc5312e76bffc19c233a2.png" width="1200"></p> 
+         <p><img alt="" height="1101" src="https://i-blog.csdnimg.cn/blog_migrate/f7eec349f86e28115d5c85f78c0a7456.png" width="1200"></p> 
+         <p>系数 βt 可以通过分子和分母这两项很好地平衡探索和开发（充分利用）。</p> 
+         <p>首先，βt 分子为 qt（st，at），βt 与 qt（st，at）成正比。</p> 
+         <ul>
+          <li>qt 越大，βt 越大，π(at|st) 这个值会被增大，意思就是，如果这个 action 之前它的 action value 比较大，那么我会给他更大的概率选择这个 action，这是再做 exploitation，也就是充分利用，我都知道那个 action 能给我更大的 action value 了，我干嘛不去给他更大的概率选择它？</li>
+         </ul> 
+         <p>第二，βt 分母为&nbsp;π，所以&nbsp;βt 与&nbsp;π 成反比</p> 
+         <ul>
+          <li>π(at|st) 越小，βt 越大，那么&nbsp;π(at|st) 越大，大的&nbsp;βt 在&nbsp;θt+1 的情况下会得到更大的&nbsp;π(at|st)。这个意思是如果之前我选择 at 的概率比较小，那么我会在下个时刻给他更大的概率去选择它，这是在做探索 exploration</li>
+         </ul> 
+         <blockquote> 
+          <p>可是你没有说beta负数的情况啊</p> 
+          <p>q是负的就为负了</p> 
+         </blockquote> 
+         <hr> 
+         <p><img alt="" height="752" src="https://i-blog.csdnimg.cn/blog_migrate/836f5f3749b2b43654bfc252a5858ef6.png" width="1200"></p> 
+         <ul>
+          <li>刚才介绍过有一些方法可以求出&nbsp;qt，也就是我从（st,at）出发得到一个 episode，我把这个 episode 的 return gt 赋值给 qt，这就是蒙特卡洛的方法，如果是这样，那么这个 policy gradient 的算法就被称为 REINFORCE</li>
+          <li>REINFORCE 是最早和最简单的策略梯度算法之一。</li>
+          <li>许多其他策略梯度算法，如 actor-critic methods，都可以通过扩展 REINFORCE 得到（下一讲）</li>
+         </ul> 
+         <p><img alt="" height="286" src="https://i-blog.csdnimg.cn/blog_migrate/09ccccf1ec931bfaa7f8482f58a22f2c.png" width="984"></p> 
+         <hr> 
+         <p><img alt="" height="1121" src="https://i-blog.csdnimg.cn/blog_migrate/3babcf0c20ffeb48a0f386e5b8421aaf.png" width="1200"></p> 
+         <ul>
+          <li>为什么这里&nbsp;θt 更新成 θt+1 之后，θt+1 没有立刻去产生数据呢？因为这个方法是基于蒙特卡洛的方法，蒙特卡洛是 offline 的，是离线的，也就是你必须把所有的 episode 全部采集完之后，我才能开始跑，所以它不能我边更新我的&nbsp;θt 边采集。</li>
+          <li>之后我们介绍基于 TD 的方法的时候，就可以变成 online 的，就是我得到新的&nbsp;θt 就可以立刻去用来生成数据</li>
+         </ul> 
+         <blockquote> 
+          <ul>
+           <li>&nbsp;蒙特卡洛需要完整的轨迹&nbsp;</li>
+           <li>老师这里说的是on\off-line(是否采一步学一步)，你说的on-policy是指采样和部署策略是否是同一个</li>
+           <li>是offline不是off policy</li>
+           <li>因为要算q就要把时间跑完了，没办法t+1更新</li>
+           <li>MC可以on也可以off，这里老师强调的是不能在一个episode没完成的时候就更新策略</li>
+           <li>value update, 累加会产生大的方差</li>
+          </ul> 
+          <p>神经网络是哪一步出现的</p> 
+          <ul>
+           <li>神经网络就是策略函数</li>
+          </ul> 
+         </blockquote> 
+         <h3 id="%E4%BA%94.%E6%80%BB%E7%BB%93">五.总结</h3> 
+         <p><img alt="" height="371" src="https://i-blog.csdnimg.cn/blog_migrate/4771076c408dff09fd49560f1935016d.png" width="447"></p> 
+        </div> 
+       </div> 
+      </article>  
+     </div>        
+     <div id="pcCommentBox" class="comment-box comment-box-new2 login-comment-box-new" style="display:none"> 
+      <div class="has-comment" style="display:block"> 
+       <div class="one-line-box"> 
+        <div class="has-comment-tit go-side-comment"> 
+         <span class="count">0</span>&nbsp;条评论 
+        </div> 
+        <div class="has-comment-con comment-operate-item"></div> 
+        <a class="has-comment-bt-right go-side-comment focus">写评论</a> 
+       </div> 
+      </div> 
+     </div>     
+     <div class="blog-footer-bottom" style="margin-top:10px;"></div>   
+    </main> 
+    <aside class="blog_container_aside "> 
+     <div id="asideProfile" class="aside-box active"> 
+      <div class="profile-intro d-flex"> 
+       <div class="avatar-box d-flex justify-content-center flex-column"> 
+        <a href="https://blog.csdn.net/qq_64671439" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_379&quot;,&quot;spm&quot;:&quot;3001.4121&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1" class="avatar_pic"> </a> 
+       </div> 
+       <div class="user-info d-flex flex-column profile-intro-name-box"> 
+        <div class="profile-intro-name-boxTop"> 
+         <a href="https://blog.csdn.net/qq_64671439" target="_blank" class="" id="uid" title="leaf_leaves_leaf" data-report-click="{&quot;mod&quot;:&quot;popu_379&quot;,&quot;spm&quot;:&quot;3001.4122&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439&quot;,&quot;ab&quot;:&quot;new&quot;}"> <span class="name" username="qq_64671439">leaf_leaves_leaf</span> </a> 
+        </div> 
+        <div class="profile-intro-name-boxFooter-new"> 
+         <p class="profile-intro-name-leve"> <span> 博客等级 </span> <img class="level" src="https://csdnimg.cn/identity/blog5.png"> </p> 
+         <span class="profile-intro-name-years" title="已加入 CSDN 4年">码龄4年</span> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="profile-intro-rank-information"> 
+       <dl> 
+        <a href="https://blog.csdn.net/qq_64671439" data-report-click="{&quot;mod&quot;:&quot;1598321000_001&quot;,&quot;spm&quot;:&quot;3001.4310&quot;}" data-report-query="t=1"> 
+         <dd>
+          <span>84</span>
+         </dd> 
+         <dt>
+          原创
+         </dt> </a> 
+       </dl> 
+       <dl title="1639"> 
+        <dd>
+         1639
+        </dd> 
+        <dt>
+         点赞
+        </dt> 
+       </dl> 
+       <dl title="3070"> 
+        <dd>
+         3070
+        </dd> 
+        <dt>
+         收藏
+        </dt> 
+       </dl> 
+       <dl id="fanBox" title="5600"> 
+        <dd>
+         <span id="fan">5600</span>
+        </dd> 
+        <dt>
+         粉丝
+        </dt> 
+       </dl> 
+      </div> 
+      <div class="profile-intro-name-boxOpration"> 
+       <div class="opt-letter-watch-box"> 
+        <a class="personal-watch bt-button" id="btnAttent">已关注</a> 
+       </div> 
+       <div class="opt-letter-watch-box"> 
+        <a rel="noopener" class="bt-button personal-letter" href="https://im.csdn.net/chat/qq_64671439" target="_blank">私信</a> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="swiper-slide-box-remuneration"> 
+      <a data-report-click="{&quot;spm&quot;:&quot;3001.9728&quot;,&quot;extra&quot;:{&quot;index&quot;:&quot;0&quot;}}" data-report-view="{&quot;spm&quot;:&quot;3001.9728&quot;,&quot;extra&quot;:{&quot;index&quot;:&quot;0&quot;}}" href="https://mp.csdn.net/edit?utm_source=blog" target="_blank"> <img src="https://i-operation.csdnimg.cn/images/bfc20af708654cc689adbb6361f6dc98.png" alt=""> </a> 
+     </div> 
+     <div id="asideHotArticle" class="aside-box"> 
+      <h3 class="aside-title">热门文章</h3> 
+      <div class="aside-content"> 
+       <ul class="hotArticle-list"> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135287166" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135287166&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细一次成功】Ubuntu 20.04 安装 ROS 详细教程 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">45445</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135293643" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135293643&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细】Ubuntu 下安装 Anaconda <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">34936</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135730107" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135730107&quot;,&quot;ab&quot;:&quot;new&quot;}"> 解决 Ubuntu 重启后输入 nvidia-smi 显示 no devices were found 的问题 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">25440</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135255536" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135255536&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细】解决联想拯救者Y7000p在ubuntu20.04未找到wifi适配器,安装rtl8852ce网卡驱动问题 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">10751</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135490585" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135490585&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细】双系统 Ubuntu 如何给根目录扩容 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">9331</span> </a> </li> 
+       </ul> 
+      </div> 
+     </div> 
+     <div id="asideCategory" class="aside-box aside-box-column flexible-box-new"> 
+      <h3 class="aside-title">分类专栏</h3> 
+      <div class="aside-content" id="aside-content"> 
+       <ul> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12935633.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12935633.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756925.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> openrealm </span> </a> <span class="special-column-num">3篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12994944.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12994944.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 语义分割 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824105.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824105.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> PX4 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12947656.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12947656.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 力扣 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824116.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824116.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 挑战杯 </span> </a> <span class="special-column-num">6篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12562527.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12562527.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756724.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> ubuntu </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12659611.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12659611.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756780.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 强化学习PPO </span> </a> <span class="special-column-num">2篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12696741.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12696741.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756928.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 强化学习避障项目 </span> </a> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561778.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561778.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756918.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> AirSim </span> </a> <span class="special-column-num">4篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12540921.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12540921.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 【强化学习的数学原理-赵世钰】课程笔记 </span> </a> <span class="special-column-num">10篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12735220.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12735220.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> ros练习 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12564618.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12564618.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756913.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> word 排版 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561800.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561800.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> github上的代码运行修改 </span> </a> </li> 
+       </ul> 
+      </div> 
+      <p class="text-center"> <a class="flexible-btn-new" data-report-click="{&quot;spm&quot;:&quot;3001.10779&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-maxheight="0" data-minheight="208px" data-fbox="#aside-content" data-flag="flag"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></a> <a class="flexible-btn-new-close" data-report-click="{&quot;spm&quot;:&quot;3001.10779&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-minheight="208px" data-fbox="#aside-content" data-scroll="true" data-flag="flag"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></a> </p> 
+     </div> 
+     <div class="article-previous" id="article-previous"> 
+      <dl data-report-click="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}"> 
+       <dt>
+         上一篇： 
+       </dt> 
+       <dd> 
+        <a href="https://blog.csdn.net/qq_64671439/article/details/136629758" data-report-query="spm=3001.10752"> 【强化学习的数学原理-赵世钰】课程笔记（八）值函数近似（value function approximation） </a> 
+       </dd> 
+      </dl> 
+      <dl class="next" data-report-click="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}"> 
+       <dt>
+         下一篇： 
+       </dt> 
+       <dd> 
+        <a href="https://blog.csdn.net/qq_64671439/article/details/137611583" data-report-query="spm=3001.10796"> 【强化学习的数学原理-赵世钰】课程笔记（十）Actor-Critic 方法 </a> 
+       </dd> 
+      </dl> 
+     </div> 
+     <div id="asideNewComments" class="aside-box"> 
+      <h3 class="aside-title">最新评论</h3> 
+      <div class="aside-content"> 
+       <ul class="newcomment-list"> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135293643#comments_37868975" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135293643#comments_37868975&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135293643#comments_37868975&quot;,&quot;ab&quot;:&quot;new&quot;}">【详细】Ubuntu 下安装 Anaconda</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/qq_63845677" class="user-name" target="_blank">就叫潇洒哥: </a> <span class="code-comments">文件目录下怎么打开终端？</span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135345465#comments_37822481" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135345465#comments_37822481&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135345465#comments_37822481&quot;,&quot;ab&quot;:&quot;new&quot;}">【强化学习的数学原理-赵世钰】课程笔记（五）蒙特卡洛方法</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/m0_69062172" class="user-name" target="_blank">m0_69062172: </a> <span class="code-comments">佬，你是通过什么做笔记的呀<img src="https://g.csdnimg.cn/static/face/emoji/004.png" alt="表情包"></span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/149597533#comments_37755289" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533#comments_37755289&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533#comments_37755289&quot;,&quot;ab&quot;:&quot;new&quot;}">win11升级更新后，wsl出现的各种问题</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/2401_82435300" class="user-name" target="_blank">2401_82435300: </a> <span class="code-comments">感谢老哥，试了一下真的可以，就这个问题困扰了我两三天了<img src="https://g.csdnimg.cn/static/face/emoji/010.png" alt="表情包"></span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135287166#comments_37736186" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135287166#comments_37736186&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135287166#comments_37736186&quot;,&quot;ab&quot;:&quot;new&quot;}">【详细一次成功】Ubuntu 20.04 安装 ROS 详细教程</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/jsjsbshahsh" class="user-name" target="_blank">jsjsbshahsh: </a> <span class="code-comments">为什么我的乌龟按键没反应啊</span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135305331#comments_37683175" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135305331#comments_37683175&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135305331#comments_37683175&quot;,&quot;ab&quot;:&quot;new&quot;}">【强化学习的数学原理-赵世钰】课程笔记（二）贝尔曼公式</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/2402_88137294" class="user-name" target="_blank">无敌蝌蚪哥: </a> <span class="code-comments">和滑冰差不多</span> </p> </li> 
+       </ul> 
+      </div> 
+     </div> 
+     <div id="asideHotArticle" class="aside-box"> 
+      <h3 class="aside-title">大家在看</h3> 
+      <div class="aside-content"> 
+       <ul class="hotArticle-list"> 
+        <li> <a href="https://blog.csdn.net/2403_85288168/article/details/150954511" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150954511&quot;,&quot;strategy&quot;:&quot;202_1052723-3250665_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150954511&quot;,&quot;strategy&quot;:&quot;202_1052723-3250665_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> Selenium WebDriver 驱动下载与使用 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">158</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_42910179/article/details/150935691" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42910179/article/details/150935691&quot;,&quot;strategy&quot;:&quot;202_1052723-3250656_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42910179/article/details/150935691&quot;,&quot;strategy&quot;:&quot;202_1052723-3250656_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【图像算法 - 25】基于深度学习 YOLOv11 与 OpenCV 实现人员跌倒识别系统（人体姿态估计版本） <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">828</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_32020645/article/details/150980105" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_32020645/article/details/150980105&quot;,&quot;strategy&quot;:&quot;202_1052723-3250660_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_32020645/article/details/150980105&quot;,&quot;strategy&quot;:&quot;202_1052723-3250660_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> Apache Flink连载（四十三）：Flink基于Kubernetes部署 - Kubernetes部署模式之Application Cluster-HA Application Cluster </a> </li> 
+        <li> <a href="https://blog.csdn.net/2403_85288168/article/details/150957908" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150957908&quot;,&quot;strategy&quot;:&quot;202_1052723-3250666_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150957908&quot;,&quot;strategy&quot;:&quot;202_1052723-3250666_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【解决办法】IntelliJ IDEA 里Java 文件图标显示为咖啡杯 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">113</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/luomoyoushang/article/details/150761248" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/luomoyoushang/article/details/150761248&quot;,&quot;strategy&quot;:&quot;202_1052723-3250661_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/luomoyoushang/article/details/150761248&quot;,&quot;strategy&quot;:&quot;202_1052723-3250661_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> 2025最新最全大模型八股文整理 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">892</span> </a> </li> 
+       </ul> 
+      </div> 
+     </div> 
+     <div id="asideArchive" class="aside-box" style="display:block!important; width:300px;"> 
+      <h3 class="aside-title">最新文章</h3> 
+      <div class="aside-content"> 
+       <ul class="inf_list clearfix"> 
+        <li class="clearfix"> <a href="https://blog.csdn.net/qq_64671439/article/details/149814959" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149814959&quot;,&quot;ab&quot;:&quot;left&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149814959&quot;,&quot;ab&quot;:&quot;left&quot;}">在VScode里运行并调试C++程序</a> </li> 
+        <li class="clearfix"> <a href="https://blog.csdn.net/qq_64671439/article/details/149597533" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533&quot;,&quot;ab&quot;:&quot;left&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533&quot;,&quot;ab&quot;:&quot;left&quot;}">win11升级更新后，wsl出现的各种问题</a> </li> 
+        <li class="clearfix"> <a href="https://blog.csdn.net/qq_64671439/article/details/148900674" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/148900674&quot;,&quot;ab&quot;:&quot;left&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/148900674&quot;,&quot;ab&quot;:&quot;left&quot;}">遥感图像语义分割1-安装mmsegmentation</a> </li> 
+       </ul> 
+       <div class="archive-bar"></div> 
+       <div class="archive-box"> 
+        <div class="archive-list-item">
+         <a href="https://blog.csdn.net/qq_64671439?type=blog&amp;year=2025&amp;month=08" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_538&quot;,&quot;spm&quot;:&quot;3001.4138&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439?type=blog&amp;year=2025&amp;month=08&quot;}"><span class="year">2025年</span><span class="num">13篇</span></a>
+        </div> 
+        <div class="archive-list-item">
+         <a href="https://blog.csdn.net/qq_64671439?type=blog&amp;year=2024&amp;month=12" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_538&quot;,&quot;spm&quot;:&quot;3001.4138&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439?type=blog&amp;year=2024&amp;month=12&quot;}"><span class="year">2024年</span><span class="num">60篇</span></a>
+        </div> 
+        <div class="archive-list-item">
+         <a href="https://blog.csdn.net/qq_64671439?type=blog&amp;year=2023&amp;month=12" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_538&quot;,&quot;spm&quot;:&quot;3001.4138&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439?type=blog&amp;year=2023&amp;month=12&quot;}"><span class="year">2023年</span><span class="num">11篇</span></a>
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <!-- 详情页显示目录 --> 
+     <!--文章目录--> 
+     <div id="asidedirectory" class="aside-box"> 
+      <div class="groupfile groupfile-active" id="directory"> 
+       <h3 class="aside-title">目录</h3> 
+       <div class="align-items-stretch group_item" id="align-items-stretch"> 
+        <div class="pos-box"> 
+         <div class="scroll-box"> 
+          <div class="toc-box"></div> 
+         </div> 
+        </div> 
+       </div> 
+       <p class="flexible-btn-new active" id="flexible-btn-groupfile" data-report-click="{&quot;spm&quot;:&quot;3001.10780&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></p> 
+       <p class="flexible-btn-new-close active" data-report-click="{&quot;spm&quot;:&quot;3001.10780&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></p> 
+      </div> 
+     </div> 
+    </aside>    
+   </div> 
+   <div class="recommend-right align-items-stretch clearfix" id="rightAside" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div class="rightside-fixed-hide"> 
+      <div class="recommend-column-box aside-box"> 
+       <h3 class="aside-title">相关专栏 </h3> 
+       <div class="aside-content"> 
+        <div class="recommend-column-itembox exp1"> 
+         <a href="https://blog.csdn.net/universsky2015/category_9462993.html" title="AI人工智能与大数据" target="_blank" data-report-view="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/universsky2015/category_9462993.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;137026601\&quot;,\&quot;recommendCount\&quot;:\&quot;5\&quot;,\&quot;index\&quot;:\&quot;0\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}" data-report-click="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/universsky2015/category_9462993.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;137026601\&quot;,\&quot;recommendCount\&quot;:\&quot;5\&quot;,\&quot;index\&quot;:\&quot;0\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}"> 
+          <div class="info-box"> 
+           <div class="img-box"> 
+            <div class="column-img" style="background-image: url(https://i-blog.csdnimg.cn/direct/ff1ae033849a4231b28a45e47e7faefa.png?x-oss-process=image/resize,m_fixed,h_224,w_224)" alt="AI人工智能与大数据" srcset=""></div> 
+           </div> 
+           <div class="info"> 
+            <div class="title-box"> 
+             <p class="title">AI人工智能与大数据</p> 
+             <p class="tag">专栏</p> 
+            </div> 
+            <p class="learn">1659 人学习</p> 
+           </div> 
+          </div> <p class="desc" title="深度解析MCP实战开发、AI大模型应用架构与大数据计算原理性能亮点，结合大数据洞察，揭示其在海量数据处理中的优势。同时，聚焦AI人工智能大模型，分享原理、训练技巧与优化策略。辅以金融、医疗等多领域应用案例，助你掌握技术精髓，把握行业趋势。">深度解析MCP实战开发、AI大模型应用架构与大数据计算原理性能亮点，结合大数据洞察，揭示其在海量数据处理中的优势。同时，聚焦AI人工智能大模型，分享原理、训练技巧与优化策略。辅以金融、医疗等多领域应用案例，助你掌握技术精髓，把握行业趋势。</p> </a> 
+        </div> 
+        <div class="recommend-column-itembox exp1"> 
+         <a href="https://blog.csdn.net/qq_42568323/category_12787177.html" title="进阶算法案例" target="_blank" data-report-view="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42568323/category_12787177.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;137026601\&quot;,\&quot;recommendCount\&quot;:\&quot;5\&quot;,\&quot;index\&quot;:\&quot;1\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}" data-report-click="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42568323/category_12787177.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;137026601\&quot;,\&quot;recommendCount\&quot;:\&quot;5\&quot;,\&quot;index\&quot;:\&quot;1\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}"> 
+          <div class="info-box"> 
+           <div class="img-box"> 
+            <div class="column-img" style="background-image: url(https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224)" alt="进阶算法案例" srcset=""></div> 
+           </div> 
+           <div class="info"> 
+            <div class="title-box"> 
+             <p class="title">进阶算法案例</p> 
+             <p class="tag">专栏</p> 
+            </div> 
+            <p class="learn">21 人学习</p> 
+           </div> 
+          </div> <p class="desc" title="欢迎订阅我们的CSDN付费专栏——进阶算法案例！
+
+在这个专栏中，我们将深入讲解各种优化算法的核心技术和实战应用。无论你是初学者还是有一定经验的开发者，都能在这里找到有价值的内容，提升你的技术水平。">欢迎订阅我们的CSDN付费专栏——进阶算法案例！ 在这个专栏中，我们将深入讲解各种优化算法的核心技术和实战应用。无论你是初学者还是有一定经验的开发者，都能在这里找到有价值的内容，提升你的技术水平。</p> </a> 
+        </div> 
+        <div class="recommend-column-itembox exp1"> 
+         <a href="https://blog.csdn.net/weixin_36829761/category_12717178.html" title="AGI通用人工智能" target="_blank" data-report-view="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/weixin_36829761/category_12717178.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;137026601\&quot;,\&quot;recommendCount\&quot;:\&quot;5\&quot;,\&quot;index\&quot;:\&quot;2\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}" data-report-click="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/weixin_36829761/category_12717178.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;137026601\&quot;,\&quot;recommendCount\&quot;:\&quot;5\&quot;,\&quot;index\&quot;:\&quot;2\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}"> 
+          <div class="info-box"> 
+           <div class="img-box"> 
+            <div class="column-img" style="background-image: url(https://i-blog.csdnimg.cn/direct/bc541d8ba8ea4031bded98bf4c0a84dc.png?x-oss-process=image/resize,m_fixed,h_224,w_224)" alt="AGI通用人工智能" srcset=""></div> 
+           </div> 
+           <div class="info"> 
+            <div class="title-box"> 
+             <p class="title">AGI通用人工智能</p> 
+             <p class="tag">专栏</p> 
+            </div> 
+            <p class="learn">83 人学习</p> 
+           </div> 
+          </div> <p class="desc" title="专注在 AGI通用人工智能 方面的科技">专注在 AGI通用人工智能 方面的科技</p> </a> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <div id="recommend-right"> 
+      <div class="flex-column aside-box groupfile groupfile-active " id="groupfile"> 
+       <div class="groupfile-div"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item" id="align-items-stretch-right"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+        <p class="flexible-btn-new" id="flexible-btn-groupfile" data-report-click="{&quot;spm&quot;:&quot;3001.10782&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-traigger="true" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch-right"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></p> 
+        <p class="flexible-btn-new-close close" data-report-click="{&quot;spm&quot;:&quot;3001.10782&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-traigger="true" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch-right"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></p> 
+       </div> 
+      </div> 
+      <div class="article-previous" id="article"> 
+       <dl data-report-click="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}"> 
+        <dt>
+          上一篇： 
+        </dt> 
+        <dd> 
+         <a href="https://blog.csdn.net/qq_64671439/article/details/136629758" data-report-query="spm=3001.10752"> 【强化学习的数学原理-赵世钰】课程笔记（八）值函数近似（value function approximation） </a> 
+        </dd> 
+       </dl> 
+       <dl class="next" data-report-click="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}"> 
+        <dt>
+          下一篇： 
+        </dt> 
+        <dd> 
+         <a href="https://blog.csdn.net/qq_64671439/article/details/137611583" data-report-query="spm=3001.10796"> 【强化学习的数学原理-赵世钰】课程笔记（十）Actor-Critic 方法 </a> 
+        </dd> 
+       </dl> 
+      </div> 
+      <div class="aside-box kind_person d-flex flex-column flexible-box-new"> 
+       <h3 class="aside-title">分类专栏</h3> 
+       <div class="align-items-stretch kindof_item" id="kind_person_column"> 
+        <div class="aside-content" id="aside-content-column"> 
+         <ul> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12935633.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12935633.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756925.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> openrealm </span> </a> <span class="special-column-num">3篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12994944.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12994944.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 语义分割 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824105.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824105.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> PX4 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12947656.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12947656.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 力扣 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824116.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824116.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 挑战杯 </span> </a> <span class="special-column-num">6篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12562527.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12562527.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756724.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> ubuntu </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12659611.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12659611.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756780.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 强化学习PPO </span> </a> <span class="special-column-num">2篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12696741.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12696741.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756928.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 强化学习避障项目 </span> </a> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561778.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561778.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756918.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> AirSim </span> </a> <span class="special-column-num">4篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12540921.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12540921.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 【强化学习的数学原理-赵世钰】课程笔记 </span> </a> <span class="special-column-num">10篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12735220.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12735220.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> ros练习 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12564618.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12564618.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756913.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> word 排版 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561800.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561800.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> github上的代码运行修改 </span> </a> </li> 
+         </ul> 
+        </div> 
+        <p class="text-center"> <a class="flexible-btn-new" data-report-click="{&quot;spm&quot;:&quot;3001.10783&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-traigger="true" data-maxheight="0" data-minheight="208px" data-fbox="#aside-content-column" data-flag="flag"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></a> <a class="flexible-btn-new-close" data-report-click="{&quot;spm&quot;:&quot;3001.10783&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-traigger="true" data-minheight="208px" data-fbox="#aside-content-column" data-scroll="true" data-flag="flag"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></a> </p> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+   <div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div id="recommend-right-concision"> 
+      <div class="flex-column aside-box groupfile" id="groupfileConcision"> 
+       <div class="groupfile-div1"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+  </div> 
+  <div class="mask-dark"></div> 
+  <div class="skin-boxshadow"></div> 
+  <div class="directory-boxshadow"></div> 
+  <div class="comment-side-box-shadow comment-side-tit-close" id="commentSideBoxshadow"> 
+   <div class="comment-side-content"> 
+    <div class="comment-side-tit"> 
+     <span class="comment-side-tit-count">评论</span> 
+     <img class="comment-side-tit-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/closeBt.png">
+    </div> 
+    <div id="pcCommentSideBox" class="comment-box comment-box-new2 " style="display:block"> 
+     <div class="comment-edit-box d-flex"> 
+      <div class="user-img"> 
+       <a href="https://blog.csdn.net/2501_92738035" target="_blank"> <img src="https://profile-avatar.csdnimg.cn/default.jpg!1"> </a> 
+      </div> 
+      <form id="commentform"> 
+       <textarea class="comment-content" name="comment_content" id="comment_content" placeholder="欢迎高质量的评论，低质的评论会被折叠" maxlength="1000"></textarea> 
+       <div class="comment-reward-box" style="background-image: url('https://img-home.csdnimg.cn/images/20230131025301.png');"> 
+        <a class="btn-remove-reward"></a> 
+        <div class="form-reward-box"> 
+         <div class="info">
+           成就一亿技术人! 
+         </div> 
+         <div class="price-info">
+           拼手气红包
+          <span class="price">6.0元</span> 
+         </div> 
+        </div> 
+       </div> 
+       <div class="comment-operate-box"> 
+        <div class="comment-operate-l"> 
+         <span id="tip_comment" class="tip">还能输入<em>1000</em>个字符</span> 
+        </div> 
+        <div class="comment-operate-c">
+          &nbsp; 
+        </div> 
+        <div class="comment-operate-r"> 
+         <div class="comment-operate-item comment-reward"> 
+          <img class="comment-operate-img" data-url="https://csdnimg.cn/release/blogv2/dist/pc/img/" src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentReward.png" alt="红包"> 
+          <span class="comment-operate-tip">添加红包</span> 
+         </div> 
+         <div class="comment-operate-item comment-emoticon"> 
+          <img class="comment-operate-img" data-url="https://csdnimg.cn/release/blogv2/dist/pc/img/" src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentEmotionIcon.png" alt="表情包"> 
+          <span class="comment-operate-tip">插入表情</span> 
+          <div class="comment-emoticon-box comment-operate-isshow"> 
+           <div class="comment-emoticon-img-box"></div> 
+          </div> 
+         </div> 
+         <div class="comment-operate-item comment-code"> 
+          <img class="comment-operate-img" data-url="https://csdnimg.cn/release/blogv2/dist/pc/img/" src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentCodeIcon.png" alt="表情包"> 
+          <span class="comment-operate-tip">代码片</span> 
+          <div class="comment-code-box comment-operate-isshow"> 
+           <ul id="commentCode"> 
+            <li><a data-code="html">HTML/XML</a></li> 
+            <li><a data-code="objc">objective-c</a></li> 
+            <li><a data-code="ruby">Ruby</a></li> 
+            <li><a data-code="php">PHP</a></li> 
+            <li><a data-code="csharp">C</a></li> 
+            <li><a data-code="cpp">C++</a></li> 
+            <li><a data-code="javascript">JavaScript</a></li> 
+            <li><a data-code="python">Python</a></li> 
+            <li><a data-code="java">Java</a></li> 
+            <li><a data-code="css">CSS</a></li> 
+            <li><a data-code="sql">SQL</a></li> 
+            <li><a data-code="plain">其它</a></li> 
+           </ul> 
+          </div> 
+         </div> 
+         <div class="comment-operate-item"> 
+          <input type="hidden" id="comment_replyId" name="comment_replyId"> 
+          <input type="hidden" id="article_id" name="article_id" value="137026601"> 
+          <input type="hidden" id="comment_userId" name="comment_userId" value=""> 
+          <input type="hidden" id="commentId" name="commentId" value=""> 
+          <a data-report-click="{&quot;mod&quot;:&quot;1582594662_003&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4227&quot;,&quot;ab&quot;:&quot;new&quot;}"> <input type="submit" class="btn-comment btn-comment-input" value="评论"> </a> 
+         </div> 
+        </div> 
+       </div> 
+      </form> 
+     </div> 
+     <div class="comment-list-container"> 
+      <div class="comment-list-box comment-operate-item"> 
+      </div> 
+      <div id="lookFlodComment" class="look-flod-comment"> 
+       <span class="count"></span>&nbsp;条评论被折叠&nbsp;
+       <a class="look-more-flodcomment">查看</a> 
+      </div> 
+      <div class="opt-box text-center"> 
+       <div class="btn btn-sm btn-link-blue" id="btnMoreComment"></div> 
+      </div> 
+     </div> 
+    </div> 
+    <div id="pcFlodCommentSideBox" class="pc-flodcomment-sidebox"> 
+     <div class="comment-fold-tit">
+      <span id="lookUnFlodComment" class="back"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentArrowLeftWhite.png" alt=""></span>被折叠的&nbsp;
+      <span class="count"></span>&nbsp;条评论 
+      <a href="https://blogdev.blog.csdn.net/article/details/122245662" class="tip" target="_blank">为什么被折叠?</a> 
+      <a href="https://bbs.csdn.net/forums/FreeZone" class="park" target="_blank"> <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/iconPark.png">到【灌水乐园】发言</a> 
+     </div> 
+     <div class="comment-fold-content"></div> 
+     <div id="lookBadComment" class="look-bad-comment side-look-comment"> 
+      <a class="look-more-comment">查看更多评论<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentArrowDownWhite.png" alt=""></a> 
+     </div> 
+    </div> 
+   </div> 
+   <div class="comment-rewarddialog-box"> 
+    <div class="form-box"> 
+     <div class="title-box">
+       添加红包 
+      <a class="btn-form-close"></a> 
+     </div> 
+     <form id="commentRewardForm"> 
+      <div class="ipt-box"> 
+       <label for="txtName">祝福语</label> 
+       <div class="ipt-btn-box"> 
+        <input type="text" name="name" id="txtName" autocomplete="off" maxlength="50"> 
+        <a class="btn-ipt btn-random"></a> 
+       </div> 
+       <p class="notice">请填写红包祝福语或标题</p> 
+      </div> 
+      <div class="ipt-box"> 
+       <label for="txtSendAmount">红包数量</label> 
+       <div class="ipt-txt-box"> 
+        <input type="text" name="sendAmount" maxlength="4" id="txtSendAmount" placeholder="请填写红包数量(最小10个)" autocomplete="off"> 
+        <span class="after-txt">个</span> 
+       </div> 
+       <p class="notice">红包个数最小为10个</p> 
+      </div> 
+      <div class="ipt-box"> 
+       <label for="txtMoney">红包总金额</label> 
+       <div class="ipt-txt-box error"> 
+        <input type="text" name="money" maxlength="5" id="txtMoney" placeholder="请填写总金额(最低5元)" autocomplete="off"> 
+        <span class="after-txt">元</span> 
+       </div> 
+       <p class="notice">红包金额最低5元</p> 
+      </div> 
+      <div class="balance-info-box"> 
+       <label>余额支付</label> 
+       <div class="balance-info">
+         当前余额
+        <span class="balance">3.43</span>元 
+        <a href="https://i.csdn.net/#/wallet/balance/recharge" class="link-charge" target="_blank">前往充值 &gt;</a> 
+       </div> 
+      </div> 
+      <div class="opt-box"> 
+       <div class="pay-info">
+         需支付：
+        <span class="price">10.00</span>元 
+       </div> 
+       <button type="button" class="ml-auto btn-cancel">取消</button> 
+       <button type="button" class="ml8 btn-submit" disabled="true">确定</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="rr-guide-box"> 
+    <div class="rr-first-box"> 
+     <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward02.png" alt=""> 
+     <button class="btn-guide-known next">下一步</button> 
+    </div> 
+    <div class="rr-second-box"> 
+     <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward03.png" alt=""> 
+     <button class="btn-guide-known known">知道了</button> 
+    </div> 
+   </div> 
+  </div> 
+  <div class="redEnvolope" id="redEnvolope"> 
+   <div class="env-box"> 
+    <div class="env-container"> 
+     <div class="pre-open" id="preOpen"> 
+      <div class="top"> 
+       <header> 
+        <img class="clearTpaErr" :src="redpacketAuthor.avatar" alt=""> 
+        <div class="author">
+         成就一亿技术人!
+        </div> 
+       </header> 
+       <div class="bot-icon"></div> 
+      </div> 
+      <footer> 
+       <div class="red-openbtn open-start"></div> 
+       <div class="tip">
+         领取后你会自动成为博主和红包主的粉丝 
+        <a class="rule" target="_blank">规则</a> 
+       </div> 
+      </footer> 
+     </div> 
+     <div class="opened" id="opened"> 
+      <div class="bot-icon"> 
+       <header> 
+        <a class="creatorUrl" href="" target="_blank"> <img class="clearTpaErr" src="https://profile-avatar.csdnimg.cn/default.jpg!2" alt=""> </a> 
+        <div class="author"> 
+         <div class="tt">
+          hope_wisdom
+         </div> 发出的红包 
+        </div> 
+       </header> 
+      </div> 
+      <div class="receive-box"> 
+       <header></header> 
+       <div class="receive-list"> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="close-btn"></div> 
+   </div> 
+  </div> 
+  <div id="rewardNew" class="reward-popupbox-new"> 
+   <p class="rewad-title">打赏作者<span class="reward-close"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/closeBt.png"></span></p> 
+   <dl class="profile-box"> 
+    <dd> 
+     <a href="https://blog.csdn.net/qq_64671439" data-report-click="{&quot;mod&quot;:&quot;popu_379&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1" class="avatar_pic"> </a> 
+    </dd> 
+    <dt> 
+     <p class="blog-name">leaf_leaves_leaf</p> 
+     <p class="blog-discript">你的鼓励将是我创作的最大动力</p> 
+    </dt> 
+   </dl> 
+   <div class="reward-box-new"> 
+    <div class="reward-content">
+     <div class="reward-right"></div>
+    </div> 
+   </div> 
+   <div class="money-box"> 
+    <span class="choose-money choosed" data-id="1">¥1</span> 
+    <span class="choose-money " data-id="2">¥2</span> 
+    <span class="choose-money " data-id="4">¥4</span> 
+    <span class="choose-money " data-id="6">¥6</span> 
+    <span class="choose-money " data-id="10">¥10</span> 
+    <span class="choose-money " data-id="20">¥20</span> 
+   </div> 
+   <div class="sure-box"> 
+    <div class="sure-box-money"> 
+     <div class="code-box"> 
+      <div class="code-num-box"> 
+       <span class="code-name">扫码支付：</span>
+       <span class="code-num">¥1</span> 
+      </div> 
+      <div class="code-img-box"> 
+       <div class="renovate"> 
+        <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-time-out.png"> 
+        <span>获取中</span> 
+       </div> 
+      </div> 
+      <div class="code-pay-box"> 
+       <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/newWeiXin.png" alt=""> 
+       <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/newZhiFuBao.png" alt=""> 
+       <span>扫码支付</span> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="sure-box-blance"> 
+     <p class="tip">您的余额不足，请更换扫码支付或<a target="_blank" data-report-click="{&quot;mod&quot;:&quot;1597646289_003&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4302&quot;}" href="https://i.csdn.net/#/wallet/balance/recharge?utm_source=RewardVip" class="go-invest">充值</a></p> 
+     <p class="is-have-money"><a class="reward-sure">打赏作者</a></p> 
+    </div> 
+   </div> 
+  </div> 
+  <div class="pay-code"> 
+   <div class="pay-money">
+    实付
+    <span class="pay-money-span" data-nowprice="" data-oldprice="">元</span>
+   </div> 
+   <div class="content-blance">
+    <a class="blance-bt" href="javascript:;">使用余额支付</a>
+   </div> 
+   <div class="content-code"> 
+    <div id="payCode" data-id=""> 
+     <div class="renovate"> 
+      <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-time-out.png"> 
+      <span>点击重新获取</span> 
+     </div> 
+    </div> 
+    <div class="pay-style">
+     <span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/weixin.png"></span>
+     <span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/zhifubao.png"></span>
+     <span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/jingdong.png"></span>
+     <span class="text">扫码支付</span>
+    </div> 
+   </div> 
+   <div class="bt-close"> 
+    <svg t="1567152543821" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10924" xmlns:xlink="http://www.w3.org/1999/xlink" width="12" height="12"> 
+     <defs> 
+      <style type="text/css"></style> 
+     </defs> 
+     <path d="M512 438.378667L806.506667 143.893333a52.032 52.032 0 1 1 73.6 73.621334L585.621333 512l294.485334 294.485333a52.074667 52.074667 0 0 1-73.6 73.642667L512 585.621333 217.514667 880.128a52.053333 52.053333 0 1 1-73.621334-73.642667L438.378667 512 143.893333 217.514667a52.053333 52.053333 0 1 1 73.621334-73.621334L512 438.378667z" fill="" p-id="10925"></path> 
+    </svg> 
+   </div> 
+   <div class="pay-balance"> 
+    <input type="radio" class="pay-code-radio" data-type="details"> 
+    <span class="span">钱包余额</span> 
+    <span class="balance" style="color:#FC5531;font-size:14px;">0</span> 
+    <div class="pay-code-tile"> 
+     <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-help.png" alt=""> 
+     <div class="pay-code-content"> 
+      <div class="span"> 
+       <p class="title">抵扣说明：</p> 
+       <p> 1.余额是钱包充值的虚拟货币，按照1:1的比例进行支付金额的抵扣。<br> 2.余额无法直接购买下载，可以购买VIP、付费专栏及课程。</p> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+   <a class="pay-balance-con" href="https://i.csdn.net/#/wallet/balance/recharge" target="_blank"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/recharge.png" alt=""><span>余额充值</span></a> 
+  </div>  
+  <div class="keyword-dec-box" id="keywordDecBox"></div>  
+  <!-- 富文本柱状图  --> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css">        
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">                  
+ </body>
+</html>

@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <link rel="canonical" href="https://blog.csdn.net/qq_64671439/article/details/135329688"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="report" content="{&quot;pid&quot;: &quot;blog&quot;, &quot;spm&quot;:&quot;1001.2101&quot;}"> 
+  <meta name="referrer" content="always"> 
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <link rel="alternate" media="handheld" href="#">  
+  <meta name="applicable-device" content="pc"> 
+  <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"> 
+  <title>【强化学习的数学原理-赵世钰】课程笔记（四）值迭代与策略迭代_赵世钰值迭代算法-CSDN博客</title>   
+  <meta name="keywords" content="赵世钰值迭代算法"> 
+  <meta name="csdn-baidu-search" content="{&quot;autorun&quot;:true,&quot;install&quot;:true,&quot;keyword&quot;:&quot;赵世钰值迭代算法&quot;}"> 
+  <meta name="description" content="文章浏览阅读6.7k次，点赞71次，收藏73次。详细介绍强化学习中的值迭代与策略迭代，有案例有推导，环环相扣，会持续更新_赵世钰值迭代算法"> 
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-d4fc849858.min.css">  
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-1024/skin-1024-ecd36efea2.min.css">    
+  <meta name="toolbar" content="{&quot;type&quot;:&quot;0&quot;,&quot;fixModel&quot;:&quot;1&quot;}">    
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css"> 
+  <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>    
+ 	<style>
+	main div.blog-content-box pre {
+		max-height: 100%;
+		overflow-y: hidden;
+	}
+	</style>
+ </head>  
+ <body class="nodata  " style=""> 
+  <div id="toolbarBox" style="min-height: 48px;"></div>    
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css"> 
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css">   
+  <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;"> 
+   <div class="container clearfix container-concision" id="mainBox">  
+    <main>  
+     <div class="blog-content-box"> 
+      <div class="article-header-box"> 
+       <div class="article-header"> 
+        <div class="article-title-box"> 
+         <h1 class="title-article" id="articleContentId">【强化学习的数学原理-赵世钰】课程笔记（四）值迭代与策略迭代</h1> 
+        </div> 
+        <div class="article-info-box"> 
+         <div class="article-bar-top"> 
+          <img class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png" alt=""> 
+          <div class="bar-content"> 
+           <a class="follow-nickName " href="https://blog.csdn.net/qq_64671439" target="_blank" rel="noopener" title="leaf_leaves_leaf">leaf_leaves_leaf</a> 
+           <img class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newUpTime2.png" alt=""> 
+           <span class="time">已于&nbsp;2024-02-26 21:48:12&nbsp;修改</span> 
+           <div class="read-count-box"> 
+            <img class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png" alt=""> 
+            <span class="read-count">阅读量6.7k</span> 
+            <a id="blog_detail_zk_collection" class="un-collection" data-report-click="{&quot;mod&quot;:&quot;popu_823&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="article-collect-img article-heard-img un-collect-status isdefault" style="display:inline-block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" alt=""> <img class="article-collect-img article-heard-img collect-status isactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" alt=""> <span class="name">收藏</span> <span class="get-collection"> 73 </span> </a> 
+            <div class="read-count-box is-like" data-type="top"> 
+             <img class="article-read-img article-heard-img" style="display:none" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" alt=""> 
+             <img class="article-read-img article-heard-img" style="display:block" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" alt=""> 
+             <span class="read-count" id="blog-digg-num">点赞数 71 </span> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="blog-tags-box"> 
+          <div class="tags-box artic-tag-box"> 
+           <span class="label">分类专栏：</span> 
+           <a class="tag-link" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" rel="noopener">【强化学习的数学原理-赵世钰】课程笔记</a> 
+           <span class="label">文章标签：</span> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E7%AC%94%E8%AE%B0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">笔记</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">机器学习</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;人工智能&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;人工智能\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;人工智能&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;人工智能\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">人工智能</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">学习</a> 
+          </div> 
+         </div> 
+         <div class="up-time">
+          <span>于&nbsp;2024-01-02 16:56:47&nbsp;首次发布</span>
+         </div> 
+         <div class="slide-content-box"> 
+          <div class="article-copyright"> 
+           <div class="creativecommons">
+             版权声明：本文为博主原创文章，遵循
+            <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"> CC 4.0 BY-SA </a>版权协议，转载请附上原文出处链接和本声明。 
+           </div> 
+           <div class="article-source-link">
+             本文链接：
+            <a href="https://blog.csdn.net/qq_64671439/article/details/135329688" target="_blank">https://blog.csdn.net/qq_64671439/article/details/135329688</a> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="operating"> 
+          <a class="href-article-edit slide-toggle">版权</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div id="blogHuaweiyunAdvert"></div> 
+      <div id="blogColumnPayAdvert"> 
+       <div class="column-group"> 
+        <div class="column-group-item column-group0 column-group-item-one"> 
+         <div class="item-l"> 
+          <a class="item-target" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" title="【强化学习的数学原理-赵世钰】课程笔记" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}"> <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt=""> <span class="title item-target"> <span> <span class="tit">【强化学习的数学原理-赵世钰】课程笔记</span> <span class="dec">专栏收录该内容</span> </span> </span> </a> 
+         </div> 
+         <div class="item-m"> 
+          <span>10 篇文章</span> 
+         </div> 
+         <div class="item-r"> 
+          <a class="item-target article-column-bt articleColumnFreeBt" data-id="12540921">订阅专栏</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <article class="baidu_pl"> 
+       <div id="article_content" class="article_content clearfix"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-704d5b9767.css"> 
+        <div id="content_views" class="htmledit_views atom-one-dark"> 
+         <p id="main-toc"><strong>目录</strong></p> 
+         <p id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0-toc" style="margin-left:0px;"><a href="#%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0" rel="nofollow">一.内容概述</a></p> 
+         <p id="%E4%BA%8C.%E5%80%BC%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88value%20iteration%20algorithm%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%8C.%E5%80%BC%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88value%20iteration%20algorithm%EF%BC%89" rel="nofollow">二.值迭代算法（value iteration algorithm）</a></p> 
+         <p id="1.%E7%AC%AC%201%20%E6%AD%A5%EF%BC%9A%E7%AD%96%E7%95%A5%E6%9B%B4%E6%96%B0%EF%BC%88policy%20update%EF%BC%89-toc" style="margin-left:40px;"><a href="#1.%E7%AC%AC%201%20%E6%AD%A5%EF%BC%9A%E7%AD%96%E7%95%A5%E6%9B%B4%E6%96%B0%EF%BC%88policy%20update%EF%BC%89" rel="nofollow">1.第 1 步：策略更新（policy update）</a></p> 
+         <p id="2.%E7%AC%AC%202%20%E6%AD%A5%EF%BC%9A%E4%BB%B7%E5%80%BC%E6%9B%B4%E6%96%B0%EF%BC%88value%20update%EF%BC%89-toc" style="margin-left:40px;"><a href="#2.%E7%AC%AC%202%20%E6%AD%A5%EF%BC%9A%E4%BB%B7%E5%80%BC%E6%9B%B4%E6%96%B0%EF%BC%88value%20update%EF%BC%89" rel="nofollow">2.第 2 步：价值更新（value update）</a></p> 
+         <p id="3.%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%8C%E7%A8%8B%E5%BA%8F%E6%A6%82%E8%A6%81%EF%BC%8C%E5%B9%B6%E5%86%99%E6%88%90%E4%BC%AA%E4%BB%A3%E7%A0%81-toc" style="margin-left:40px;"><a href="#3.%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%8C%E7%A8%8B%E5%BA%8F%E6%A6%82%E8%A6%81%EF%BC%8C%E5%B9%B6%E5%86%99%E6%88%90%E4%BC%AA%E4%BB%A3%E7%A0%81" rel="nofollow">3.流程总结，程序概要，并写成伪代码</a></p> 
+         <p id="4.%E4%B8%BE%E4%BE%8B-toc" style="margin-left:40px;"><a href="#4.%E4%B8%BE%E4%BE%8B" rel="nofollow">4.举例</a></p> 
+         <p id="%E4%B8%89.%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88policy%20iteration%20algorithm%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%89.%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88policy%20iteration%20algorithm%EF%BC%89" rel="nofollow">三.策略迭代算法（policy iteration algorithm）</a></p> 
+         <p id="1.%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D-toc" style="margin-left:40px;"><a href="#1.%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D" rel="nofollow">1.算法介绍</a></p> 
+         <p id="2.policy%20iteration%20algorithm%20%E7%9A%84%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0-toc" style="margin-left:40px;"><a href="#2.policy%20iteration%20algorithm%20%E7%9A%84%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0" rel="nofollow">2.policy iteration algorithm 的具体实现</a></p> 
+         <p id="3.%E4%BE%8B%E5%AD%90-toc" style="margin-left:40px;"><a href="#3.%E4%BE%8B%E5%AD%90" rel="nofollow">3.例子</a></p> 
+         <p id="%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901-toc" style="margin-left:80px;"><a href="#%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901" rel="nofollow">（1）例子1</a></p> 
+         <p id="%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902-toc" style="margin-left:80px;"><a href="#%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902" rel="nofollow">（2）例子2</a></p> 
+         <p id="%E4%B8%89.%E6%88%AA%E6%96%AD%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88Truncated%20policy%20iteration%20algorithm%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%89.%E6%88%AA%E6%96%AD%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88Truncated%20policy%20iteration%20algorithm%EF%BC%89" rel="nofollow">四.截断策略迭代算法（Truncated policy iteration algorithm）</a></p> 
+         <p id="%E5%9B%9B.%E6%80%BB%E7%BB%93-toc" style="margin-left:0px;"><a href="#%E5%9B%9B.%E6%80%BB%E7%BB%93" rel="nofollow">五.总结</a></p> 
+         <hr id="hr-toc"> 
+         <p></p> 
+         <h2 id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0">一.内容概述</h2> 
+         <p><strong>本节课讲的是 model base 的算法，下节课将会介绍 model-free 算法。值迭代和策略迭代和截断策略迭代都是求解最优状态值和最优策略的办法</strong></p> 
+         <ul>
+          <li><span style="background-color:#fbd4d0;">值迭代算法（value iteration algorithm）：第三章的贝尔曼最优公式中，提到了有一个算法能求解贝尔曼最优公式，这个算法实际上就是值迭代算法。</span></li>
+          <li>策略迭代算法（policy&nbsp;iteration algorithm）：在第五章，不需要模型的蒙特卡洛方法中有重要应用。是下节课，蒙特卡洛学习（Mente Carlo learning）的一个基础</li>
+          <li>截断策略迭代算法（Truncated policy iteration algorithm）</li>
+         </ul> 
+         <p><strong>值迭代算法和策略算法是截断策略迭代算法的极端情况</strong></p> 
+         <ul>
+          <li>上面三个算法都有两个子步骤：policy update 和 value update</li>
+          <li>在当前时刻我有一个不太好的策略，我估计一下这个策略它的值，也就是做一下策略评价，我得到值之后就根据这个值改进一下策略，改进完了策略得到新的策略再估计它的值然后再改进策略，所以 policy update 和 value update 这两个步骤会不断迭代，<span style="background-color:#fbd4d0;">最后就能找到最优的策略。</span></li>
+          <li>这样一个思想不只用在第四章当中，后面所有强化学习算法都是这样做的，都是<span style="background-color:#fbd4d0;">值和策略，值和策略不断地迭代</span>，只不过具体算法形式可能不同。</li>
+         </ul> 
+         <h2 id="%E4%BA%8C.%E5%80%BC%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88value%20iteration%20algorithm%EF%BC%89">二.值迭代算法（value iteration algorithm）</h2> 
+         <blockquote> 
+          <p><strong>这是上一节课由收缩映射定理（Contraction mapping theorem）给出的一个算法，这节课给它一个名字，给它两个步骤，正式的介绍出来：&nbsp;</strong></p> 
+         </blockquote> 
+         <p>贝尔曼最优公式（矩阵向量形式）：</p> 
+         <p class="img-center"><img alt="" height="43" src="https://i-blog.csdnimg.cn/blog_migrate/386d17ed75cfded14c8843e141cab2e9.png" width="265"></p> 
+         <p>如何求解贝尔曼最优公式？在上一讲中，我们知道收缩映射定理提出了一种迭代算法：只要用下面这个算法就可以求出它的最优策略（optimal policy）和最优的状态值（optimal state value）</p> 
+         <p class="img-center"><img alt="" height="49" src="https://i-blog.csdnimg.cn/blog_migrate/f9f2f8e745cca75bcb6aaea803e626b7.png" width="463"></p> 
+         <p>其中 v0 可以是任意值。</p> 
+         <ul>
+          <li>这种算法最终能找到最优状态值和最优策略。</li>
+          <li>这种算法称为值迭代（value iteration）！</li>
+          <li>我们将看到，我们所学的关于 BOE 的数学知识终于得到了回报！</li>
+          <li><strong>接下来我们将详细剖析值迭代算法，包括编程的时候如何实现。至于这个值迭代算法为什么会设计成这样，为什么能够找到最优策略，它的数学原理上节课已经介绍过了，这节课就不回答了。</strong></li>
+         </ul> 
+         <hr> 
+         <p>算法的矩阵向量形式如下：</p> 
+         <p class="img-center"><img alt="" height="51" src="https://i-blog.csdnimg.cn/blog_migrate/d41e0131e008f2a871e8c90f8b1042c9.png" width="424"></p> 
+         <p>可以分解为（be decomposed）两个步骤：</p> 
+         <p>第 1 步：在 vk 给定的情况下进行<strong>策略更新（policy update）</strong>，求解 π，可以得到 πk+1 。这一步是处理方程右边的优化问题：</p> 
+         <p class="img-center"><img alt="" height="53" src="https://i-blog.csdnimg.cn/blog_migrate/ef059a1fc71d64224b29d56e64621d8b.png" width="243"></p> 
+         <p>其中 vk 是给定的。</p> 
+         <p>第 2 步：<strong>价值更新（value update）</strong>。把上一步求解出的&nbsp;πk+1 带入第一个式子，第一个式子中下标的&nbsp;π 全部变成&nbsp;πk+1，然后根据 vk 可以求解出来&nbsp; vk+1</p> 
+         <p class="img-center"><img alt="" height="55" src="https://i-blog.csdnimg.cn/blog_migrate/17e791a54ae3eab1ffe06b4879e301fa.png" width="235"></p> 
+         <p><strong>问题：vk 是状态值（state value）吗？不是</strong>，因为不能确保 vk 满足贝尔曼方程。如果上式中，左边是 vk，那它确实是一个贝尔曼公式，那么 vk 就是一个状态值（state value），但是左边并不是 vk，而是 vk+1。所以这里的 vk 就是一个向量，就是一个值，可以是任意的值，并不是状态值（state value）</p> 
+         <p><strong>理解：</strong></p> 
+         <ul>
+          <li>vk只是某次迭代过程中没有收敛的一个值</li>
+          <li>是估计的state value,后面可以求解出最优的state value</li>
+          <li>因为不在在同一个policy下的vk迭代，所以没有收敛到当前policy下的state value</li>
+          <li>这就是我们胡乱假设的一个state value吧，老师说不算的意思大概是它还没迭代到位</li>
+          <li>其实是state value只是还没收敛</li>
+          <li>只能说vk k无穷时，vk的物理意义为state的估计。否则只是估计过程中的一个参数，没有意义</li>
+          <li>意思是最后无穷/有限多步收敛到的值才是state value吗？</li>
+         </ul> 
+         <hr> 
+         <p>接下来，我们需要研究元素形式（elementwise form），以便实现算法。</p> 
+         <ul>
+          <li>矩阵向量形式（Matrix-vector form）有助于理论分析（theoretical analysis）。</li>
+          <li>元素形式（elementwise form）有助于实现（implementation）。</li>
+         </ul> 
+         <hr> 
+         <h3 id="1.%E7%AC%AC%201%20%E6%AD%A5%EF%BC%9A%E7%AD%96%E7%95%A5%E6%9B%B4%E6%96%B0%EF%BC%88policy%20update%EF%BC%89">1.第 1 步：策略更新（policy update）</h3> 
+         <p><img alt="" height="1144" src="https://i-blog.csdnimg.cn/blog_migrate/f00252dfa42057ada2f175ddae8b76b8.png" width="1200"></p> 
+         <ul>
+          <li>如果有多个action有相同的qk(s,a)，那么可以任意选取一个，数学上都能达到最优</li>
+          <li>压缩映射定理v*存在且唯一</li>
+          <li>v*唯一，但策略不一定唯一，有两个最优策略，一般随机选一个</li>
+         </ul> 
+         <h3 id="2.%E7%AC%AC%202%20%E6%AD%A5%EF%BC%9A%E4%BB%B7%E5%80%BC%E6%9B%B4%E6%96%B0%EF%BC%88value%20update%EF%BC%89">2.第 2 步：<strong>价值更新（value update）</strong></h3> 
+         <p><img alt="" height="1019" src="https://i-blog.csdnimg.cn/blog_migrate/06bdac501e6a27f1a9239a78e167e4c9.png" width="1200"></p> 
+         <h3 id="3.%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93%EF%BC%8C%E7%A8%8B%E5%BA%8F%E6%A6%82%E8%A6%81%EF%BC%8C%E5%B9%B6%E5%86%99%E6%88%90%E4%BC%AA%E4%BB%A3%E7%A0%81"><span style="background-color:#fbd4d0;">3.流程总结，程序概要，并写成伪代码</span></h3> 
+         <p><span style="background-color:#fbd4d0;">&nbsp; &nbsp;对每一个 s，一开始有个 vk(s)，vk 最开始可以从 v0 或者 v1 开始——&gt;从 vk 可以计算得到 qk——&gt;得到 qk 后我知道哪个 qk 是最大的，然后知道它对应的 action 是什么，就可以得到贪婪策略（greedy policy）πk+1——&gt;然后得到 vk+1，vk+1就对应最大的 qk</span></p> 
+         <p><img alt="" height="131" src="https://i-blog.csdnimg.cn/blog_migrate/03decad2aba594b01b9203af9f3ea5c4.png" width="980"></p> 
+         <p>这个过程可以写成下面的伪代码：</p> 
+         <p><img alt="" height="979" src="https://i-blog.csdnimg.cn/blog_migrate/c8af128e65bea29cd978c3d02ba50bc3.png" width="1200"></p> 
+         <h3 id="4.%E4%B8%BE%E4%BE%8B">4.举例</h3> 
+         <p>用值迭代算法（value iteration algorithm）为下面的 a 图求解出一个最优的策略，图 b,c 是我们在使用算法进行迭代的过程中，每次我们都会得到一个策略&nbsp;πk+1，图 b,c 就是得到的策略&nbsp;πk+1，把它画在图中。</p> 
+         <p><img alt="" height="369" src="https://i-blog.csdnimg.cn/blog_migrate/1f333ecb7dc39e56fbed247dec93986d.png" width="975"></p> 
+         <p>q 表（q-table）： q(s, a) 的表达式（当给出 v 的时候，能求出 q）</p> 
+         <p><img alt="" height="240" src="https://i-blog.csdnimg.cn/blog_migrate/b7f936b67f3701a3e14f67ecd4e3541c.png" width="964"></p> 
+         <p>k=0，先选取 v0，可以任意选取，简单起见全选0，然后把 v0 带入刚才的 q-table 当中去：</p> 
+         <p style="text-align:center;"><img alt="" height="177" src="https://i-blog.csdnimg.cn/blog_migrate/e771b1340cc8b39578a655b7b27e80d9.png" width="552"></p> 
+         <p><strong>先进行策略更新</strong>，针对每一个状态，我们去看哪个 qk 是最大的，那么它对应的新的策略就可以求出。对 s1 而言，选取动作 a3 和 a5 对应的 q 最大，所以 policy 可以在最大的 q 里面随便选一个（第k步是对所有s进行更新）</p> 
+         <p><img alt="" height="184" src="https://i-blog.csdnimg.cn/blog_migrate/f71de3a4f245643d13fcf10849653f06.png" width="715"></p> 
+         <p><strong>再进行价值更新</strong>，上面选出的最大的 qk，作为新的 v1 进行下一步的使用</p> 
+         <p><img alt="" height="116" src="https://i-blog.csdnimg.cn/blog_migrate/10730ac32edf56ce108225f69c55e557.png" width="644"></p> 
+         <p>这个策略绘制出图片就是上面的 b 图，可以看出在 s2 ，s3 和 s4 上都已经达到了最优，可以到达目标。但是在 s1 上还没有达到最优，因为当前策略是原地不动，但是最优策略需要到达目标。再进行下一步迭代：</p> 
+         <p>k=1，把上次迭代得到的 v1&nbsp;带入刚才的 q-table 当中去：</p> 
+         <p><img alt="" height="567" src="https://i-blog.csdnimg.cn/blog_migrate/bd12a61126f736db6bf4dc57df55fcd5.png" width="760"></p> 
+         <p>这个策略绘制出图片就是上面的 c&nbsp;图，可以看出在 s1，s2 ，s3 和 s4 上都已经达到了最优，可以到达目标，已经求出来了最优策略。还可以进行下一步迭代，直到达到迭代终止条件：</p> 
+         <p><img alt="" height="76" src="https://i-blog.csdnimg.cn/blog_migrate/4d79ca0d87177bdfcab83026408bdb6e.png" width="731"></p> 
+         <hr> 
+         <h2 id="%E4%B8%89.%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88policy%20iteration%20algorithm%EF%BC%89">三.策略迭代算法（policy iteration algorithm）</h2> 
+         <h3 id="1.%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D">1.算法介绍</h3> 
+         <blockquote> 
+          <p><strong>这是这节课新介绍的一个算法，下节课会在这个算法的基础上，得到一个 model free 的 reinforcement learning 的算法</strong></p> 
+         </blockquote> 
+         <p><strong>算法描述：</strong></p> 
+         <p>给定随机初始策略 π0（任意给定，可能是不好的策略，之后会迭代找到好的策略）</p> 
+         <p>每次迭代分为两个步骤：</p> 
+         <p><strong>步骤 1：策略评估（PE）（Step 1: policy evaluation (PE)）</strong></p> 
+         <p>之前提过，policy evaluation 就是我给定一个策略 πk（最开始是 π0），可以求解它对应的贝尔曼公式，得到 πk 对应的 state value&nbsp;v_πk，这样的过程就叫策略评估（policy evaluation）</p> 
+         <p style="text-align:center;"><img alt="" height="165" src="https://i-blog.csdnimg.cn/blog_migrate/e4575703220b0c784258ff4338e9693f.png" width="433"></p> 
+         <p><strong>步骤 2：策略改进 (PI)（Step 2: policy improvement (PI)）</strong></p> 
+         <p>上一步求出来了&nbsp;v_πk，我求解优化问题得到一个新的策略&nbsp;πk+1，πk+1 比&nbsp;πk 更好</p> 
+         <p class="img-center"><img alt="" height="149" src="https://i-blog.csdnimg.cn/blog_migrate/13d0d3693df45242f4f4a1103f523f38.png" width="526"></p> 
+         <p>最大化是分量式的！</p> 
+         <p>理解：</p> 
+         <ul>
+          <li>policy iter 相当于比value iter提前了一步，从pi到v然后再经历完整的value iter到pi</li>
+          <li>Policy iteration algorithm和Value iteration algorithm的区别就是你以policy为主体还是以state value为主体。</li>
+          <li>PE里面包含了一层value iteration</li>
+          <li>其实在这两个iteration都会更新policy和valuie，只是先后的问题而已</li>
+         </ul> 
+         <hr> 
+         <p>该算法可以得到一个序列，用下面的过程来表示：最开始猜的&nbsp;π0 肯定是不好的，然后我做&nbsp;policy evaluation 得到 v_π0，然后做&nbsp;policy improvement 得到<strong>&nbsp;</strong>π1......</p> 
+         <p class="img-center"><img alt="" height="143" src="https://i-blog.csdnimg.cn/blog_migrate/9b8a458b3123da6e9adba83078f1174d.png" width="609"></p> 
+         <p><strong>问题</strong></p> 
+         <ul>
+          <li>问题 1：在策略评估（policy evaluation）步骤中，如何通过求解贝尔曼方程得到状态值（state value） vπk？</li>
+          <li>问题 2: 在策略改进（policy improvement）步骤中，为什么新策略&nbsp;πk+1 比 πk 更好？</li>
+          <li>问题 3：为什么这种迭代算法能最终找到最优的策略？</li>
+          <li>问题 4: 这种策略迭代算法（policy iteration algorithm）与前一种值迭代算法（value iteration algorithm）之间的关系是什么？</li>
+         </ul> 
+         <hr> 
+         <p><strong>问题 1： 在策略评估（policy evaluation）步骤中，如何通过求解贝尔曼方程得到状态值（state value） vπk？</strong></p> 
+         <p><strong>这个问题之前在介绍贝尔曼公式的时候已经详细介绍了（第二节课第六点）</strong>，假设给定一个策略（policy）πk，我们可以列出来它的贝尔曼公式（&nbsp;Bellman equation）如下：</p> 
+         <p class="img-center"><img alt="" height="54" src="https://i-blog.csdnimg.cn/blog_migrate/7359918e40301498d0e4888b4a58e56c.png" width="216"></p> 
+         <p>有两种方法可以求解这个贝尔曼公式得到状态值（state value）：</p> 
+         <p><strong>（1）闭式解为（The closed-form solution is）</strong>，即状态值（state value）的解析表达式为：</p> 
+         <p class="img-center"><img alt="" height="112" src="https://i-blog.csdnimg.cn/blog_migrate/f787fd9129ef7a49a250a5e98ff52a01.png" width="512"></p> 
+         <p>这个方法我们不太用，因为要求逆矩阵，经常用的是下面的方法</p> 
+         <p><strong>（2）迭代解决（iterative solution）方案是：</strong>（v_πk&nbsp;和 v_πk+1 都是向量，包含了不同时刻的所有状态值）最开始对&nbsp;v_πk 有一个猜测，不断迭代就可以得到&nbsp;v_πk</p> 
+         <p class="img-center"><img alt="" height="91" src="https://i-blog.csdnimg.cn/blog_migrate/59b96335fb22e15f308f16b38942a276.png" width="484"></p> 
+         <ul>
+          <li>已在贝尔曼方程讲座中学习过。</li>
+          <li>policy evaluation 是 policy iteration 这个算法的一步，这一步又依赖于一个迭代的算法（即上面的迭代解决（iterative solution）方案）。</li>
+          <li>策略迭代算法（policy iteration algorithm）是一种迭代算法，在策略迭代算法的策略评估（policy evaluation）步骤中嵌入了另一种迭代算法（iterative solution）（相当于有一个大的迭代算法，里面有一步又嵌入了一个小的迭代算法）</li>
+         </ul> 
+         <hr> 
+         <p><strong>问题 2: 在策略改进（policy improvement）步骤中，为什么新策略&nbsp;πk+1 比 πk 更好？</strong></p> 
+         <p>πk+1 是求解下面这个（v_πk给定的）式子所得到的，可以证明&nbsp;v_πk+1 一定大于等于&nbsp;v_πk，所以&nbsp;πk+1 比 πk 更好</p> 
+         <p><img alt="" height="319" src="https://i-blog.csdnimg.cn/blog_migrate/6b0e3a94be25cc3d3516b000b4487aec.png" width="1008"></p> 
+         <hr> 
+         <p><strong>问题 3： 为什么这种迭代算法能最终找到最优的策略？</strong></p> 
+         <p>由于每次迭代都会改进策略，我们知道：最优的状态值（state value）是 v*</p> 
+         <p class="img-center"><img alt="" height="62" src="https://i-blog.csdnimg.cn/blog_migrate/db0d7ef092005547f187e0f4bb8cc726.png" width="429"></p> 
+         <p>因此，v_πk 会不断增加并收敛（keeps increasing and will converge）。仍需证明它收敛于 v*：</p> 
+         <p><img alt="" height="481" src="https://i-blog.csdnimg.cn/blog_migrate/df3260ba8129e41ade05524300ba07cb.png" width="1200"></p> 
+         <ul>
+          <li>个人的理解是，PI是多轮的VI，VI只为了达成目的，但策略不一定最好，Pi相当于BFS算法一样，把最好的策略都完完全全走了一遍流程（因为只有求出贝尔曼才能说明他最好）&nbsp;</li>
+         </ul> 
+         <hr> 
+         <p><strong>问题 4: 这种策略迭代算法（policy iteration algorithm）与前一种值迭代算法（value iteration algorithm）之间的关系是什么？</strong></p> 
+         <p>问题 3 给出的那个定理的证明（就是上面那个定理），即若要证明 policy iteration 的算法是收敛的，实际上用到了 value iteration 算法是收敛的这样的一个结果，所以它是基于 value iteration 算法的一个结果。另外&nbsp;policy iteration 和&nbsp;value iteration 实际上是两个极端，是一个更 general 的截断策略迭代算法（Truncated policy iteration algorithm）的两个极端，稍后会介绍。</p> 
+         <hr> 
+         <h3 id="2.policy%20iteration%20algorithm%20%E7%9A%84%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0">2.<strong>policy iteration algorithm 的具体实现</strong></h3> 
+         <p>为了实现，我们要研究它的元素形式（Elementwise form）</p> 
+         <p><strong>步骤 1：策略评估（PE）（Step 1: policy evaluation (PE)）</strong></p> 
+         <p><img alt="" height="715" src="https://i-blog.csdnimg.cn/blog_migrate/6c053758d3e7e67da5e57829ef04ac25.png" width="1200"></p> 
+         <p><strong>步骤 2：策略改进 (PI)（Step 2: policy improvement (PI)）</strong></p> 
+         <p><img alt="" height="973" src="https://i-blog.csdnimg.cn/blog_migrate/0a74c4a2384319943ec378fdc6c6fa0c.png" width="1200"></p> 
+         <p><strong>流程伪代码：</strong></p> 
+         <p><img alt="" height="1000" src="https://i-blog.csdnimg.cn/blog_migrate/f470a9bdb40de4ec63eac6aad27f52c7.png" width="1200"></p> 
+         <p>值迭代和策略迭代的区别：&nbsp;</p> 
+         <ul>
+          <li>有差别，值迭代每一步得到的value是虚假的，但策略迭代每一步得到的value是真实的&nbsp;</li>
+          <li>区别是先求策略还是先求state value的问题</li>
+          <li>策略迭代里面包含值迭代，策略迭代时间复杂度更大</li>
+          <li>其实不同在于值迭代不同迭代次数间的state&nbsp; value是严格根据不动点迭代运算得到的</li>
+          <li>policy iteration的终点应该是policy收敛不变，这比value收敛快很多</li>
+          <li>确实，值迭代是严格遵守不动点迭代的</li>
+          <li>这里对比值迭代算法，策略迭代算法实际就是多了一块策略评估。如果策略评估直接给定v0那么这个算法就是值迭代</li>
+          <li>可以把值迭代的value update看成一次策略评估，只不过评估的效果不是很好。补充一下，不好的原因是因为没有加入最好策略的计算</li>
+          <li>Policy iteration先通过策略评估选取V_k，而不是随机初始化一个直接用了</li>
+          <li>value感觉虽然在更新pi，但是实际上没有用pi，policy实际上是用了pi来计算v的</li>
+         </ul> 
+         <hr> 
+         <h3 id="3.%E4%BE%8B%E5%AD%90">3.例子</h3> 
+         <h4 id="%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901">（1）例子1</h4> 
+         <p>图 b 是最优策略，在 s1 的时候往右走，在 s2 的时候静止不动。图 a 是初始策略，都往左走是不合适的，我们用 policy iteration 的算法得到图 b 这样一个最优策略</p> 
+         <p><img alt="" height="431" src="https://i-blog.csdnimg.cn/blog_migrate/bd2fb5c6275a3edfabc2e02e1ae37ca8.png" width="969"></p> 
+         <p>k=0</p> 
+         <p><img alt="" height="1055" src="https://i-blog.csdnimg.cn/blog_migrate/66e75b7ab750a08a9faf1488164bfd9c.png" width="1200"></p> 
+         <p><img alt="" height="1035" src="https://i-blog.csdnimg.cn/blog_migrate/32a4343e54672f425157d837a49a785a.png" width="1200"></p> 
+         <p>该例子比较简单，该策略在一次迭代后达到最优！在您的程序设计中，应该继续运行，直到满足停止标准为止。<br> 现在你知道了另一种搜索最优策略（optimal policies）的强大算法！现在，让我们应用它，看看能发现什么。</p> 
+         <hr> 
+         <h4 id="%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902">（2）例子2</h4> 
+         <p>例子的基本设置：</p> 
+         <p><img alt="" height="57" src="https://i-blog.csdnimg.cn/blog_migrate/e9a350ad8bfd0907a3b654a5e2e23b6d.png" width="853"></p> 
+         <p>现在要做的是对这样一个 5×5 的网格，求一个最优策略。下面这些图画的是，我从最开始随便给定的一个策略&nbsp;π0，求出 v_π0，policy improvement 得到&nbsp;π0，然后policy evaluation 得到&nbsp;v_π1，一直下去直到得到&nbsp;π10 和&nbsp;vπ10</p> 
+         <p>让我们来看看中间策略和状态值。</p> 
+         <p><img alt="" height="645" src="https://i-blog.csdnimg.cn/blog_migrate/e13b0f277275bacebb25151893db6e16.png" width="980"></p> 
+         <p>策略和状态值的有趣模式</p> 
+         <p><img alt="" height="670" src="https://i-blog.csdnimg.cn/blog_migrate/52ea3a01d7313403e3e7871d6e25d90d.png" width="977"></p> 
+         <ul>
+          <li>可以看到，中间的策略不好，但是策略&nbsp;π10 已经是一个最优的策略了，从任何一点（图中任何一个状态）出发都能到达目标区域。我们设置的 r_forbidden 比较大，所以会避开障碍。</li>
+          <li>从图中还能看出一个现象，比较接近目标的状态的策略会先变好（从图中绿色的箭头可以看出），远离目标的状态的策略会后变好。从直观上这是因为，在某一个状态，我选择它的 greedy action，也就是 action 对应的最大的动作值（action value）q_π(s, a)的时候，严重依赖于其他状态的策略，如果其他状态的策略是不好的乱七八糟的，这时候虽然选一个最大的动作值（action value）q_π(s, a) ，但是可能也是没有意义的。&nbsp;</li>
+          <li>当这个状态周围没有状态能到达目标区域时，它也不会到达目标区域，当有状态有能够到达目标区域的策略时，这个状态新的策略也能到达目标区域。</li>
+         </ul> 
+         <hr> 
+         <h2 id="%E4%B8%89.%E6%88%AA%E6%96%AD%E7%AD%96%E7%95%A5%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95%EF%BC%88Truncated%20policy%20iteration%20algorithm%EF%BC%89">四.截断策略迭代算法（Truncated policy iteration algorithm）</h2> 
+         <p>这是前两个值迭代算法（value iteration algorithm）和策略迭代算法（policy iteration algorithm）的一般化推广；值迭代算法（value iteration algorithm）和策略迭代算法（policy iteration algorithm）是截断策略迭代算法（Truncated policy iteration algorithm）的特殊情况</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/157c73272e308aac54b1c49f2e775cf0.png" width="1200"></p> 
+         <p>这两种算法非常相似：</p> 
+         <p><img alt="" height="265" src="https://i-blog.csdnimg.cn/blog_migrate/e0278350f441b882f5e04081985a435c.png" width="986"></p> 
+         <p>理解：&nbsp;</p> 
+         <ul>
+          <li>u 不是真实的状态价值</li>
+          <li>u0 可以看成未收敛的state value，就是一个中间值</li>
+          <li>这个前面提到过了，状态价值（state value）是需要贝尔曼方程求解得到的，而这里 u0 只是由策略求出来的一个值，并不是状态价值&nbsp;</li>
+         </ul> 
+         <p>让我们仔细比较一下这些步骤：</p> 
+         <p><img alt="" height="1156" src="https://i-blog.csdnimg.cn/blog_migrate/112c918146a0d39ed2abceca900ee838.png" width="1200"></p> 
+         <p>理解：&nbsp;</p> 
+         <ul>
+          <li>值迭代的状态值V经过一步计算获得 策略迭代的状态值V需要迭代计算获得&nbsp;</li>
+          <li>开始一个需要policy一个不要。value更新时Policy iteration每一个value的求解都得Bellman公式求解，Value iteration直接一步带入</li>
+          <li>policy iteration直接一步到位，value iteration 还在迭代</li>
+          <li>太妙了，这里v的下标是pi的时候，表示一个值函数；是数字的时候，不表示值函数了，只是一个迭代中的变量</li>
+          <li>雀氏，值迭代中外框架是用一个序列逼近真实的v，所以值迭代里的v你可以理解为v的估计\中间计算步骤，而策略迭代里的v是通过PE评估一个确定的策略得到的</li>
+          <li>value iteration: v-p-v-p-v-p-v-p-.....；policy iteration: p-vvvvv...-p-vvvvv...-p-vvvvv.</li>
+          <li>值迭代算法只迭代一次，策略迭代算法迭代无穷多次</li>
+         </ul> 
+         <p><img alt="" height="1150" src="https://i-blog.csdnimg.cn/blog_migrate/b840a2be237f36199e7ad0cd7d070892.png" width="1200"></p> 
+         <ul>
+          <li><span style="background-color:#fbd4d0;">由上图可知，在第四步中 value iteration 只计算了一步，就得到 v1，而 policy iteration 要计算无穷多步才能得到&nbsp;v_π1。那么自然能想象到有没有一个中间步，只计算 j 次，把 v_π1(j) 作为一个新的量，把它作为新的值放到下一步计算策略，这样的算法叫截断策略迭代算法（Truncated policy iteration algorithm），之所以是&nbsp;Truncated，因为从 j 到 ∞ 的这些步骤全都被截断了。&nbsp;</span></li>
+          <li>所以截断策略迭代算法（Truncated policy iteration algorithm）是前两个值迭代算法（value iteration algorithm）和策略迭代算法（policy iteration algorithm）的一般化推广。当 j=1，截断策略迭代算法（Truncated policy iteration algo rithm）变成了值迭代算法（value iteration algorithm）；当 j=∞，截断策略迭代算法（Truncated policy iteration algorithm）变成了策略迭代算法（policy iteration algorithm）</li>
+          <li>在实际当中策略迭代算法（policy iteration algorithm）不存在，因为不可能计算无穷多步，我们经常做的是判断&nbsp;v_π1(j) 和&nbsp;v_π1(j-1) 这两个它们之间的 error 是否足够小，足够小就停止迭代，这样的话它仍然是计算了有限步。所以在实际当中即使我们要计算策略迭代算法（policy iteration algorithm）它也仍然是一个截断策略迭代算法（Truncated policy iteration algorithm）</li>
+         </ul> 
+         <hr> 
+         <p><strong>伪代码：</strong></p> 
+         <p><span style="background-color:#fbd4d0;">收敛的意思就是，收敛到一个怎么迭代都不太会改变的值&nbsp;</span></p> 
+         <p><img alt="" height="827" src="https://i-blog.csdnimg.cn/blog_migrate/bd91ab8c07ff108fed0910424aa89429.png" width="1200"></p> 
+         <p>因为没有计算无穷多步，所以此时的 vk ≠ v_πk，那么此时的截断是否会带来一些问题呢？比如是否会使整个算法不再收敛？</p> 
+         <hr> 
+         <p><strong>截断是否会削弱收敛性？下面给出一个定理：&nbsp;</strong></p> 
+         <p><img alt="" height="793" src="https://i-blog.csdnimg.cn/blog_migrate/9049863d1f700892a10855bb49bf67ff.png" width="1200"></p> 
+         <p>刚才这个结果可以通过下图比较好的展示出来，这个图的横轴是 k，即 policy iteration 算法中的迭代次数 iteration 的索引（index）&nbsp;，纵轴是值，简单起见，state value 只有一维。红线 v* 代表最优状态值（optimal state value），其他曲线是上面三种算法，通过迭代都最终收敛到 v*</p> 
+         <p><img alt="" height="684" src="https://i-blog.csdnimg.cn/blog_migrate/2d2cebe2c281a761843928a205017720.png" width="1192"></p> 
+         <p>PI 的收敛证明基于 VI 的收敛证明。既然 VI 收敛，我们就知道 PI 收敛。</p> 
+         <hr> 
+         <p><strong>例子：</strong></p> 
+         <p>设置： 与上一示例相同。<span style="background-color:#fbd4d0;">以下是初始策略，目标是找一个最优策略</span></p> 
+         <p class="img-center"><img alt="" height="253" src="https://i-blog.csdnimg.cn/blog_migrate/1478b9ace4b0f33efb501272f1bd2399.png" width="258"></p> 
+         <p class="img-center"><img alt="" height="384" src="https://i-blog.csdnimg.cn/blog_migrate/c0802ddad57fd7acd11f4a7f2f1ddec2.png" width="508"></p> 
+         <ul>
+          <li>"截断策略迭代（Truncated policy iteration）-x"，其中 x = 1、3、6、100 指的是截断策略迭代算法，其中策略评估步骤（the policy evaluation step）运行 x 次迭代。</li>
+          <li>每个小图右上角标签上的数字意思是，每次在大的&nbsp;Truncated policy iteration 中有一个嵌套的迭代的次数（在策略评估那一步 policy evaluation），如果是 value iteration 只迭代一次，如果是 policy iteration 则迭代无穷多次，把那个次数设为 x。当 x=1 时，就是&nbsp;value iteration，最上面一幅图，要到50多步的时候 vk 与&nbsp;v* 的误差才小于 0.01；如果 x=3，那么它20多步就小于 0.01 了，可以加快收敛速度；x=6，x=100的时候也可以加快收敛，但是效果越来越不明显。</li>
+          <li>上图横坐标是最外面的迭代次数，这里迭代的步数应该是外面PE，PI的步数</li>
+         </ul> 
+         <p>结论：</p> 
+         <ul>
+          <li>x 值越大，估计值收敛得越快。</li>
+          <li>但是，当 x 值越大时，增加 x 值的好处就会迅速减少。</li>
+          <li>在实际操作中，在策略评估步骤中运行少量的迭代，尽量不要每次计算一步，也不要计算很多步，尽量稍微多计算几步就能有很大收获。</li>
+          <li>外层循环相比内层循环要多计算很多东西，每一次迭代花费的时间不一样，所以找一个折中方案。让外层尽量少，内层又不至于过多</li>
+         </ul> 
+         <hr> 
+         <h2 id="%E5%9B%9B.%E6%80%BB%E7%BB%93">五.总结</h2> 
+         <p><img alt="" height="745" src="https://i-blog.csdnimg.cn/blog_migrate/4d160d9ac6a05bec164c93048ab854b9.png" width="1127"></p> 
+         <p></p> 
+        </div> 
+       </div> 
+      </article>   
+      <img src="https://img-home.csdnimg.cn/images/20211209110851.png" alt="pdf_watermark" width="0" height="0" style="display: none"> 
+      <div class="print_watermark"></div> 
+      <div class="print_watermark_info"> 
+       <p>内容来源：csdn.net</p> 
+       <p>作者昵称：leaf_leaves_leaf</p> 
+       <p>原文链接：https://blog.csdn.net/qq_64671439/article/details/135329688</p> 
+       <p>作者主页：https://blog.csdn.net/qq_64671439</p> 
+      </div> 
+      <style>
+    .print_watermark, .print_watermark_info {
+      display: none
+    }
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact; /* Chrome, Safari */
+        color-adjust: exact; /* Firefox */
+        background-image: none !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact;
+      }
+      .blog-content-box {
+        padding: 0;
+      }
+      .blog-content-box .article-header .article-info-box > div:not(.article-bar-top){
+        display: none !important;
+      }
+      .blog-content-box .article-header .article-info-box  .article-bar-top img{
+          display:none
+      }
+      .blog-content-box .article-header .article-info-box > .article-bar-top .bar-content > *:not(.follow-nickName):not(.time){
+          display: none !important;
+      }
+      .print_watermark {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 999;
+        background-image: url('https://img-home.csdnimg.cn/images/20211209110851.png');
+        background-size: 180px auto;
+        background-repeat: repeat;
+      }
+      .print_watermark_info {
+        display: block;
+        position: fixed;
+        bottom: 16px;
+        right: 0;
+        z-index: 1000;
+        color: #e8e8ed;
+        font-size: 12px;
+        ocapity: .5
+      }
+      @page {
+        margin: 0 10mm 10mm;
+        size: landscape;
+      }
+      body, article {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #csdn-toolbar,.main_father > *:not(#mainBox), .csdn-side-toolbar, .main_father aside {
+        display: none !important;
+      }
+      .main_father > #mainBox {
+        width: unset
+      }
+      .main_father > #mainBox > main > *:not(.blog-content-box){
+        display: none !important;
+      }
+    }
+  </style> 
+     </div> 
+     <div class="directory-boxshadow-dialog" style="display:none;"> 
+      <div class="directory-boxshadow-dialog-box"> 
+      </div> 
+      <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new"> 
+       <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png"> 
+       <div class="vip-limited-time-top">
+         确定要放弃本次机会？ 
+       </div> 
+       <span class="vip-limited-time-text">福利倒计时</span> 
+       <div class="limited-time-box-new"> 
+        <span class="time-hour"></span> 
+        <i>:</i> 
+        <span class="time-minite"></span> 
+        <i>:</i> 
+        <span class="time-second"></span> 
+       </div> 
+       <div class="limited-time-vip-box"> 
+        <p> <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png"> <span class="def">立减 ¥</span> <span class="active limited-num"></span> </p> 
+        <span class="">普通VIP年卡可用</span> 
+       </div> 
+       <a class="limited-time-btn-new" href="https://mall.csdn.net/vip" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.9621&quot;}" data-report-query="spm=1001.2101.3001.9621">立即使用</a> 
+      </div> 
+     </div> 
+     <div class="more-toolbox-new more-toolbar" id="toolBarBox"> 
+      <div class="left-toolbox"> 
+       <div class="toolbox-left"> 
+        <div class="profile-box"> 
+         <a class="profile-href" target="_blank" href="https://blog.csdn.net/qq_64671439"><img class="profile-img" src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1"> <span class="profile-name"> leaf_leaves_leaf </span> </a> 
+        </div> 
+        <div class="profile-attend"> 
+         <a class="tool-attend tool-bt-button tool-bt-attend" href="javascript:;" data-report-view="{&quot;mod&quot;:&quot;1592215036_002&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;extend1&quot;:&quot;已关注&quot;}">已关注</a> 
+         <a class="tool-item-follow active-animation" style="display:none;">已关注</a> 
+        </div> 
+       </div> 
+       <div class="toolbox-middle"> 
+        <ul class="toolbox-list"> 
+         <li class="tool-item tool-item-size tool-active is-like" id="is-like" data-type="bottom"> <a class="tool-item-href"> <img style="display:none;" id="is-like-imgactive-animation-like" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarThumbUpactive.png" alt=""> <img class="isactive" style="display:none" id="is-like-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like-active.png" alt=""> <img class="isdefault" style="display:block" id="is-like-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like.png" alt=""> <span id="spanCount" class="count "> 71 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">点赞</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-unlike" id="is-unlike"> <a class="tool-item-href"> <img class="isactive" style="margin-right:0px;display:none" id="is-unlike-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike-active.png" alt=""> <img class="isdefault" style="margin-right:0px;display:block" id="is-unlike-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike.png" alt=""> <span id="unlikeCount" class="count "></span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">踩</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-collection "> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_824&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4130&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img style="display:none" id="is-collection-img-collection" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect-active.png" alt=""> <img class="isdefault" id="is-collection-img" style="display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect.png" alt=""> <img class="isactive" id="is-collection-imgactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCollectActive.png" alt=""> <span class="count get-collection " data-num="73" id="get-collection"> 73 </span> </a> 
+          <div class="tool-hover-tip collect"> 
+           <div class="collect-operate-box"> 
+            <span class="collect-text" id="is-collection"> 收藏 </span> 
+           </div> 
+          </div> 
+          <div class="tool-active-list"> 
+           <div class="text">
+             觉得还不错? 
+            <span class="collect-text" id="tool-active-list-collection"> 一键收藏 </span> 
+            <img id="tool-active-list-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/collectionCloseWhite.png" alt=""> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-comment"> 
+          <div class="guide-rr-first"> 
+           <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward01.png" alt=""> 
+           <button class="btn-guide-known">知道了</button> 
+          </div> <a class="tool-item-href go-side-comment" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7009&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/comment.png" alt=""> <span class="count"> 0 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">评论</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-QRcode" data-type="article" id="tool-share"> <a class="tool-item-href" href="javascript:;" data-report-view="{&quot;spm&quot;:&quot;3001.4129&quot;,&quot;extra&quot;:{&quot;type&quot;:&quot;blogdetail&quot;}}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/share.png" alt=""> <span class="count">分享</span> </a> 
+          <div class="QRcode" id="tool-QRcode"> 
+           <div class="share-bg-box"> 
+            <div class="share-content"> 
+             <a id="copyPosterUrl" data-type="link" class="btn-share">复制链接</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="qq">分享到 QQ</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="weibo">分享到新浪微博</a> 
+            </div> 
+            <div class="share-code"> 
+             <div class="share-code-box" id="shareCode"></div> 
+             <div class="share-code-text"> 
+              <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/share/icon-wechat.png" alt="">扫一扫 
+             </div> 
+            </div> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-reward"> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_830&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4237&quot;,&quot;dest&quot;:&quot;&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="isdefault reward-bt" id="rewardBtNew" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">打赏</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-downloadpdf" id="tool-downloadpdf"> <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> </a> 
+          <div class="tool-hover-tip">
+           <span class="text">导出PDF</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-more" id="is-more"> <a class="tool-item-href"> <img class="isdefault" style="margin-right:0px;display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/more.png" alt=""> <span class="count"></span> </a> 
+          <div class="more-opt-box"> 
+           <div class="mini-box"> 
+            <a class="tool-item-href" id="rewardBtNewHide" data-report-click="{&quot;spm&quot;:&quot;3001.4237&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault reward-bt" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+            <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> <span class="count">导出PDF</span> </a> 
+            <a class="tool-item-href" id="toolReportBtnHide"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+           <div class="normal-box"> 
+            <a class="tool-item-href" id="toolReportBtnHideNormal"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+          </div> </li> 
+        </ul> 
+       </div> 
+       <div class="toolbox-right"> 
+        <div class="tool-directory"> 
+         <a class="bt-columnlist-show" data-id="12540921" data-free="true" data-description="" data-subscribe="false" data-title="【强化学习的数学原理-赵世钰】课程笔记" data-img="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" data-url="https://blog.csdn.net/qq_64671439/category_12540921.html" data-sum="10" data-people="244" data-price="0" data-hotrank="0" data-status="true" data-oldprice="0" data-join="false" data-studyvip="true" data-studysubscribe="false" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}">专栏目录</a> 
+        </div> 
+       </div> 
+      </div> 
+     </div>    
+     <a id="commentBox" name="commentBox"></a> 
+    </main> 
+   </div> 
+   <div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div id="recommend-right-concision"> 
+      <div class="flex-column aside-box groupfile" id="groupfileConcision"> 
+       <div class="groupfile-div1"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+  </div> 
+  <div class="mask-dark"></div> 
+  <div class="skin-boxshadow"></div> 
+  <div class="directory-boxshadow"></div> 
+  <div style="display:none;"> 
+   <img src="" onerror="setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){var test=&quot;\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74&quot;}},3000);"> 
+  </div> 
+  <div class="keyword-dec-box" id="keywordDecBox"></div> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css">        
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">                  
+ </body>
+</html>

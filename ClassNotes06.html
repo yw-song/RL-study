@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <link rel="canonical" href="https://blog.csdn.net/qq_64671439/article/details/135375515"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="report" content="{&quot;pid&quot;: &quot;blog&quot;, &quot;spm&quot;:&quot;1001.2101&quot;}"> 
+  <meta name="referrer" content="always"> 
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <link rel="alternate" media="handheld" href="#">  
+  <meta name="applicable-device" content="pc"> 
+  <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"> 
+  <title>【强化学习的数学原理-赵世钰】课程笔记（六）随机近似与随机梯度下降-CSDN博客</title>   
+  <meta name="keywords" content="强化学习的数学原理-赵世钰"> 
+  <meta name="csdn-baidu-search" content="{&quot;autorun&quot;:true,&quot;install&quot;:true,&quot;keyword&quot;:&quot;wps打字明明有但看不见&quot;}"> 
+  <meta name="description" content="文章浏览阅读4.7k次，点赞44次，收藏59次。万字长文，详细介绍强化学习中的随机近似与随机梯度下降（随机梯度下降对比 BGD，MBGD 和 SGD），看完本文可以更好的理解经典强化学习算法，比如时序差分算法（TD算法）_强化学习的数学原理-赵世钰"> 
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-d4fc849858.min.css">  
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-1024/skin-1024-ecd36efea2.min.css">    
+  <meta name="toolbar" content="{&quot;type&quot;:&quot;0&quot;,&quot;fixModel&quot;:&quot;1&quot;}">    
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css"> 
+  <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>    
+ 	<style>
+	main div.blog-content-box pre {
+		max-height: 100%;
+		overflow-y: hidden;
+	}
+	</style>
+ </head>  
+ <body class="nodata  " style=""> 
+  <div id="toolbarBox" style="min-height: 48px;"></div>    
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css"> 
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css">   
+  <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;"> 
+   <div class="container clearfix container-concision" id="mainBox">  
+    <main>  
+     <div class="blog-content-box"> 
+      <div class="article-header-box"> 
+       <div class="article-header"> 
+        <div class="article-title-box"> 
+         <h1 class="title-article" id="articleContentId">【强化学习的数学原理-赵世钰】课程笔记（六）随机近似与随机梯度下降</h1> 
+        </div> 
+        <div class="article-info-box"> 
+         <div class="article-bar-top"> 
+          <img class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png" alt=""> 
+          <div class="bar-content"> 
+           <a class="follow-nickName " href="https://blog.csdn.net/qq_64671439" target="_blank" rel="noopener" title="leaf_leaves_leaf">leaf_leaves_leaf</a> 
+           <img class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newUpTime2.png" alt=""> 
+           <span class="time">已于&nbsp;2024-03-03 13:47:41&nbsp;修改</span> 
+           <div class="read-count-box"> 
+            <img class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png" alt=""> 
+            <span class="read-count">阅读量4.7k</span> 
+            <a id="blog_detail_zk_collection" class="un-collection" data-report-click="{&quot;mod&quot;:&quot;popu_823&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="article-collect-img article-heard-img un-collect-status isdefault" style="display:inline-block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" alt=""> <img class="article-collect-img article-heard-img collect-status isactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" alt=""> <span class="name">收藏</span> <span class="get-collection"> 59 </span> </a> 
+            <div class="read-count-box is-like" data-type="top"> 
+             <img class="article-read-img article-heard-img" style="display:none" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" alt=""> 
+             <img class="article-read-img article-heard-img" style="display:block" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" alt=""> 
+             <span class="read-count" id="blog-digg-num">点赞数 44 </span> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="blog-tags-box"> 
+          <div class="tags-box artic-tag-box"> 
+           <span class="label">分类专栏：</span> 
+           <a class="tag-link" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" rel="noopener">【强化学习的数学原理-赵世钰】课程笔记</a> 
+           <span class="label">文章标签：</span> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E7%AC%94%E8%AE%B0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">笔记</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;人工智能&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;人工智能\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;人工智能&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;人工智能\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">人工智能</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">机器学习</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">学习</a> 
+          </div> 
+         </div> 
+         <div class="up-time">
+          <span>于&nbsp;2024-01-06 13:10:43&nbsp;首次发布</span>
+         </div> 
+         <div class="slide-content-box"> 
+          <div class="article-copyright"> 
+           <div class="creativecommons">
+             版权声明：本文为博主原创文章，遵循
+            <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"> CC 4.0 BY-SA </a>版权协议，转载请附上原文出处链接和本声明。 
+           </div> 
+           <div class="article-source-link">
+             本文链接：
+            <a href="https://blog.csdn.net/qq_64671439/article/details/135375515" target="_blank">https://blog.csdn.net/qq_64671439/article/details/135375515</a> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="operating"> 
+          <a class="href-article-edit slide-toggle">版权</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div id="blogHuaweiyunAdvert"></div> 
+      <div id="blogColumnPayAdvert"> 
+       <div class="column-group"> 
+        <div class="column-group-item column-group0 column-group-item-one"> 
+         <div class="item-l"> 
+          <a class="item-target" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" title="【强化学习的数学原理-赵世钰】课程笔记" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}"> <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt=""> <span class="title item-target"> <span> <span class="tit">【强化学习的数学原理-赵世钰】课程笔记</span> <span class="dec">专栏收录该内容</span> </span> </span> </a> 
+         </div> 
+         <div class="item-m"> 
+          <span>10 篇文章</span> 
+         </div> 
+         <div class="item-r"> 
+          <a class="item-target article-column-bt articleColumnFreeBt" data-id="12540921">订阅专栏</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <article class="baidu_pl"> 
+       <div id="article_content" class="article_content clearfix"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-704d5b9767.css"> 
+        <div id="content_views" class="htmledit_views atom-one-dark"> 
+         <p id="main-toc"><strong>目录</strong></p> 
+         <p id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0-toc" style="margin-left:0px;"><a href="#%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0" rel="nofollow">一.内容概述</a></p> 
+         <p id="%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89" rel="nofollow">二.激励性实例（Motivating examples）</a></p> 
+         <p id="%E4%B8%89.Robbins-Monro%20%E7%AE%97%E6%B3%95%EF%BC%88RM%20%E7%AE%97%E6%B3%95%EF%BC%89%EF%BC%9A-toc" style="margin-left:0px;"><a href="#%E4%B8%89.Robbins-Monro%20%E7%AE%97%E6%B3%95%EF%BC%88RM%20%E7%AE%97%E6%B3%95%EF%BC%89%EF%BC%9A" rel="nofollow">三.Robbins-Monro 算法（RM 算法）：</a></p> 
+         <p id="1.%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0-toc" style="margin-left:40px;"><a href="#1.%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0" rel="nofollow">1.算法描述</a></p> 
+         <p id="2.%E8%AF%B4%E6%98%8E%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88llustrative%20examples%EF%BC%89-toc" style="margin-left:40px;"><a href="#2.%E8%AF%B4%E6%98%8E%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88llustrative%20examples%EF%BC%89" rel="nofollow">2.说明性实例（llustrative examples）</a></p> 
+         <p id="3.%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Convergence%20analysis%EF%BC%89-toc" style="margin-left:40px;"><a href="#3.%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Convergence%20analysis%EF%BC%89" rel="nofollow">3.收敛性分析（Convergence analysis）</a></p> 
+         <p id="4.%E5%9C%A8%E5%B9%B3%E5%9D%87%E5%80%BC%E4%BC%B0%E8%AE%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%EF%BC%88Application%20to%20mean%20estimation%EF%BC%89-toc" style="margin-left:40px;"><a href="#4.%E5%9C%A8%E5%B9%B3%E5%9D%87%E5%80%BC%E4%BC%B0%E8%AE%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%EF%BC%88Application%20to%20mean%20estimation%EF%BC%89" rel="nofollow">4.在平均值估计中的应用（Application to mean estimation）</a></p> 
+         <p id="%E5%9B%9B.%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%88stochastic%20gradient%20descent%EF%BC%8CSDG%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E5%9B%9B.%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%88stochastic%20gradient%20descent%EF%BC%8CSDG%EF%BC%89" rel="nofollow">四.随机梯度下降（stochastic gradient descent，SDG）</a></p> 
+         <p id="1.%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0-toc" style="margin-left:40px;"><a href="#1.%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0" rel="nofollow">1.算法描述</a></p> 
+         <p id="2.%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%BA%94%E7%94%A8%EF%BC%88Example%20and%20application%EF%BC%89-toc" style="margin-left:40px;"><a href="#2.%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%BA%94%E7%94%A8%EF%BC%88Example%20and%20application%EF%BC%89" rel="nofollow">2.实例和应用（Example and application）</a></p> 
+         <p id="3.%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Convergence%20analysis%EF%BC%89-toc" style="margin-left:40px;"><a href="#3.%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Convergence%20analysis%EF%BC%89" rel="nofollow">3.收敛性分析（Convergence analysis）</a></p> 
+         <p id="4.%E6%94%B6%E6%95%9B%E6%A8%A1%E5%BC%8F%EF%BC%88Convergence%20pattern%EF%BC%89-toc" style="margin-left:40px;"><a href="#4.%E6%94%B6%E6%95%9B%E6%A8%A1%E5%BC%8F%EF%BC%88Convergence%20pattern%EF%BC%89" rel="nofollow">4.收敛模式（Convergence pattern）</a></p> 
+         <p id="5.%E4%B8%80%E7%A7%8D%E7%A1%AE%E5%AE%9A%E6%80%A7%E8%A1%A8%E8%BF%B0%EF%BC%88A%20deterministic%20formulation%EF%BC%89-toc" style="margin-left:40px;"><a href="#5.%E4%B8%80%E7%A7%8D%E7%A1%AE%E5%AE%9A%E6%80%A7%E8%A1%A8%E8%BF%B0%EF%BC%88A%20deterministic%20formulation%EF%BC%89" rel="nofollow">5.一种确定性表述（A deterministic formulation）</a></p> 
+         <p id="%E4%BA%94.batch%20gradient%20descent%EF%BC%8Cmini-batch%20gradient%20descent%20%E5%92%8C%20stochastic%20gradient%20descent%EF%BC%88%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%8C%E5%BE%AE%E5%9E%8B%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E5%92%8C%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%89%EF%BC%88BGD%EF%BC%8CMBGD%20%E5%92%8C%20SGD%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%94.batch%20gradient%20descent%EF%BC%8Cmini-batch%20gradient%20descent%20%E5%92%8C%20stochastic%20gradient%20descent%EF%BC%88%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%8C%E5%BE%AE%E5%9E%8B%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E5%92%8C%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%89%EF%BC%88BGD%EF%BC%8CMBGD%20%E5%92%8C%20SGD%EF%BC%89" rel="nofollow">五.batch gradient descent，mini-batch gradient descent 和 stochastic gradient descent（批量梯度下降，微型批量梯度下降和随机梯度下降）（BGD，MBGD 和 SGD）</a></p> 
+         <p id="%E5%85%AD.%E6%80%BB%E7%BB%93-toc" style="margin-left:0px;"><a href="#%E5%85%AD.%E6%80%BB%E7%BB%93" rel="nofollow">六.总结</a></p> 
+         <hr id="hr-toc"> 
+         <p></p> 
+         <h3 id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0">一.内容概述</h3> 
+         <p>背景：</p> 
+         <ul>
+          <li>本次课学习随机近似理论（Stochastic Approximation）和随机梯度下降（Stochastic Gradient Descent）。因为下节课我们要介绍 Temporal-Difference learning，这是一个无模型的强化学习算法，下节课与上节课介绍的有一个知识的鸿沟，比较难理解。实际上，Temporal-Difference learning 是&nbsp;Stochastic Approximation 的一个特殊情况。因此，这节课先介绍背景知识</li>
+          <li>在上一讲中，我们介绍了蒙特卡洛学习法（Monte-Carlo learning）。</li>
+          <li>在下一讲中，我们将介绍时差（TD）学习（temporal-difference (TD) learning）。</li>
+          <li>在本讲座中，我们将按下暂停键，以便做好更充分的准备。</li>
+         </ul> 
+         <p>为什么？</p> 
+         <ul>
+          <li>TD算法（temporal-difference (TD) learning）的思想和表达方式与我们目前学习的算法截然不同。</li>
+          <li>很多学生在第一次看到 TD 算法时，都会疑惑为什么当初要设计这些算法，为什么它们能有效地工作。</li>
+          <li>There is a knowledge gap!</li>
+         </ul> 
+         <p>在本次课中：</p> 
+         <ul>
+          <li>我们将通过介绍基本的随机逼近（SA）算法，填补上一讲和下一讲之间的知识空白。通过介绍基本的随机近似（SA）算法（basic stochastic approximation (SA) algorithms），我们将填补上一讲和下一讲之间的知识空白。</li>
+          <li>我们将在下一讲中看到，时差算法是一种特殊的 SA 算法（temporal-difference algorithms are special SA algorithms）。因此，理解这些算法会容易得多。</li>
+         </ul> 
+         <hr> 
+         <p>本节课内容：</p> 
+         <ul>
+          <li>1.激励性实例（Motivating examples）：首先介绍 mean estimation，也就是估计一个随机变量的 expectation，因为我们想用这个例子说明什么是 non-incremental（非增量式），什么是 incremental（增量式）。<span style="background-color:#fbd4d0;">实际上要估计 E[X] 有两种方法：</span>non-incremental 方法就是比如有一万个采样，要等所有采样都采到了再一次性求平均，得到 E[X] 的一个近似；incremental 的思想是开始的时候对他有一个估计，这个估计可能不准但是没关系，我得到一个采样我就用这个采样来更新我的估计，得到一个采样就更新一次，慢慢的估计会越来越准确，这就是增量式的思想，它的好处是不需要等全部样本全部集齐，在收集样本的过程中就可以有一些估计尽管不太准确，但可以使用，会越来越准确。</li>
+          <li>2.Robbins-Monro 算法（RM 算法）：是随机近似理论（Stochastic Approximation）中非常经典的一个算法，<span style="background-color:#fbd4d0;">求解 g(w)=0 这样一个方程</span>，求解 w 使得这个方程成立。不需要知道 g(w) 长什么样子，它的表达式，它的梯度导数全都不需要就可以被求出来。</li>
+          <li>3.随机梯度下降（Stochastic Gradient Descent）：是 RM 算法的一个特殊情况</li>
+          <li>4.batch gradient descent，mini-batch gradient descent 和 stochastic gradient descent（批量梯度下降，微型批量梯度下降和随机梯度下降）（BGD，MBGD 和 SGD）</li>
+          <li>5.总结</li>
+         </ul> 
+         <hr> 
+         <h3 id="%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89">二.激励性实例（Motivating examples）</h3> 
+         <p>这部分介绍一个 mean estimation 的算法，如何通过迭代的方式去求一个期望（expectation）</p> 
+         <p><strong>重温上节课学过的平均值估计问题（Revisit the mean estimation problem）</strong></p> 
+         <ul>
+          <li>考虑一个随机变量 X</li>
+          <li>我们的目标是估计它的期望 E[X]</li>
+          <li>假设我们收集了一些独立同分布的采样</li>
+          <li>对采样求平均值，认为是&nbsp;E[X] 的近似</li>
+          <li>上面这种近似方法就是蒙特卡罗估计的基本思想。</li>
+          <li>当有足够多的数据的时候，采样的平均值会逐渐收敛到它真实的期望 E[X]</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="260" src="https://i-blog.csdnimg.cn/blog_migrate/936a820729b35b91eb387ba7a495e2a2.png" width="497"></p> 
+         <p><strong>为什么我们如此在意平均值估计问题（mean estimation problem）？</strong></p> 
+         <p>强化学习（RL）中的许多量，如动作值和梯度（action values and gradients），都被定义为期望值，都需要用数据去估计</p> 
+         <hr> 
+         <p><strong>新问题：</strong>如何计算平均值&nbsp;<img alt="\overline{x}" class="mathcode" src="https://latex.csdn.net/eq?%5Coverline%7Bx%7D">？</p> 
+         <p class="img-center"><img alt="" height="113" src="https://i-blog.csdnimg.cn/blog_migrate/13514dc8402f9846db269efa4f2e1ee9.png" width="419"></p> 
+         <p>有两种方法：</p> 
+         <p><strong>第一种方法：</strong>很简单，就是收集所有样本，然后计算平均值。</p> 
+         <ul>
+          <li>这种方法的缺点是，如果要在一段时间内逐个（one by one）收集样本，我们就必须等到所有样本都收集完毕。我们必须等到所有样本都收集完毕再求平均。</li>
+         </ul> 
+         <p><strong>第二种方法：</strong>可以避免这一缺点，因为它是以递增（增量式的）（incremental）和迭代（iterative）的方式计算平均值的。基本思路就是来几个就先计算几个，这样效率更高。</p> 
+         <p><strong>下面详细介绍第二种方法</strong></p> 
+         <p class="img-center"><img alt="" height="405" src="https://i-blog.csdnimg.cn/blog_migrate/50aa6849be716839ecd4722b42dafeba.png" width="547"></p> 
+         <p class="img-center"><img alt="" height="336" src="https://i-blog.csdnimg.cn/blog_migrate/c10160541c361eacba478d8722fb9c36.png" width="470"></p> 
+         <p><strong>关于该算法的说明：</strong></p> 
+         <ul>
+          <li>这种算法的优势在于它是渐进式的。一旦收到样本，就可以立即获得平均值估计值。然后，平均估算值就可以立即用于其他目的。在第 k 步的时候，我不需要把前面所有的 xi 全部加起来再求平均，只需要通过上式一步的计算就可以得到一个新的平均数</li>
+          <li>这个算法代表一种增量式的计算思想：在最开始的时候因为数据量比较小，wk 难以非常精确的逼近 E[X]，即由于样本不足，平均值估计在开始时并不准确（即 wk ≠&nbsp;E[X]。不过，有总比没有好，总比一直等到最后才能有一个数来得到一个平均数要强。在这个过程中 wk 就算不精确，也可以用到其它任务中。随着样本的增多，数据越来越大，wk 也会越来越精确的逼近 E[X]，估计值会逐渐提高（即当 k → ∞ 时，wk → E[X]）。</li>
+         </ul> 
+         <p><strong>此外，这个算法也可以进一步推广：</strong></p> 
+         <p>还可以考虑一种表达式更一般的算法：</p> 
+         <p class="img-center"><img alt="" height="86" src="https://i-blog.csdnimg.cn/blog_migrate/dbbd3e7741781303789139df4f17067c.png" width="472"></p> 
+         <ul>
+          <li><strong>这种算法还能收敛到平均值 E[X] 吗？</strong>我们之后将证明，如果 {αk} 满足一些温和的条件（satisfy some mild conditions），答案是可以的。</li>
+          <li>我们还将证明，这种算法是一种特殊的 SA 算法（Stochastic Approximation algorithm），也是一种特殊的随机梯度下降算法（stochastic gradient descent algorithm）。</li>
+          <li>在下一讲中，我们将看到时差算法(the temporal-difference algorithms)有类似（但更复杂）的表达式。</li>
+         </ul> 
+         <hr> 
+         <h3 id="%E4%B8%89.Robbins-Monro%20%E7%AE%97%E6%B3%95%EF%BC%88RM%20%E7%AE%97%E6%B3%95%EF%BC%89%EF%BC%9A">三.Robbins-Monro 算法（RM 算法）：</h3> 
+         <p>是随机近似理论（Stochastic Approximation）中非常经典的一个算法</p> 
+         <h4 id="1.%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0">1.算法描述</h4> 
+         <p><strong>随机近似（Stochastic approximation，SA）究竟是什么：</strong></p> 
+         <ul>
+          <li>SA 指的是<strong>解决寻根（方程求解）或优化问题</strong>的一大类随机迭代算法。SA refers to a broad class of stochastic iterative algorithms solving root finding or optimization problems.（随机算法就是里面会涉及到对随机变量的采样）</li>
+          <li>与许多其他寻根（方程求解）算法（如基于梯度的方法gradient-based methods，梯度下降或梯度上升）相比，SA 的强大之处在于它不需要知道目标函数的表达式或其导数或者梯度的表达式。</li>
+         </ul> 
+         <p><strong>Robbins-Monro (RM) 算法:</strong></p> 
+         <ul>
+          <li>这是随机逼近领域（in the field of stochastic approximation）的一项开创性工作。</li>
+          <li>著名的随机梯度下降算法（stochastic gradient descent algorithm）是 RM 算法的一种特殊形式。</li>
+          <li>它可以用来分析开头介绍的均值估计（mean estimation）算法。我们前面介绍的 mean estimation 算法也是一种特殊的 RM 算法。</li>
+         </ul> 
+         <hr> 
+         <p><strong>问题陈述：</strong> 假设我们想找出方程的根</p> 
+         <p class="img-center"><img alt="" height="50" src="https://i-blog.csdnimg.cn/blog_migrate/f76945dca4bb4e20374c8e71ef6e5340.png" width="102"></p> 
+         <p>其中 w∈R 是待解变量，g ： R → R 是一个函数。w 和 g 全都是标量</p> 
+         <ul>
+          <li>这个问题看似很简单，但是很有用，因为它广泛的存在。许多问题最终都可以转化为这个寻根问题，比如优化问题：例如，假设 J(w) 是一个需要最小化的目标函数，需要优化 J(w) 那么方法就是求解下面的这个方程，就是 J(w) 的梯度等于 0，这个梯度等于 0 是 J(w) 达到最大或最小的一个必要条件，并不是充分条件，但我们可以找到一个局部的极值。或者当 J(w) 只有一个极值的时候，这个就变成一个充分必要条件。</li>
+          <li>总之，优化问题可以写成 g(w)=0 的形式，这时候 g(w) 指的就是梯度</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="55" src="https://i-blog.csdnimg.cn/blog_migrate/3e399417fc67a8691ce71574bef928bb.png" width="190"></p> 
+         <ul>
+          <li>请注意，g(w) = c 这样的方程（c 为常数），也可以通过将 g(w) - c 改写为一个新函数而转换为上式 g(w) - c=0。</li>
+         </ul> 
+         <p><strong>如何求解 g(w) = 0 的根？</strong></p> 
+         <p>有两种情况：<br><strong>基于模型：</strong> 如果已知 g 或者其导数的表达式，有很多数值算法可以解决这个问题。If the expression of g or its derivative is known, there are many numerical algorithms that can solve this problem.<br><strong>无模型： </strong>如果函数 g 的表达式未知呢？例如，函数由人工神经元网络表示。可以通过神经网络求解，y = g(w)，这个神经网络的输入是 w，输出是 y，神经网络里面其实就是&nbsp;g(w)。常见的全连接神经网络其实就是做一个函数的近似，神经网络中我是不知道表达式的，现在问题就是输入什么样的 w 能得到一个 0 的输出？</p> 
+         <p class="img-center"><img alt="" height="119" src="https://i-blog.csdnimg.cn/blog_migrate/2c7ee787f89706af50fee958dc326535.png" width="276"></p> 
+         <hr> 
+         <p><strong>求解 g(w)=0 这样的问题（求这个方程的根）可以用 RM 算法来求解，下面正式介绍 RM 算法：</strong></p> 
+         <p>目标是求解&nbsp;g(w)=0，假设最优解是 w*</p> 
+         <p>RM算法是个迭代式的算法，对 w* 第 k 次的估计是 wk，第 k+1 次的估计是 wk+1</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/a8c7cdb0bd19ba5b7b88a033f0431238.png" width="1200"></p> 
+         <p>用图片表示如下，有一个黑盒是 g(w)，当我们输入 w 之后，有一个输出 y，但是这个 y 我们不能直接测量，还要加上一个噪音，这个噪音我们也不知道，反正能测量到的就是 g~。输入一个 w 就输出一个 g~</p> 
+         <p class="img-center"><img alt="" height="102" src="https://i-blog.csdnimg.cn/blog_migrate/2b0d23282a45fc0f5216dd958ce5bb3f.png" width="184"></p> 
+         <p class="img-center"><img alt="" height="319" src="https://i-blog.csdnimg.cn/blog_migrate/1d9cb0656b2c1cd0b358c4cfb1f133e3.png" width="405"></p> 
+         <p>最开始的时候我输入 w1，得到 g~1，然后带入到下式的右侧，得到 w2，再把 w2 输入，再得到&nbsp;g~2，再带入下式的右侧，得到 w3，以此类推。最后我们会得到 {wk} 的序列和 {g~k} 的序列。RM 算法就是通过这样一种方式来求解的。</p> 
+         <p class="img-center"><img alt="" height="58" src="https://i-blog.csdnimg.cn/blog_migrate/0a16ca2c6f177294bbe2dcfd917b82f6.png" width="377"></p> 
+         <p>这里与之前介绍的基于模型的强化学习和不基于模型的强化学习一样，有模型的时候不需要数据，没有模型就需要数据</p> 
+         <hr> 
+         <h4 id="2.%E8%AF%B4%E6%98%8E%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88llustrative%20examples%EF%BC%89">2.说明性实例（llustrative examples）</h4> 
+         <p><strong>刚才我们通过例子看到 RM 能找到那个解，下面分析为什么能找到解</strong></p> 
+         <p><strong>g(w)=0 的解 w* 标在下图上，要求的就是这个最优解 w*</strong></p> 
+         <p class="img-center"><img alt="" height="217" src="https://i-blog.csdnimg.cn/blog_migrate/09704e18341fc8d6d488a2f7ffd892dd.png" width="521"></p> 
+         <p class="img-center"><img alt="" height="126" src="https://i-blog.csdnimg.cn/blog_migrate/6ad119a707dd12768290c124add86062.png" width="317"></p> 
+         <p>思路基本上是，我给一个 w 看一下输出，如果我发现输出是大于 0 的，那么 g(w) 就小一点，然后输出就会小一点，一直小到输出等于 0 的时候，w 就停止了。但是主要的精髓是每次小要小多少，这个就是 RM 算法给出的，小 ak×g 这么多</p> 
+         <p class="img-center"><img alt="" height="412" src="https://i-blog.csdnimg.cn/blog_migrate/accb3d6ce7fe26ec5e984146e8b22382.png" width="606"></p> 
+         <hr> 
+         <h4 id="3.%E6%94%B6%E6%95%9B%E6%80%A7%E5%88%86%E6%9E%90%EF%BC%88Convergence%20analysis%EF%BC%89">3.收敛性分析（Convergence analysis）</h4> 
+         <p>上述分析 RM 算法为什么能够收敛是直观的，但并不严谨。下面给出了严格的收敛结果。</p> 
+         <p><img alt="" height="794" src="https://i-blog.csdnimg.cn/blog_migrate/0b926bfec7009517a402bacc262f7b00.png" width="1200"></p> 
+         <p><strong>对三个条件的解释：</strong></p> 
+         <p><img alt="" height="1128" src="https://i-blog.csdnimg.cn/blog_migrate/b37007161e8761718fb703e4a3a9733c.png" width="1200"></p> 
+         <p><strong>下面对第二个条件再进行进一步的讨论，因为在未来的 Temporal-Difference learning 中，以及在看论文的时候也会经常看到这个条件：</strong></p> 
+         <p><img alt="" height="998" src="https://i-blog.csdnimg.cn/blog_migrate/770da0de89f7a6a6154ccbbc1405c692.png" width="1200"></p> 
+         <p><img alt="" height="1139" src="https://i-blog.csdnimg.cn/blog_migrate/3f961272d0d4803c3de84302fb2ea5ff.png" width="1200"></p> 
+         <p><strong>什么样的 ak 满足条件 2 呢？</strong></p> 
+         <p><img alt="" height="1163" src="https://i-blog.csdnimg.cn/blog_migrate/758390403adcaf330c439274a6a50fba.png" width="1200"></p> 
+         <hr> 
+         <p>在 RM 算法中，三个条件若是有一个不满足，算法可能无法运行。</p> 
+         <ul>
+          <li>例如，g(w) = w*3 - 5 就不满足梯度有上界的第一个条件（does not satisfy the first condition on gradient boundedness），因为 g'(w) = 3w*2，当 w-&gt;∞ 的时候，g'(w) = 3w*2 也趋向于 ∞。如果初始猜测不错，算法可以收敛（局部）。否则，算法就会发散。</li>
+         </ul> 
+         <p>在实际中，虽然 1/k 满足条件 2，但是我们不总是让 ak =1/k，也不总是让 ak 趋向于 0。在许多 RL 算法中，ak 通常被选为一个足够小的常数。虽然在这种情况下第二个条件无法满足<br> 在这种情况下，算法仍能有效运行。</p> 
+         <ul>
+          <li>如果 ak=1/k，当 k 比较大的时候，后面进来的测量或者数据起到的作用就非常小了，在实际中问题比较复杂，我们希望未来进来的数据仍然能够有用，所以不会让 ak 趋于 0，而是让它趋于非常小的一个数</li>
+         </ul> 
+         <hr> 
+         <h4 id="4.%E5%9C%A8%E5%B9%B3%E5%9D%87%E5%80%BC%E4%BC%B0%E8%AE%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%EF%BC%88Application%20to%20mean%20estimation%EF%BC%89">4.在平均值估计中的应用（Application to mean estimation）</h4> 
+         <p>把 RM 算法应用到 mean estimation 问题中</p> 
+         <p>回忆之前（第一部分）介绍的&nbsp;mean estimation 算法：<strong>（当时在 αk ≠ 1/k 的时候，这个算法的收敛性没法得到证明）</strong></p> 
+         <p class="img-center"><img alt="" height="51" src="https://i-blog.csdnimg.cn/blog_migrate/18d5dd28109fffc704b2d235afe7cee1.png" width="253"></p> 
+         <p>我们知道：</p> 
+         <p class="img-center"><img alt="" height="181" src="https://i-blog.csdnimg.cn/blog_migrate/e94ca85c5b1fd8fd892e81477623a024.png" width="517"></p> 
+         <p><strong>接下来，我们将证明该算法是 RM 算法的一个特例。</strong>然后，它的收敛性自然也就水到渠成了。</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/a04a9e4971bd9c46443764245653808f.png" width="1200"></p> 
+         <hr> 
+         <p>下面介绍一个更加复杂的 stochastic sequence 的收敛性的证明</p> 
+         <ul>
+          <li>这是一个比 RM 定理更普遍的结果定理。它可以用来证明RM定理</li>
+          <li>它还可以直接分析均值估计（mean estimation）问题。</li>
+          <li>它的推广扩展可用于分析 Q-learning 和 TD 学习算法的收敛性。</li>
+         </ul> 
+         <p><img alt="" height="350" src="https://i-blog.csdnimg.cn/blog_migrate/96901202aecfa69fad2d638b54223067.png" width="798"></p> 
+         <blockquote> 
+          <p>第一部分（激励性实例中）介绍的 mean estimation 算法是第二部分介绍的 RM 算法的特殊情况</p> 
+         </blockquote> 
+         <hr> 
+         <h3 id="%E5%9B%9B.%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%88stochastic%20gradient%20descent%EF%BC%8CSDG%EF%BC%89">四.随机梯度下降（stochastic gradient descent，SDG）</h3> 
+         <blockquote> 
+          <p>SGD 是 RM 算法的特殊情况，mean estimation 算法也是 SGD 的特殊情况</p> 
+         </blockquote> 
+         <h4>1.算法描述</h4> 
+         <p><strong>接下来，我们将介绍随机梯度下降（SGD）算法：</strong></p> 
+         <ul>
+          <li>SGD 在机器学习领域和 RL 中得到广泛应用。</li>
+          <li>SGD 是一种特殊的 RM 算法。</li>
+          <li>均值估计（mean estimation）算法是一种特殊的 SGD 算法。</li>
+         </ul> 
+         <p><strong>接下来看一下 SGD 算法要解决的问题是什么：</strong></p> 
+         <p>假设我们的目标是解决以下优化问题：</p> 
+         <p class="img-center"><img alt="" height="48" src="https://i-blog.csdnimg.cn/blog_migrate/61aeb604ec7017dd1118847600811be1.png" width="220"></p> 
+         <ul>
+          <li>目标函数 J，是 w 的函数，目标是要找到最优的 w，要优化 w 使得目标函数达到最小。</li>
+          <li>目标函数是 f 的期望，f 是 w 和随机变量 X 的函数。随机变量 X 的概率分布（probability distribution）已经给定，但我们还不知道。期望是对 X 求期望</li>
+          <li>w 和 X 可以是标量或矢量。函数 f(*) 是一个标量。</li>
+         </ul> 
+         <p><strong>求解这个问题有多种方法，下面给出三种方法：</strong></p> 
+         <p><strong>方法1：梯度下降（gradient descent，GD）</strong></p> 
+         <p>因为我们的目标是最小化一个目标函数，所以要用梯度下降；如果目标是最大化一个目标函数，就要用梯度上升。</p> 
+         <p><img alt="" height="427" src="https://i-blog.csdnimg.cn/blog_migrate/0795fba30414d56273b3c05fc32f8335.png" width="1200"></p> 
+         <p>缺点：难以获得期望值（expected value）。对此有两种解决方法：第一种方法，如果有模型就可以求出来；第二种方法，如果没有模型，用数据求</p> 
+         <p><strong>方法2：批量梯度下降（batch gradient descent，BGD）</strong></p> 
+         <p>接下来看看没有模型，用数据如何求</p> 
+         <p><img alt="" height="582" src="https://i-blog.csdnimg.cn/blog_migrate/351d216ecefb5eca4445f8fad4dae7c3.png" width="1200"></p> 
+         <p>缺点：每次迭代都需要对每个 wk 进行多次采样。在每次更新 wk 的时候都要采样 n 次或者多次。这在实际中还是不实用，那么来到了方法3</p> 
+         <p><strong>方法3：随机梯度下降（stochastic gradient descent，SGD）</strong></p> 
+         <p><img alt="" height="560" src="https://i-blog.csdnimg.cn/blog_migrate/c861ef5ed79f6c9f718b34eb487a4599.png" width="1200"></p> 
+         <p>在&nbsp;batch gradient descent 中，要采样很多次，如果采样越多，对期望估计的就越准，但是问题是也需要很多数据；在&nbsp;stochastic gradient descent 中，只用了一个数据，估计的肯定是不精确的。之后会介绍它究竟不精确到什么程度，还能否解决优化问题？</p> 
+         <h4 id="2.%E5%AE%9E%E4%BE%8B%E5%92%8C%E5%BA%94%E7%94%A8%EF%BC%88Example%20and%20application%EF%BC%89">2.实例和应用（Example and application）</h4> 
+         <p>考虑下面这样一个例子</p> 
+         <p class="img-center"><img alt="" height="176" src="https://i-blog.csdnimg.cn/blog_migrate/34af8bbdba9c243e6657e2e05aa98960.png" width="468"></p> 
+         <p>有三个问题：</p> 
+         <p><strong>问题1：证明最优解为 w* = E[X].</strong></p> 
+         <p class="img-center"><img alt="" height="194" src="https://i-blog.csdnimg.cn/blog_migrate/6b4e06dbdbdc5b665bfc3abcfe862dc5.png" width="458"></p> 
+         <p><strong>问题2：写出解决这个问题的 GD 算法。</strong></p> 
+         <p class="img-center"><img alt="" height="135" src="https://i-blog.csdnimg.cn/blog_migrate/6bcdf2bce022f97e87da57cf922f1965.png" width="311"></p> 
+         <p><strong>问题3：写出解决这个问题的 SGD 算法。</strong></p> 
+         <p>先知道 gradient descent，GD 算法，知道里面要有期望，把期望去掉就直接得到 SGD</p> 
+         <p style="text-align:center;"><img alt="" height="59" src="https://i-blog.csdnimg.cn/blog_migrate/d939680e2a5049bbc348788edbe872b5.png" width="482"></p> 
+         <p>请注意：</p> 
+         <ul>
+          <li>它与我们在最开始介绍的均值估计（mean estimation）算法相同。</li>
+          <li>最开始（激励性实例）介绍的均值估计（mean estimation）算法就是假设有一个 X，我要求它的 E[X]，有一组的对 X 的采样 {xi}，把 xi 一个一个放到上面那个图片的算法里，最后就能得到 xi 的平均值，进而近似得到 E[X]。在那个里面，αk =1/k，我们知道 wk 确实是非常精确的前 k 个 xi 的平均值。后面我们又提到了&nbsp;αk ≠1/k 的时候也是可以解决的，因为这个算法是一个特殊的 SGD 算法，<strong>它的问题的描述是不一样的，之前是描述求&nbsp;E[X]，现在它描述为一个优化问题，它们是殊途同归的。</strong></li>
+          <li>该均值估计（mean estimation）算法是一种特殊的 SGD 算法。</li>
+         </ul> 
+         <hr> 
+         <h4>3.收敛性分析（Convergence analysis）</h4> 
+         <p>为什么 SGD 能够是有效的</p> 
+         <p>SGD 的基本思路就是从 GD 出发， GD 中的期望 E 是不知道的，干脆把它去掉，用一个采样来近似这个 E，这个就是 SGD。用的这个采样有一个名字，叫 stochastic gradient；GD 中的期望叫 true gradient</p> 
+         <p class="img-center"><img alt="" height="187" src="https://i-blog.csdnimg.cn/blog_migrate/0abcb81585efbff9cafe40809cf2c52c.png" width="503"></p> 
+         <p>用 stochastic gradient 去近似 true gradient，那么它们之间肯定是存在一个误差的，他俩之间的关系式如下：</p> 
+         <p class="img-center"><img alt="" height="151" src="https://i-blog.csdnimg.cn/blog_migrate/80f6cda44e6ce7c8891c360202245a4b.png" width="496"></p> 
+         <p>stochastic gradient 肯定不是准确的，在这种情况下，用 SGD 是否能找到最优解 w* 呢？答案是肯定的，下面看一下怎样去找。</p> 
+         <hr> 
+         <p>分析的基本思想是证明 SGD 是一个特殊的 RM 算法，RM 算法在满足一定条件下是可以收敛的，我们就知道 SGD 在满足什么条件下也是能够收敛的（若是不依赖于 RM 算法，直接去证明 SGD 的收敛性，会非常复杂）</p> 
+         <p>下面看看如何证明 SGD 是一个特殊的 RM 算法：</p> 
+         <p>SGD 要解决的问题是去最小化下面这样一个目标函数（objective function）</p> 
+         <p class="img-center"><img alt="" height="68" src="https://i-blog.csdnimg.cn/blog_migrate/728237213dbb5a997ddfcf6b0fc52b94.png" width="220"></p> 
+         <p>这个优化问题可以转化为一个寻根问题（a root-finding problem），就是求解一个方程的问题，因为上面的目标函数要达到最优的话，必要条件是它的梯度（gradient）等于 0：</p> 
+         <p class="img-center"><img alt="" height="60" src="https://i-blog.csdnimg.cn/blog_migrate/55f02774f503180a82937cda319a2ee4.png" width="289"></p> 
+         <p>如果让 g(w) 等于梯度（gradient），那么求解上上个图片的最优问题就变成了求解一个方程 g(w)=0 的问题。</p> 
+         <p class="img-center"><img alt="" height="120" src="https://i-blog.csdnimg.cn/blog_migrate/9e14c8c53067484c5607031c1cde89d2.png" width="468"></p> 
+         <p>那么&nbsp;g(w)=0 可以用一个 RM 算法来求解。为了求解 RM 算法需要用到数据，也就是 g(w) 算法的表达式我们不知道，但是<strong>我们有一些测量</strong>，这个测量用 g~ 表示，g~ 是 w 和噪音的函数。在这里面，g~ 是 stochastic gradient：</p> 
+         <p class="img-center"><img alt="" height="133" src="https://i-blog.csdnimg.cn/blog_migrate/e015f15b3fcbdefeb8b6aa0ba7bdbcaf.png" width="500"></p> 
+         <p>所以，求解 g(w)=0 的 RM 算法是：</p> 
+         <p class="img-center"><img alt="" height="172" src="https://i-blog.csdnimg.cn/blog_migrate/8283cdad5f75501fe4f39086c3415930.png" width="494"></p> 
+         <p>所以这个 RM 算法就是一个 SGD 算法，反过来说，SGD 算法是求解这样一个特殊问题的 RM 算法，相应的收敛性也可以用 RM 算法的收敛性结论来分析。</p> 
+         <hr> 
+         <p>由于 SGD 是一种特殊的 RM 算法，那么 RM 算法的收敛性也可以应用到 SGD 的收敛性分析当中，它的收敛性自然也就不言而喻了。有下面一个结论：</p> 
+         <p><img alt="" height="880" src="https://i-blog.csdnimg.cn/blog_migrate/75ae4507014ae4662889ab0f308957a2.png" width="1200"></p> 
+         <hr> 
+         <h4 id="4.%E6%94%B6%E6%95%9B%E6%A8%A1%E5%BC%8F%EF%BC%88Convergence%20pattern%EF%BC%89">4.收敛模式（Convergence pattern）</h4> 
+         <p>分析它在收敛过程中有意思的行为</p> 
+         <p><strong>问题：</strong>SGD 是把 GD 当中的 true gradient 用 stochastic gradient 来代替，stochastic gradient&nbsp; 是有随机性的，会不会造成 SGD 的收敛随机性比较大呢。由于随机梯度（stochastic gradient）是随机的，因此近似是不准确的，那么 SGD 的收敛速度是慢还是随机的？</p> 
+         <p>为了回答这个问题，我们考虑了随机梯度（stochastic gradient）和批量梯度（batch gradient）之间的相对误差（relative error）：（分子是两者的绝对误差，分母是）</p> 
+         <p><img alt="" height="844" src="https://i-blog.csdnimg.cn/blog_migrate/0caa5ba1a327d7c0421a037dc2381f10.png" width="1200"></p> 
+         <p><img alt="" height="1085" src="https://i-blog.csdnimg.cn/blog_migrate/153c5610232a5711526ed910cdf085c9.png" width="1200"></p> 
+         <p>注意到：</p> 
+         <p><img alt="" height="452" src="https://i-blog.csdnimg.cn/blog_migrate/88062657926bc8413811ee89b355786b.png" width="1200"></p> 
+         <p>上式表明，SGD 的收敛模式非常有趣。</p> 
+         <ul>
+          <li>当 wk 距离 w* 比较远的时候，分母比较大，若分子是有限的，那么相对误差（relative error）比较小，也就是&nbsp;stochastic gradient 和&nbsp;true gradient 比较接近，这时候SGD 和 GD 很类似，也就是它会大概朝这个方向接近目标；相反，如果 wk-w* 比较小的时候，整个上界比较大，wk 在&nbsp;w* 的附近，这时候存在随机性</li>
+          <li>相对误差 δk 与 |wk - w∗| 成反比。</li>
+          <li>当 |wk - w∗| 较大时，δk 较小，SGD 的表现与普通的梯度下降（GD）相似。</li>
+          <li>当 wk 接近 w∗ 时，相对误差可能很大，收敛在 w∗ 附近表现出更大的随机性。</li>
+         </ul> 
+         <p><img alt="" height="249" src="https://i-blog.csdnimg.cn/blog_migrate/f10d3ac72f70892b35ff5aa2b17bc48d.png" width="919"></p> 
+         <hr> 
+         <p>下面看一个例子：</p> 
+         <ul>
+          <li>设置 X∈R*2 表示平面上的一个随机位置。其在以原点为中心、边长为 20 的正方形区域内分布均匀。真实均值为 E[X] =[0,0]T（转置）。均值估计基于 100 个独立同分布的（iid）样本 {xi}，i=1-100。</li>
+          <li>在以原点为中心、边长为 20 的正方形区域内均匀随机采样 100 组，采集 100 组点。用这 100 组点跑刚才的 mean estimation 的算法，也就是 wk+1=wk-αk(wk-xk)，观察整个算法在收敛过程中呈现什么样的行为</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="161" src="https://i-blog.csdnimg.cn/blog_migrate/6ac3bfbe9713ffc14472fa140bfbe5ff.png" width="504"></p> 
+         <p>结果如下：<br><img alt="" height="899" src="https://i-blog.csdnimg.cn/blog_migrate/4036f29810420d7ea557dbb265bbc8f4.png" width="1200"></p> 
+         <ul>
+          <li>虽然初始猜测的平均值与真实值相距甚远，但 SGD 估计值可以快速接近真实值的邻域。</li>
+          <li>当估计值接近真值时，它表现出一定的随机性，但仍会逐渐接近真值。</li>
+         </ul> 
+         <hr> 
+         <h4 id="5.%E4%B8%80%E7%A7%8D%E7%A1%AE%E5%AE%9A%E6%80%A7%E8%A1%A8%E8%BF%B0%EF%BC%88A%20deterministic%20formulation%EF%BC%89">5.一种确定性表述（A deterministic formulation）</h4> 
+         <ul>
+          <li>我们上面介绍的 SGD 公式（The formulation of SGD）涉及随机变量和期望值（random variables and expectation）。</li>
+          <li>我们经常会遇到不涉及任何随机变量（random variables）的确定性 SGD 公式（deterministic formulation of SGD）。</li>
+         </ul> 
+         <p>考虑下面的优化问题：</p> 
+         <p><img alt="" height="811" src="https://i-blog.csdnimg.cn/blog_migrate/de0592aff4be8a67de1e434049590b52.png" width="1200"></p> 
+         <p>求解这个问题的梯度下降方法（gradient descent algorithm）是：</p> 
+         <p class="img-center"><img alt="" height="84" src="https://i-blog.csdnimg.cn/blog_migrate/bb2ea6fdbb6f80e006eff7679b545747.png" width="565"></p> 
+         <p>假设集合 {xi} 很大，我们每次只能获取一个数字 xi。在这种情况下，我们可以使用下面的迭代算法：把上式求平均的 xi 用 xk 代替</p> 
+         <p class="img-center"><img alt="" height="70" src="https://i-blog.csdnimg.cn/blog_migrate/202b0a4ff55790b5e6585232d82a9e6b.png" width="316"></p> 
+         <p><strong>问题1：</strong>这个算法看起来与 SGD 非常类似，但这种算法是 SGD 吗？</p> 
+         <ul>
+          <li>在问题的描述中它就是一组 {xi}，它不涉及任何随机变量或期望值。</li>
+         </ul> 
+         <p><strong>问题2：</strong></p> 
+         <p><img alt="" height="782" src="https://i-blog.csdnimg.cn/blog_migrate/c1563d0676c88a8accec048d30e05eb4.png" width="1200"></p> 
+         <p>我们应该按照一定的顺序排列这些数字，然后一个一个地使用它们吗？还是随机抽样，还是以某种概率分布随机使用呢？能否重复使用一些数？</p> 
+         <hr> 
+         <p>要快速回答上述问题，我们可以手动引入一个随机变量（introduce a random variable manually），将刚才一个不涉及随机变量的问题变成一个涉及随机变量的问题，将 SGD 的确定性公式（deterministic formulation）转换为随机公式（stochastic formulation）。</p> 
+         <p><img alt="" height="1048" src="https://i-blog.csdnimg.cn/blog_migrate/86405537fca9105cc1de30b640b84e9f.png" width="1200"></p> 
+         <ul>
+          <li>上式中的最后一个等式是严格等式，而不是近似等式。因此，该算法是 SGD 算法。</li>
+          <li>所以，从集合 {xi} 中抽取 xk，应该随机抽取而不应该排序，而且因为是随机抽取，所以集合里面的这些数字会被反复用到。</li>
+          <li>这里面没有随机变量，但是我通过强行引入一个随机变量，把它转化成了一个我可以得到的 SGD 算法的一个问题描述，</li>
+         </ul> 
+         <hr> 
+         <h3 id="%E4%BA%94.batch%20gradient%20descent%EF%BC%8Cmini-batch%20gradient%20descent%20%E5%92%8C%20stochastic%20gradient%20descent%EF%BC%88%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%8C%E5%BE%AE%E5%9E%8B%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E5%92%8C%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%89%EF%BC%88BGD%EF%BC%8CMBGD%20%E5%92%8C%20SGD%EF%BC%89">五.batch gradient descent，mini-batch gradient descent 和 stochastic gradient descent（批量梯度下降，微型批量梯度下降和随机梯度下降）（BGD，MBGD 和 SGD）</h3> 
+         <p>这里研究的问题依然是，有一个目标函数 J(w)，有 n 个采样 xi，我要用这样一组数据优化目标函数，有三种方法：BGD，MBGD 和 SGD</p> 
+         <p class="img-center"><img alt="" height="231" src="https://i-blog.csdnimg.cn/blog_migrate/35b04177a26dbb1bdf11d5cb34077a4b.png" width="556"></p> 
+         <p>BGD 每次都要用到 n 个所有的采样，在这个基础上求平均，这个可以说最接近于真实的期望（expectation）；MBGD 不用所有的采样，每次只用全部采样中的一部分，选取一组数使用（总集合的子集），这组数的集合称为 Ik，这组数有 m 个，我在这一组数上进行平均；SGD 就是从集合 {xi} 中随机选择一个 采样出来。</p> 
+         <p class="img-center"><img alt="" height="184" src="https://i-blog.csdnimg.cn/blog_migrate/591c769a8e9917658d196bc19c1cd478.png" width="569"></p> 
+         <hr> 
+         <p><strong>比较 MBGD，BGD和 SGD</strong></p> 
+         <ul>
+          <li>与 SGD 相比，MBGD 的随机性更小，因为它使用了更多的样本，而不是像 SGD 那样只使用一个样本。用更多的数据去平均的话，会把噪音等等测量给平均掉。</li>
+          <li>与 BGD 相比，MBGD 的数据较少，它的随机性会更大一些，因为它无需在每次迭代中使用所有样本，因此更加灵活高效。</li>
+          <li>如果 MBGD 的 mini-batch m = 1，则 MBGD 变为 SGD</li>
+          <li>如果 MBGD 的 mini-batch m = n，严格来说，MBGD 不会变成 BGD，因为 MBGD 使用随机获取的 n 个样本，抽取的过程中可能一个采样抽取了好几次没有抽到，而 BGD 使用所有 n 个数字。特别是，MBGD 可以多次使用 {xi} 中的一个值，而 BGD 只使用每个数字一次。（这种差别很多时候可以忽略不计，但是最好从数学上能够明白）</li>
+         </ul> 
+         <hr> 
+         <p>下面用例子例证这三个算法：</p> 
+         <p>有 n 个数字，我们的目标是求平均值，求平均值的问题可以等价为一个优化问题：</p> 
+         <p><img alt="" height="996" src="https://i-blog.csdnimg.cn/blog_migrate/8f4aa710b126b927b27a3073dded323b.png" width="1200"></p> 
+         <p>更进一步的，如果 αk =1/k，可以把 wk 显式的形式给求解出来，对于 BGD 的情况，&nbsp;</p> 
+         <p><img alt="" height="942" src="https://i-blog.csdnimg.cn/blog_migrate/febbef5c90ae35c27864120b9255db22.png" width="1200"></p> 
+         <ul>
+          <li>每一步对 BGD 的估计值正是最优解w ∗ = ¯x.</li>
+          <li>MBGD 的估计值比 SGD 更快接近平均值，因为x¯ (m) k 已经是一个平均值</li>
+         </ul> 
+         <hr> 
+         <p>下面通过一个仿真的例子看一下：&nbsp;&nbsp;</p> 
+         <p>与之前的仿真类似，有一个 20×20 的区域，要在里面均匀的采 100 个点，用这 100 个点的数据放到刚才的三个算法中，看一下它们的收敛情况。</p> 
+         <p><img alt="" height="688" src="https://i-blog.csdnimg.cn/blog_migrate/9a9dc8f716280e74ffe06ff78ca58e46.png" width="1200"></p> 
+         <p>红色的线是 SGD，可以看出它的收敛速度还可以；紫色的线和蓝色的线的的区别是 batch size 不同，紫色的线的 batch size 每次是 5 个，蓝色的线的 batch size 每次是 50 个，蓝色的线收敛速度更快。右图的横轴是迭代的次数，<strong>纵轴是到达目标的距离。</strong></p> 
+         <hr> 
+         <h3 id="%E5%85%AD.%E6%80%BB%E7%BB%93">六.总结</h3> 
+         <ol>
+          <li>介绍了 mean estimation 算法，用一组数来求期望（expectation），之前我们只是简单的把这一组数求平均，就可以近似估计它的期望；这节课讲了一个迭代的算法，当我得到一个采样，就计算一次，这样就不用等所有的采样全部拿到了再计算，会更加高效。</li>
+          <li>介绍了非常经典的 SA 领域的 RM 算法，要求的是方程 g(w)=0 的最优解 w*，但是不知道 g(w) 的表达式，只知道给一个 w 能测出来输出，而且这个输出的有噪音或者有误差的，输出用 g~ 表示，所以 RM 算法是怎么样用含有噪音的测量来估计 w*</li>
+          <li>介绍了 SGD 算法，知道目标函数 J(w)，还知道它的一个梯度的采样，就可以用 stochastic gradient 这个算法让最后的 wk 趋于最优值 w*</li>
+         </ol> 
+         <p><img alt="" height="505" src="https://i-blog.csdnimg.cn/blog_migrate/106eeb07e0b04993bf96dd7ec5f554b1.png" width="1172"></p> 
+         <p>这些结果是有用的：</p> 
+         <ul>
+          <li>我们将在下一章中看到，时序差分学习算法（temporal-difference learning algorithms）可以被视为随机近似算法（stochastic approximation algorithms），，因此具有类似的表达式。</li>
+          <li>它们是重要的优化技术，可应用于许多其他领域。&nbsp;</li>
+         </ul> 
+         <p></p> 
+        </div> 
+       </div> 
+      </article>   
+      <img src="https://img-home.csdnimg.cn/images/20211209110851.png" alt="pdf_watermark" width="0" height="0" style="display: none"> 
+      <div class="print_watermark"></div> 
+      <div class="print_watermark_info"> 
+       <p>内容来源：csdn.net</p> 
+       <p>作者昵称：leaf_leaves_leaf</p> 
+       <p>原文链接：https://blog.csdn.net/qq_64671439/article/details/135375515</p> 
+       <p>作者主页：https://blog.csdn.net/qq_64671439</p> 
+      </div> 
+      <style>
+    .print_watermark, .print_watermark_info {
+      display: none
+    }
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact; /* Chrome, Safari */
+        color-adjust: exact; /* Firefox */
+        background-image: none !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact;
+      }
+      .blog-content-box {
+        padding: 0;
+      }
+      .blog-content-box .article-header .article-info-box > div:not(.article-bar-top){
+        display: none !important;
+      }
+      .blog-content-box .article-header .article-info-box  .article-bar-top img{
+          display:none
+      }
+      .blog-content-box .article-header .article-info-box > .article-bar-top .bar-content > *:not(.follow-nickName):not(.time){
+          display: none !important;
+      }
+      .print_watermark {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 999;
+        background-image: url('https://img-home.csdnimg.cn/images/20211209110851.png');
+        background-size: 180px auto;
+        background-repeat: repeat;
+      }
+      .print_watermark_info {
+        display: block;
+        position: fixed;
+        bottom: 16px;
+        right: 0;
+        z-index: 1000;
+        color: #e8e8ed;
+        font-size: 12px;
+        ocapity: .5
+      }
+      @page {
+        margin: 0 10mm 10mm;
+        size: landscape;
+      }
+      body, article {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #csdn-toolbar,.main_father > *:not(#mainBox), .csdn-side-toolbar, .main_father aside {
+        display: none !important;
+      }
+      .main_father > #mainBox {
+        width: unset
+      }
+      .main_father > #mainBox > main > *:not(.blog-content-box){
+        display: none !important;
+      }
+    }
+  </style> 
+     </div> 
+     <div class="directory-boxshadow-dialog" style="display:none;"> 
+      <div class="directory-boxshadow-dialog-box"> 
+      </div> 
+      <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new"> 
+       <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png"> 
+       <div class="vip-limited-time-top">
+         确定要放弃本次机会？ 
+       </div> 
+       <span class="vip-limited-time-text">福利倒计时</span> 
+       <div class="limited-time-box-new"> 
+        <span class="time-hour"></span> 
+        <i>:</i> 
+        <span class="time-minite"></span> 
+        <i>:</i> 
+        <span class="time-second"></span> 
+       </div> 
+       <div class="limited-time-vip-box"> 
+        <p> <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png"> <span class="def">立减 ¥</span> <span class="active limited-num"></span> </p> 
+        <span class="">普通VIP年卡可用</span> 
+       </div> 
+       <a class="limited-time-btn-new" href="https://mall.csdn.net/vip" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.9621&quot;}" data-report-query="spm=1001.2101.3001.9621">立即使用</a> 
+      </div> 
+     </div> 
+     <div class="more-toolbox-new more-toolbar" id="toolBarBox"> 
+      <div class="left-toolbox"> 
+       <div class="toolbox-left"> 
+        <div class="profile-box"> 
+         <a class="profile-href" target="_blank" href="https://blog.csdn.net/qq_64671439"><img class="profile-img" src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1"> <span class="profile-name"> leaf_leaves_leaf </span> </a> 
+        </div> 
+        <div class="profile-attend"> 
+         <a class="tool-attend tool-bt-button tool-bt-attend" href="javascript:;" data-report-view="{&quot;mod&quot;:&quot;1592215036_002&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;extend1&quot;:&quot;已关注&quot;}">已关注</a> 
+         <a class="tool-item-follow active-animation" style="display:none;">已关注</a> 
+        </div> 
+       </div> 
+       <div class="toolbox-middle"> 
+        <ul class="toolbox-list"> 
+         <li class="tool-item tool-item-size tool-active is-like" id="is-like" data-type="bottom"> <a class="tool-item-href"> <img style="display:none;" id="is-like-imgactive-animation-like" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarThumbUpactive.png" alt=""> <img class="isactive" style="display:none" id="is-like-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like-active.png" alt=""> <img class="isdefault" style="display:block" id="is-like-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like.png" alt=""> <span id="spanCount" class="count "> 44 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">点赞</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-unlike" id="is-unlike"> <a class="tool-item-href"> <img class="isactive" style="margin-right:0px;display:none" id="is-unlike-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike-active.png" alt=""> <img class="isdefault" style="margin-right:0px;display:block" id="is-unlike-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike.png" alt=""> <span id="unlikeCount" class="count "></span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">踩</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-collection "> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_824&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4130&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img style="display:none" id="is-collection-img-collection" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect-active.png" alt=""> <img class="isdefault" id="is-collection-img" style="display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect.png" alt=""> <img class="isactive" id="is-collection-imgactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCollectActive.png" alt=""> <span class="count get-collection " data-num="59" id="get-collection"> 59 </span> </a> 
+          <div class="tool-hover-tip collect"> 
+           <div class="collect-operate-box"> 
+            <span class="collect-text" id="is-collection"> 收藏 </span> 
+           </div> 
+          </div> 
+          <div class="tool-active-list"> 
+           <div class="text">
+             觉得还不错? 
+            <span class="collect-text" id="tool-active-list-collection"> 一键收藏 </span> 
+            <img id="tool-active-list-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/collectionCloseWhite.png" alt=""> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-comment"> 
+          <div class="guide-rr-first"> 
+           <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward01.png" alt=""> 
+           <button class="btn-guide-known">知道了</button> 
+          </div> <a class="tool-item-href go-side-comment" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7009&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/comment.png" alt=""> <span class="count"> 2 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">评论</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-QRcode" data-type="article" id="tool-share"> <a class="tool-item-href" href="javascript:;" data-report-view="{&quot;spm&quot;:&quot;3001.4129&quot;,&quot;extra&quot;:{&quot;type&quot;:&quot;blogdetail&quot;}}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/share.png" alt=""> <span class="count">分享</span> </a> 
+          <div class="QRcode" id="tool-QRcode"> 
+           <div class="share-bg-box"> 
+            <div class="share-content"> 
+             <a id="copyPosterUrl" data-type="link" class="btn-share">复制链接</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="qq">分享到 QQ</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="weibo">分享到新浪微博</a> 
+            </div> 
+            <div class="share-code"> 
+             <div class="share-code-box" id="shareCode"></div> 
+             <div class="share-code-text"> 
+              <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/share/icon-wechat.png" alt="">扫一扫 
+             </div> 
+            </div> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-reward"> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_830&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4237&quot;,&quot;dest&quot;:&quot;&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="isdefault reward-bt" id="rewardBtNew" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">打赏</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-downloadpdf" id="tool-downloadpdf"> <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> </a> 
+          <div class="tool-hover-tip">
+           <span class="text">导出PDF</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-more" id="is-more"> <a class="tool-item-href"> <img class="isdefault" style="margin-right:0px;display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/more.png" alt=""> <span class="count"></span> </a> 
+          <div class="more-opt-box"> 
+           <div class="mini-box"> 
+            <a class="tool-item-href" id="rewardBtNewHide" data-report-click="{&quot;spm&quot;:&quot;3001.4237&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault reward-bt" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+            <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> <span class="count">导出PDF</span> </a> 
+            <a class="tool-item-href" id="toolReportBtnHide"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+           <div class="normal-box"> 
+            <a class="tool-item-href" id="toolReportBtnHideNormal"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+          </div> </li> 
+        </ul> 
+       </div> 
+       <div class="toolbox-right"> 
+        <div class="tool-directory"> 
+         <a class="bt-columnlist-show" data-id="12540921" data-free="true" data-description="" data-subscribe="false" data-title="【强化学习的数学原理-赵世钰】课程笔记" data-img="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" data-url="https://blog.csdn.net/qq_64671439/category_12540921.html" data-sum="10" data-people="244" data-price="0" data-hotrank="0" data-status="true" data-oldprice="0" data-join="false" data-studyvip="true" data-studysubscribe="false" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}">专栏目录</a> 
+        </div> 
+       </div> 
+      </div> 
+     </div>    
+     <a id="commentBox" name="commentBox"></a> 
+    </main> 
+   </div> 
+   <div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div id="recommend-right-concision"> 
+      <div class="flex-column aside-box groupfile" id="groupfileConcision"> 
+       <div class="groupfile-div1"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+  </div> 
+  <div class="mask-dark"></div> 
+  <div class="skin-boxshadow"></div> 
+  <div class="directory-boxshadow"></div> 
+  <div style="display:none;"> 
+   <img src="" onerror="setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){var test=&quot;\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74&quot;}},3000);"> 
+  </div> 
+  <div class="keyword-dec-box" id="keywordDecBox"></div> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css">        
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">                  
+ </body>
+</html>

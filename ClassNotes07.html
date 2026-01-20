@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <link rel="canonical" href="https://blog.csdn.net/qq_64671439/article/details/136529678"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="report" content="{&quot;pid&quot;: &quot;blog&quot;, &quot;spm&quot;:&quot;1001.2101&quot;}"> 
+  <meta name="referrer" content="always"> 
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <link rel="alternate" media="handheld" href="#">  
+  <meta name="applicable-device" content="pc"> 
+  <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"> 
+  <title>【强化学习的数学原理-赵世钰】课程笔记（七）时序差分方法_【强化学习的数学原理-赵世钰】课程笔记(七)时序差分方法-CSDN博客</title>   
+  <meta name="keywords" content="【强化学习的数学原理-赵世钰】课程笔记(七)时序差分方法"> 
+  <meta name="csdn-baidu-search" content="{&quot;autorun&quot;:true,&quot;install&quot;:true,&quot;keyword&quot;:&quot;【强化学习的数学原理-赵世钰】课程笔记(七)时序差分方法&quot;}"> 
+  <meta name="description" content="文章浏览阅读6.2k次，点赞65次，收藏56次。本文介绍了TD学习算法，它是第二种model - free方法，与蒙特卡洛方法不同，是迭代式的。文中涵盖估计state value和action value的多种TD算法，如Sarsa、Expected Sarsa、n - step Sarsa、Q - learning等，还对比了on - policy和off - policy，最后统一比较了各算法。"> 
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-6fdc7e4913.min.css">  
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-1024/skin-1024-ecd36efea2.min.css">    
+  <meta name="toolbar" content="{&quot;type&quot;:&quot;0&quot;,&quot;fixModel&quot;:&quot;1&quot;}">   
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css"> 
+  <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>      
+ 	<style>
+	main div.blog-content-box pre {
+		max-height: 100%;
+		overflow-y: hidden;
+	}
+	</style>
+ </head>  
+ <body class="nodata  " style=""> 
+  <div id="toolbarBox" style="min-height: 48px;"></div>    
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css"> 
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css">   
+  <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;"> 
+   <div class="container clearfix container-concision" id="mainBox">  
+    <main>  
+     <div class="blog-content-box"> 
+      <div class="article-header-box" id="article-header-box"> 
+       <div class="article-header"> 
+        <div class="article-title-box"> 
+         <h1 class="title-article" id="articleContentId">【强化学习的数学原理-赵世钰】课程笔记（七）时序差分方法</h1> 
+        </div>  
+       </div> 
+      </div> 
+      <div id="blogHuaweiyunAdvert" class="active-padding"></div> 
+      <div id="blogColumnPayAdvert" class="active-padding"> 
+       <div class="column-group"> 
+        <div class="column-group-item column-group0 column-group-item-one"> 
+         <div class="item-l"> 
+          <a class="item-target" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" title="【强化学习的数学原理-赵世钰】课程笔记" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}"> <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt=""> <span class="title item-target"> <span> <span class="tit">【强化学习的数学原理-赵世钰】课程笔记</span> <span class="dec">专栏收录该内容</span> </span> </span> </a> 
+         </div> 
+         <div class="item-m"> 
+          <span>10 篇文章</span> 
+         </div> 
+         <div class="item-r"> 
+          <a class="item-target article-column-bt articleColumnFreeBt" data-id="12540921">订阅专栏</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="ai-abstract-box"> 
+       <div class="ai-abstract"> 
+        <div class="abstract-content"> 
+         <img class="lock-img" src="https://img-home.csdnimg.cn/images/20240711042549.png" alt=""> 本文介绍了TD学习算法，它是第二种model - free方法，与蒙特卡洛方法不同，是迭代式的。文中涵盖估计state value和action value的多种TD算法，如Sarsa、Expected Sarsa、n - step Sarsa、Q - learning等，还对比了on - policy和off - policy，最后统一比较了各算法。 
+        </div> 
+        <p> 摘要生成于 <a href="https://ai.csdn.net?utm_source=cknow_pc_ai_abstract" data-report-query="spm=3001.10128" data-report-view="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;}}" data-report-click="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;,&quot;text&quot;:&quot;C知道&quot;}}" target="_blank"> C知道</a> ，由 DeepSeek-R1 满血版支持， <a href="https://ai.csdn.net?utm_source=cknow_pc_ai_abstract" data-report-query="spm=3001.10128" data-report-click="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;,&quot;text&quot;:&quot;前往体验&quot;}}" target="_blank"> 前往体验 &gt;</a></p> 
+       </div> 
+      </div> 
+      <article class="baidu_pl"> 
+       <div id="article_content" class="article_content clearfix"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-8d6d398833.css"> 
+        <div id="content_views" class="htmledit_views atom-one-dark"> 
+         <p id="main-toc"><strong>目录</strong></p> 
+         <p id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0-toc" style="margin-left:0px;"><a href="#%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0" rel="nofollow">&nbsp;一.内容概述</a></p> 
+         <p id="%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89-%E9%9A%8F%E6%9C%BA%E9%97%AE%E9%A2%98%EF%BC%88stochastic%20problems%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89-%E9%9A%8F%E6%9C%BA%E9%97%AE%E9%A2%98%EF%BC%88stochastic%20problems%EF%BC%89" rel="nofollow">二.激励性实例（Motivating examples）-随机问题（stochastic problems）</a></p> 
+         <p id="%E4%B8%89.%E4%BC%B0%E8%AE%A1%20state%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20state%20values%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%89.%E4%BC%B0%E8%AE%A1%20state%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20state%20values%EF%BC%89" rel="nofollow">三.估计 state value 的 TD 算法（TD learning of state values）</a></p> 
+         <p id="%E5%9B%9B.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%20%E2%80%93%20Sarsa%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E5%9B%9B.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%20%E2%80%93%20Sarsa%EF%BC%89" rel="nofollow">四.估计 action value 的 TD 算法（TD learning of action values – Sarsa）</a></p> 
+         <p id="%E4%BA%94.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%3A%20Expected%20Sarsa%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%94.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%3A%20Expected%20Sarsa%EF%BC%89" rel="nofollow">五.估计 action value 的 TD 算法（TD learning of action values: Expected Sarsa）</a></p> 
+         <p id="%E5%85%AD.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%3A%20n-step%20Sarsa%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E5%85%AD.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%3A%20n-step%20Sarsa%EF%BC%89" rel="nofollow">六.估计 action value 的 TD 算法（TD learning of action values: n-step Sarsa）</a></p> 
+         <p id="%E4%B8%83.%E4%BC%B0%E8%AE%A1%E6%9C%80%E4%BC%98%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%9AQ-learning%EF%BC%88TD%20learning%20of%20optimal%20action%20values%3A%20Q-learning%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%83.%E4%BC%B0%E8%AE%A1%E6%9C%80%E4%BC%98%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%9AQ-learning%EF%BC%88TD%20learning%20of%20optimal%20action%20values%3A%20Q-learning%EF%BC%89" rel="nofollow">七.估计最优 action value 的 TD 算法：Q-learning（TD learning of optimal action values: Q-learning）</a></p> 
+         <p id="%E5%85%AB.%E4%B8%80%E4%B8%AA%E7%BB%9F%E4%B8%80%E7%9A%84%E8%A7%82%E7%82%B9%EF%BC%9A%E5%B0%86%E8%BF%99%E4%BA%9B%E7%AE%97%E6%B3%95%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83%EF%BC%88A%20unified%20point%20of%20view%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E5%85%AB.%E4%B8%80%E4%B8%AA%E7%BB%9F%E4%B8%80%E7%9A%84%E8%A7%82%E7%82%B9%EF%BC%9A%E5%B0%86%E8%BF%99%E4%BA%9B%E7%AE%97%E6%B3%95%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83%EF%BC%88A%20unified%20point%20of%20view%EF%BC%89" rel="nofollow">八.一个统一的观点：将这些算法进行比较（A unified point of view）</a></p> 
+         <p id="%E4%B9%9D.%E6%80%BB%E7%BB%93-toc" style="margin-left:0px;"><a href="#%E4%B9%9D.%E6%80%BB%E7%BB%93" rel="nofollow">九.总结</a></p> 
+         <hr id="hr-toc"> 
+         <p></p> 
+         <h3 id="%E4%B8%80.%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0">&nbsp;一.内容概述</h3> 
+         <ul>
+          <li>第五节课蒙特卡洛（Mento Carlo）方法是全课程中第一次介绍 model-free 的方法，本节课的 Temporal-difference learning（TD learning）是我们要介绍的第二种 model-free 的方法。</li>
+          <li>基于蒙特卡洛（Mento Carlo）的方法是一种非递增（non-incremental）的方法，Temporal-difference learning（TD learning）是一种迭代式（incremental）的方法</li>
+          <li>第六节课的内容是本节课的铺垫</li>
+          <li>下节课会介绍 value function approximation 的方法，这个是基于现在我们要介绍的 TD 算法，不过这节课介绍的是基于 table 的（tabular representation），下节课会介绍基于 function 的 representation。非常经典的 deep Q learning 也会在下节课介绍。</li>
+         </ul> 
+         <hr> 
+         <p>本节课内容：</p> 
+         <ul>
+          <li>激励性实例（Motivating examples）</li>
+          <li>估计 state value 的 TD 算法：（在第四章我们使用模型计算 state value（做 state value estimation），在第五章使用蒙特卡洛计算 state value（做 state value estimation），在这章使用时序差分计算 state value（做 state value estimation），所以它们都是在做类似的事情，但是用的方法不一样。）</li>
+          <li>估计 action value 的 TD 算法：（Sarsa 算法）：使用 TD 的思想来学习 action value，然后得到 action value 可以以此为据去更新策略，得到一个新的策略再计算它的 action value，这样不断循环下去就能够不断改进策略，直到最后找到最优的策略。</li>
+          <li>估计 action value 的 TD 算法：expected Sarsa （Sarsa 算法的变形）</li>
+          <li>估计 action value 的 TD 算法：n-step Sarsa （Sarsa 算法的变形）</li>
+          <li>估计最优 action value 的 TD 算法：Q-learning：直接计算 optimal action value，所以他是一个 off-policy 的算法。这就涉及到了 on-policy 和 off-policy 两个概念，在强化学习中有两个策略，一个是 behavior policy，它是用来生成经验数据的，一个是 target policy，这是我们的目标策略，我们不断改进希望这个 target policy 能够收敛到最优的策略。如果&nbsp;behavior policy 和 target policy 这两个是相同的，那么它就是 on-policy，如果它们可以不同，那这个算法就是 off-policy。off-policy 的好处是，我可以用之前的别的策略所生成的数据为我所用，我可以拿过来进行学习然后得到最优的策略。</li>
+          <li>一个统一的观点：将这些算法进行比较</li>
+          <li>总结</li>
+         </ul> 
+         <hr> 
+         <h3 id="%E4%BA%8C.%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89-%E9%9A%8F%E6%9C%BA%E9%97%AE%E9%A2%98%EF%BC%88stochastic%20problems%EF%BC%89">二.激励性实例（Motivating examples）-随机问题（stochastic problems）</h3> 
+         <p>下面讲几个例子，讲这个例子的目的是为了建立起上节课和这节课的关系</p> 
+         <p>接下来，我们将考虑一些随机问题（stochastic problems），并展示如何使用 RM 算法来解决这些问题</p> 
+         <hr> 
+         <p>首先，考虑简单的均值估计问题（mean estimation problem）：（之前的课程都在反复讲这个问题，我们会从不同角度介绍这个问题）：mean estimation 问就是要求解一个 random variable X 的 expectation，用 w 来表示这样一个 expectation 的值，现在有的是 X 的独立同分布（iid）采样，用这些采样求 expectation。这个问题有很多算法可以求解，这里讲解 RM 算法</p> 
+         <ul>
+          <li>要求解 w，先把它写成一个函数 g(w)=w-E[X]，求解 g(w)=0 的方程，这个方程求解出来自然可以得到它的解 w*=E[X]</li>
+          <li>因为我们只能获得 X 的采样 {x}，w - x 是 g 的测量 g~</li>
+         </ul> 
+         <p><img alt="" height="1172" src="https://i-blog.csdnimg.cn/blog_migrate/a5228298b6529293a20e7ab8b3f3e720.png" width="1200"></p> 
+         <ul>
+          <li>这么看的话\alpha_k的取值也是权衡历史值和当前采样，所以也有一种“记忆”的味道在里面&nbsp;</li>
+          <li>每次考虑了期望值和结果采样值的差距进行考虑</li>
+         </ul> 
+         <hr> 
+         <p>第二，考虑一个稍微复杂一点的例子：</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/d8bda2124025f77f5203d46a3bd035b4.png" width="1200"></p> 
+         <hr> 
+         <p>第三，考虑一个更复杂的例子：</p> 
+         <p>下面这个式子的变量符号都是有目的使用的，R代表 reward，γ 代表 discounted rate，v 就是 state value，X 就是对应&nbsp;state value 的 state。</p> 
+         <ul>
+          <li>这样就可以求出来 action value 了</li>
+          <li>可以model-free的方式求action value的期望！</li>
+         </ul> 
+         <p><img alt="" height="1185" src="https://i-blog.csdnimg.cn/blog_migrate/d74fcd493bcc6bd0a5a5a6bb8e925159.png" width="1200"></p> 
+         <hr> 
+         <p>快速总结：</p> 
+         <ul>
+          <li>上述三个例子越来越复杂。</li>
+          <li>它们都可以用 RM 算法求解。</li>
+          <li>我们将看到 TD 算法也有类似的表达式。</li>
+         </ul> 
+         <hr> 
+         <h3 id="%E4%B8%89.%E4%BC%B0%E8%AE%A1%20state%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20state%20values%EF%BC%89">三.估计 state value 的 TD 算法（TD learning of state values）</h3> 
+         <p><span style="background-color:#fbd4d0;">先学习如何用 TD 算法求解一个给定的策略 π 的 state value，之所以求解 state value，是因为求解出来了 state value 就相当于作了 policy evaluation，之后和 policy improvement 相结合，就可以去找最优的策略</span></p> 
+         <p><strong>请注意</strong></p> 
+         <ul>
+          <li>TD 学习算法通常指的是一大类 RL 算法。今天这节课讲的所有的算法都是 TD 算法，包括 Q learning</li>
+          <li>TD 学习算法也指下面即将介绍的一种用于估计状态值（state value）的特定算法，下面即将讲的 TD 算法是最经典的 TD 算法，就是来估计 state value 的，有一个非常明确的表达式，这时候它是指一个特定的算法。&nbsp;</li>
+         </ul> 
+         <p><strong>算法所需的数据/经验：TD 算法是基于数据，不基于模型实现强化学习的，算法使用的数据/经验（data/experience）如下：<span style="background-color:#fbd4d0;">这些数据全都是由一个给定的策略 π 所产生的，下面的 TD&nbsp; 算法就是要用这些数据估计 π 所对应的 state value</span></strong></p> 
+         <p><img alt="" height="1039" src="https://i-blog.csdnimg.cn/blog_migrate/4546cd946bbf69550fbb3c0535f25ea7.png" width="1200"></p> 
+         <ul>
+          <li>之前不理解为什么v_t(s_t)不写成v_k(s_t)，原来一组{s_t,r_t+1,s_t+1}刚好用来更新一次v，所以两个不同意义的下标k和t其实是同步的。&nbsp;</li>
+          <li>v下边的t 和 s下边的t是一回事吗？感觉s是采样的时间点，v下边的t是迭代次数</li>
+         </ul> 
+         <p>下面 TD 算法就是要用这些数据来估计 π 对应的 state value，<strong>下面正式的给出 TD 算法，包含两个式子：&nbsp;</strong></p> 
+         <p><img alt="" height="1080" src="https://i-blog.csdnimg.cn/blog_migrate/e3808fcadf8c7416453ac99e4efbc1bd.png" width="1200"></p> 
+         <ul>
+          <li>最下面两点的翻译：1)在时间t，只有访问状态st的值被更新，而未访问状态s≠st的值保持不变;2)当上下文清楚时，将省略公式（2）中的更新</li>
+          <li>实际上我们平时看 TD 算法的时候，看不到第二个式子，因为第二个式子隐含掉了，虽然忽略掉了，但是从数学上来讲，是有这样一个式子存在的</li>
+         </ul> 
+         <p>下面详细介绍第一个式子：</p> 
+         <p><img alt="" height="1039" src="https://i-blog.csdnimg.cn/blog_migrate/c209d4e269c9c20610faa193b228df00.png" width="1200"></p> 
+         <p>下面详细介绍上面式子中的两项：</p> 
+         <p><img alt="" height="1163" src="https://i-blog.csdnimg.cn/blog_migrate/2eeab812033fd072d25624cfd3d3d065.png" width="1200"></p> 
+         <p>为啥v的下标不用k呢？v下标里的t和s的下标不是同一个t吧</p> 
+         <ul>
+          <li>&nbsp;针对某一组数据的吧，同一时刻只能访问一个状态，所以下标一样</li>
+          <li>这里的t是指的某一时刻的各个变量的值，t+1就代表下一个时刻的值，即我们更新之后的值，没什么问题啊</li>
+          <li>v的脚标t代表迭代，s的脚标t代表位置</li>
+          <li>是把时间步当成迭代步</li>
+          <li>是同一个t，表示t时刻所在的状态</li>
+         </ul> 
+         <p>&nbsp;&nbsp;为什么是t+1时刻的v朝着t时刻v的趋近?</p> 
+         <ul>
+          <li>这个Vtbar是不是也在随t而变化&nbsp;</li>
+          <li>vtbar在t时刻是不变的，在下一个时刻会写作vt+1bar</li>
+         </ul> 
+         <p><img alt="" height="1076" src="https://i-blog.csdnimg.cn/blog_migrate/940a798139ba89ca9df0fdda82e227ad.png" width="1200"></p> 
+         <p>s 的下标和v的下标都是用t表示，但是意义不同吧？v的下标t表示时间，s的下标表示第t个状态</p> 
+         <ul>
+          <li>我感觉都是表示时间，st+1和st可能根本就不是同一个状态</li>
+          <li>我个人认为在t时刻，v迭代到了第t次，visit的状态s也达到了第t个</li>
+          <li>感觉两个t是一样的，因为s每变一步，只更新一次v</li>
+         </ul> 
+         <p>&nbsp;误差期望为啥是0呢</p> 
+         <ul>
+          <li>因为这就是自己减自己，贝尔曼公式嘛</li>
+         </ul> 
+         <p>V pi 是最优价值吗？</p> 
+         <ul>
+          <li>v_pi 是在给定策略pi下的state value. 定义记不清可以复习第二课</li>
+          <li>v_pi是对当前策略pi的评估，用来改进策略&nbsp;</li>
+         </ul> 
+         <p>TD误差（TD error）可以解释为创新（innovation），当前我对 vπ 有一个估计，这个估计可能是不准确的，然后来了一个新的<strong>数据/经验（data/experience）</strong>，然后把这个<strong>数据/经验（data/experience）</strong>和我的估计联系到一起，就计算出来了 error，这个 error 的存在说明当前的估计是不准确的，可以用这个 error 来改进我当前的估计，这意味着新的从经验中获得的信息(st, rt+1, st+1)。</p> 
+         <hr> 
+         <p><strong>下面介绍 TD 算法的一些其他性质:</strong></p> 
+         <ul>
+          <li>(3)中的TD算法仅估计给定的一个策略的状态值（state value），所以刚才介绍的 TD&nbsp; 算法只是估计 state value，只是来做 policy evaluation 这样的事情。</li>
+          <li>它不估计动作值（action value）。</li>
+          <li>它不寻求最优策略（optimal policies）。</li>
+          <li>稍后，马上会介绍一系列 TD 算法，他们能够估计 action value，并且和 policy improvement 的步骤结合，就能搜索最优策略。</li>
+          <li>尽管如此，(3)中的TD算法是理解的基础核心思想，之后介绍的 TD 算法和（3）中非常类似。</li>
+         </ul> 
+         <hr> 
+         <p><strong>问：这种 TD 算法在数学上有什么作用？<br> 答：它求解给定策略 π 的贝尔曼方程。</strong></p> 
+         <p>在介绍贝尔曼公式的时候我们已经给出了算法，给出了 closed-form solution 和 iterative solution，在那时候介绍的算法是依赖于模型的，现在是没有模型的。</p> 
+         <p>&nbsp;如何理解依赖模型和未依赖模型呢？</p> 
+         <ul>
+          <li>模型 model 提供了p(r|s,a)和p(s'|s,a)吧。</li>
+          <li>有模型是从一个状态到下一个状态有明确的概率</li>
+          <li>看有没有distribution吧</li>
+          <li>没有模型就用数据去逼近</li>
+          <li>模型是系统的先验知识</li>
+         </ul> 
+         <p>因此，<strong>TD 算法是在没有模型的情况下求解贝尔曼公式</strong>。下面要做的就是证明这句话：</p> 
+         <p><strong>首先，引入一个新的贝尔曼公式 </strong></p> 
+         <p><img alt="" height="776" src="https://i-blog.csdnimg.cn/blog_migrate/e1f8302d6ccdb9096c420a4c980c709b.png" width="1200"></p> 
+         <p><strong>之所以介绍这个贝尔曼公式是因为，TD 算法从本质上讲是求解公式（5）这样一个 equation</strong></p> 
+         <p>公式(4)中的S=s和之前讲的S_t=s是一样的吗？</p> 
+         <ul>
+          <li>我理解这个t是在具体算法中应用时加上的，体现迭代过程，这部分在讲理论，不涉及迭代</li>
+          <li>这是换了个表达而已，你把时间下标还原回去就明白了，条件改成S=s_t, S'=s_t+1</li>
+          <li>G本来就是下个状态S</li>
+          <li>相当于是这一步=下一步之后的state value +这一步的immediate reward</li>
+         </ul> 
+         <hr> 
+         <p><strong><span style="background-color:#fbd4d0;">第二，使用 RM 算法求解公式（5）这样的贝尔曼公式。</span></strong><span style="background-color:#fbd4d0;">之后我们会看到，推导出的 RM 算法与刚才介绍的 TD 算法非常类似，通过这个可以知道，TD 算法就是求解贝尔曼公式的一个 RM 算法</span></p> 
+         <p><img alt="" height="659" src="https://i-blog.csdnimg.cn/blog_migrate/0792f0fe3a50ab095347a597c5e913db.png" width="1200"></p> 
+         <blockquote> 
+          <p>&nbsp;所谓model less 就是把状态转移和策略这些未知的概率都积分掉了</p> 
+          <ul>
+           <li>老师的课可能刚开始有疑问，把问题记下来，课程后半部分基本都能解答了</li>
+           <li>哪里来的积分？就是不知道，只能通过采样拿到的数据去反推</li>
+           <li>应该讲是通过蒙特卡洛把概率变成了采样</li>
+           <li>除了MPC算法外，一般的model-free方法是通过与环境交互来学习策略，而不是通过积分掉未知的状态转移概率和策略。</li>
+           <li>不懂你说的积分掉是啥意思，我感觉是试出来的价值，也就是你说的和环境交互的学习</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <p><strong>因此，求解贝尔曼公式（5）的 RM 算法是公式（6）：</strong></p> 
+         <p><img alt="" height="461" src="https://i-blog.csdnimg.cn/blog_migrate/ce43fb6172b58907f0814771fcb8d74f.png" width="1200"></p> 
+         <p>(6) 中的 RM 算法有两个假设值得特别注意。这个式子和刚才我们介绍的 TD 算法非常类似，但是有两个小的不同点：</p> 
+         <p><img alt="" height="356" src="https://i-blog.csdnimg.cn/blog_migrate/003d3aaadda4718b6bd6559e356ed941.png" width="1200"></p> 
+         <ul>
+          <li>在这个公式中我们要反复得到 r 和 s' 的采样，当前时刻从 s 出发跳到 s'，下一时刻还得从 s 出发跳到 s'，要反复采样。这个和 TD 算法中使用 episode 这种时序的顺序的访问是不一样的</li>
+          <li>上面式子用蓝色标记出来了，在计算 v_k+1 的时候，要用到 v_π(sk')，也就是 sk' 真实的状态值&nbsp;v_π，但是&nbsp;v_π 是不知道的。</li>
+         </ul> 
+         <p>下面解决这两个不同点：</p> 
+         <p>为了消除 RM 算法中的两个假设，我们可以对其进行修改。</p> 
+         <ul>
+          <li>要解决第一个问题就是要把一组采样 {(s, r, s')} 替换成一组序列 &nbsp;{(st, rt+1, st+1)}&nbsp;，简而言之就是不是从 s 出发得到 r 然后得到 s'，然后再从 s 出发得到 r 然后得到 s'，而是得到一个 trajectory，如果这个 trajectory 恰巧访问到了 s，就去更新一下 s，如果不访问到 s，那么 s 对应的估计值就保持不动，这样就可以用一个序列对所有 s 的 v 都进行更新。</li>
+          <li>另一个修改是，因为我们事先不知道 v_π(s')，这是我们要求的，可以把这个 v_π(s')&nbsp; 替换成 v_k(s_k')，也就是替换成 s' 这个状态它的估计值 vk。即用对它的估计值来代替 v_π(s')。<strong>（问题：在 v_π 的时候能够收敛，现在给了一个 v_k 是不准确的，还能确保收敛吗？答案是肯定的）</strong></li>
+         </ul> 
+         <p>对上面的问题的直观解释是：如果写成&nbsp;v_π(sk')，其实只有一个式子，也就是对 s 的值进行不断地更新，如果写成&nbsp;v_k(sk')，那对每一个状态都有这样一个估计值，虽然此时此刻这个估计值不准确，但是在其他地方会对估计值进行修正，最后所有状态的估计值都会收敛到&nbsp;v_π</p> 
+         <p>这里直观解释是为什么呢？为什么是所有的状态？</p> 
+         <ul>
+          <li>就是对于trajectory的每一个s都用这个公式更新到收敛，实际应用时我们的trajectory会取到所有的s</li>
+         </ul> 
+         <p><img alt="" height="530" src="https://i-blog.csdnimg.cn/blog_migrate/e4a1bdbbdf2adf137245548bacd3b04d.png" width="1200"></p> 
+         <blockquote> 
+          <p>以上是<span style="background-color:#fbd4d0;">用 RM 算法求解贝尔曼公式</span>的一个思路，当然这个思路相对直观一些，下面会给出它的严格收敛性的分析</p> 
+         </blockquote> 
+         <hr> 
+         <p>TD 算法严格的收敛结果是下面一个定理：</p> 
+         <p><img alt="" height="365" src="https://i-blog.csdnimg.cn/blog_migrate/8227e8ed3115b35c18a2d89490f57b19.png" width="1200"></p> 
+         <p>强调：</p> 
+         <ul>
+          <li>这个定理说的是，状态值 state value v_t(s) 会收敛到真实的状态值 v_t(s)，<span style="background-color:#fbd4d0;">所以 TD 算法本质上还是在做一个 policy evaluation 的事情，而且是针对给定的一个策略&nbsp;π。（该定理说明，对于给定的策略 π，TD 算法可以找到策略 π 的状态值）</span>。那么我们怎么样去改进这个策略找到最优的策略呢，因为强化学习的最终目的是找到最优策略，之后我们会介绍，我们需要把 policy evaluation 和 policy improvement 两个相结合才可以）</li>
+          <li>αt 应该满足两个式子：</li>
+          <li>对任意一个 s，它的和 αt(s) 都应该趋于无穷，即每个状态 s 都应该被访问很多次。当每一个状态被访问的时候对应的&nbsp;αt(s) 就是一个正数，当当前的 trajectory 是访问其他的状态，那么这个状态没被访问的时候对应的&nbsp;αt(s) 就是 0，所以&nbsp;αt(s) 求和等于无穷意味着它实际上被访问了很多次</li>
+          <li>第二个条件 α 2 t (s) &lt; ∞&nbsp; 要求 αt 最终收敛到 0，实际当中，学习率 αt 通常被选为一个小常数。在这种情况下，条件 （α 2 t (s) &lt; ∞ 看图片）已经失效，即这个条件不成立（因为 αt 不等于 0），但是在实际当中为什么这么做呢，因为实际中是比较复杂的，我们希望很久之后我所得到的这些经验仍然能够派上用场，相反如果 αt 最后趋向于 0 了，那很久之后的经验就没用了，所以我们只是把它设置成一个很小的数，但是不让它收敛到完全是 0。当 α 为常数时，仍然可以证明算法在期望意义上收敛。</li>
+         </ul> 
+         <hr> 
+         <p>虽然 TD learning 和 MC learning 都是无模型（model-free）学习，但与 MC learning&nbsp;相比，TD learning 有哪些优缺点？</p> 
+         <p>下面表格里在 TD 的部分还写了 Sarsa，Sarsa 是接下来马上要讲的一个算法，可以用来估计 action value，Sarsa 和 TD 算法的表达式基本上一样</p> 
+         <p><img alt="" height="890" src="https://i-blog.csdnimg.cn/blog_migrate/91d29dcf915efa2c7434ac1a0b6fc889.png" width="1200"></p> 
+         <p><img alt="" height="1166" src="https://i-blog.csdnimg.cn/blog_migrate/1d82774730b2a2a59cd87846cae74493.png" width="1200"></p> 
+         <p>虽然 TD 算法的方差比较小，但它的 mean 或者 expectation 是有偏差（bias）的，就是因为它是 boostrapping，它依赖于初始的估计，如果初始的估计不太准确的话，那么这个不准确的估计会进入到估计的过程中造成 bias，但是随着越来越多的数据进来，会把这个 bias 给抵消掉，直到最后能够收敛到一个正确的估计值</p> 
+         <p>相反 MC learning 虽然有较高的方差，但是因为它不涉及到任何的初始值，所以它的 expectation 直接等于它真实的 action value 或 state value，所以它是无偏估计</p> 
+         <ul>
+          <li>偏差和方差不可调和，只能折中</li>
+          <li>不是说最后都会收敛到Vpi吗</li>
+         </ul> 
+         <hr> 
+         <h3 id="%E5%9B%9B.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%20%E2%80%93%20Sarsa%EF%BC%89">四.估计 action value 的 TD 算法（TD learning of action values – Sarsa）</h3> 
+         <p>接下来三个小结会（四到六）介绍 Sarsa 算法及其变形，然后第七章介绍 Q learning</p> 
+         <ul>
+          <li>Sarsa 算法及其变形在做的事情解释给定一个策略能够估计出 action value。所以他们能够做 policy evaluation，然后再结合 policy improvement，就可以找到最优的策略。</li>
+          <li>Q-learning 直接来求解 optimal action value，从而可以直接找到最优策略</li>
+         </ul> 
+         <hr> 
+         <ul>
+          <li>- 上一节介绍的 TD 算法只能估计一个给定策略的 state value，但是我们知道要改进策略的时候需要估计出 action value，这样的话哪个 action value 大，就选择哪个作为新的策略。</li>
+          <li>- <span style="background-color:#fbd4d0;">接下来，我们将介绍一种可以直接估计 action value 的算法--Sarsa。Sarsa 和 TD 算法的形式非常类似，只不过估计得的是 action value。</span>Sarsa 估计出 action value 之后，在做的其实就是&nbsp;policy evaluation，就是你给我一个策略，如果把这个策略的 action value 估计出来，但这个还是不能找到最优的策略，强化学习的目的是找到最优策略。那么可以把 Sarsa policy evaluation 这个算法和 policy improvement 那个算法结合起来，就可以找到最优策略</li>
+          <li>-<span style="background-color:#fbd4d0;"> 我们还将了解如何使用 Sarsa 寻找最优策略。把 Sarsa policy evaluation 这个算法和 policy improvement 那个算法结合起来，就可以找到最优策略。</span><strong>所以接下来我们会介绍两部分：</strong></li>
+         </ul> 
+         <p>第一部分我们先来看，如果你给我一个策略，怎么把 action value 估计出来。首先，我们的目标是估计给定政策 π 的行动值。</p> 
+         <p>因为没有模型，所以要有数据，或者说要有经验 experience。假设我们有一些经验 {(st, at, rt+1, st+1, at+1)}t，这是一个集合，这个集合有很多个不同时刻的 t，每一个时刻所对应的经验是&nbsp;st, at, rt+1, st+1, at+1</p> 
+         <p>有了这些数据之后，我们可以使用下面的 Sarsa 算法来更新，来估计 action value：</p> 
+         <p><img alt="" height="804" src="https://i-blog.csdnimg.cn/blog_migrate/faa2ab9165965261fcba08e411d4fa49.png" width="1200"></p> 
+         <p><img alt="" height="101" src="https://i-blog.csdnimg.cn/blog_migrate/bb13c0bfa1212d3c0ff486c6c37361e9.png" width="559">&nbsp;</p> 
+         <hr> 
+         <p><strong>为什么这个算法叫 Sarsa？</strong></p> 
+         <p>这是因为算法的每一步都涉及（st、at、rt+1、st+1、at+1）。Sarsa 是 state-action-reward-state-action 的缩写。</p> 
+         <p><strong>Sarsa 与之前的 TD 学习算法有什么关系？</strong><br> 我们可以用动作值估计 q(s, a) 代替 TD 算法中的状态值估计 v(s)，从而得到 Sarsa。因此，Sarsa 是动作值版本的 TD 算法。把 TD 算法对状态的估计改成对 action value 的估计，就得到了 Saesa 算法。</p> 
+         <p><strong>Sarsa 算法在数学上是做什么的？Sarsa 算法在解决一个什么样的数学问题呢？</strong></p> 
+         <p>刚才的 TD 算法是求解了一个贝尔曼公式，Sarsa 算法也是求解了一个贝尔曼公式，只不过这个贝尔曼公式的形式有所不同。从 Sarsa 算法的表达式来看，它是一种随机逼近（stochastic approximation）算法，可以求解以下方程（以下贝尔曼公式）：</p> 
+         <p style="text-align:center;"><img alt="" height="60" src="https://i-blog.csdnimg.cn/blog_migrate/9a086cad33102fff4a19db080e7b681a.png" width="511"></p> 
+         <p>与之前我们看到的所有贝尔曼公式不同的是，它是用 action value 表达的，而不是 state value，所以这个贝尔曼公式刻画了不同的 action value 之间的关系。这是用行动值表示的贝尔曼方程的另一种表达方式。我在书中给出了证明。</p> 
+         <hr> 
+         <p><strong>定理（Sarsa learning 算法的收敛性）</strong></p> 
+         <p>这个定理和刚才的 TD 算法的收敛性一样</p> 
+         <p><img alt="" height="527" src="https://i-blog.csdnimg.cn/blog_migrate/4b8ea4170bd3ace9422971c9a827a8f5.png" width="1200"></p> 
+         <p>该定理说明，对于给定的策略 π，Sarsa 可以找到 action value。</p> 
+         <p>这个定理告诉我们 q_t 只是收敛到了 q_π，就是<span style="background-color:#fbd4d0;">给定一个策略，估计出来了了 action value，所以下面为了要得到最优的 policy，我们还需要把这个过程和一个 policy improvement 相结合才可以</span></p> 
+         <hr> 
+         <p><span style="background-color:#fbd4d0;">RL 的最终目标是找到最优策略（optimal value）。</span></p> 
+         <p><span style="background-color:#fbd4d0;">为此，我们可以将 Sarsa 与策略改进（policy improvement）步骤相结合。</span></p> 
+         <p><span style="background-color:#fbd4d0;">这种组合算法也被称为 Sarsa，或者说在大多数情况下我们听到 Sarsa 的时候是把 policy evaluation 和 policy improvement 这两个结合之后的算法。</span></p> 
+         <p>之前在网格世界中，如果到达了目标可以一直执行策略不需要停，现在我们更已关注的是从一个状态出发怎么样能够到达目标，也可以到达目标之后强行停下，也可以到达目标之后不要停，都可以，区别不大。</p> 
+         <p>1. 收集给定（st，at）的经验样本（rt+1，st+1，at+1）：通过与环境互动生成 rt+1，st+1；根据 πt(st+1) 生成 at+1。</p> 
+         <p>或 1. 在 t 时刻要得到一个经验 experience（st、at、rt+1、st+1、at+1）： 具体来说，在 st ，根据当前的策略 take action&nbsp;a_t 行动，得到 reward&nbsp;r_t+1，跳到下一个状态 s_t+1，在下一个状态的时候再根据那个状态的策略在进行一个 action 的采样得到 a_t+1，就得到了 Sarsa 的 experience。基于这个 experience，下面要做的就是这个 q value 的 update，<span style="background-color:#fbd4d0;">或者叫 policy evaluation</span></p> 
+         <p>2.更新（st，at）的 q 值：</p> 
+         <p>3.做 policy update 进行更新，<span style="background-color:#fbd4d0;">即 policy improvement</span></p> 
+         <p><img alt="" height="934" src="https://i-blog.csdnimg.cn/blog_migrate/7e456588265d19823e1e4da5bc56950d.png" width="1200"></p> 
+         <p><img alt="" height="555" src="https://i-blog.csdnimg.cn/blog_migrate/073001c7be7303cd43fe102bdbc07744.png" width="984"></p> 
+         <p>在更新了 q value 后，会立刻进行策略的更新。这和之前讲的 policy evaluation 不完全一样，因为 policy evaluation 是当前策略&nbsp;π_t 要得到很多数据，然后把它的 action value 准确的给估计一下。但是这里只执行一下并没有得到很准确的 action value，就立刻切换到 policy update 当中。</p> 
+         <hr> 
+         <p><strong>关于此算法的说明</strong></p> 
+         <ul>
+          <li>- q(st, at) 更新后，st 的策略立即更新。这是基于广义策略迭代（generalized policy iteration）的思想。之前学的 policy iteration 在每一个 iteration 中都分为两个步骤：policy evaluation 和 policy improvement，但是我要计算 policy evaluation 准确的 state value 的时候需要无穷步，而实际当中只计算一步或者几步，没有得到精确的 state value，但是也会立刻切换到 policy 的更新中&nbsp;policy improvement，刚才介绍的 Sarsa 也是基于这样的思想</li>
+          <li>- 策略是 <img alt="\epsilon" class="mathcode" src="https://latex.csdn.net/eq?%5Cepsilon">-greedy 的，而不是 greedy 的，以很好地平衡开发和探索，能够尽可能访问到更多的 （s,a），然后找到更优的策略。</li>
+         </ul> 
+         <p><img alt="" height="272" src="https://i-blog.csdnimg.cn/blog_migrate/32d83bbfcae5209f8de623e16101005f.png" width="953"></p> 
+         <p><strong>强调：</strong></p> 
+         <p>刚才讲了两部分，第一部分就是给定一个策略怎么求解对应的贝尔曼公式得到 Sarsa 这样一个迭代的算法，那个复杂的迭代的式子是用来做 policy evaluation 就是来求 action value 的。第二个是怎么把 policy evaluation 和 policy improvement 相结合然后找到最优策略，</p> 
+         <p><strong>明确核心思想和复杂性：</strong></p> 
+         <ul>
+          <li>- 核心理念很简单：即使用算法求解给定策略的贝尔曼方程。</li>
+          <li>- 当我们试图找到最优策略并高效工作时，复杂性就出现了，因为我还需要迭代去改进策略，还需要让这个策略是 <img alt="\epsilon" class="mathcode" src="https://latex.csdn.net/eq?%5Cepsilon">-greedy 的。</li>
+         </ul> 
+         <p><img alt="" height="285" src="https://i-blog.csdnimg.cn/blog_migrate/db2dee573b7af26887a7ad44d8fb4171.png" width="945"></p> 
+         <hr> 
+         <p><strong>下面通过一个例子来例证 Sarsa</strong></p> 
+         <p><strong>任务描述</strong>：任务是找到一条从特定起始状态到目标状态的良好路径。(The task is to find a good path from a specific starting state to the target state.)</p> 
+         <ul>
+          <li>- 这项任务不同于之前所有的网格世界的任务，之前所有网格世界的任务是需要为每个状态找出最优策略！但是在这个任务里，不已关注每一个状态，只已关注从一个特定的状态到目标的一个策略或者说路径</li>
+          <li>- 在这个例子里，每一个 episode 都从左上角的状态开始，以目标状态结束。</li>
+          <li>- <span style="background-color:#fbd4d0;">今后在学习课程的时候，请注意任务的内容。我们是要找一个从特定状态出发的情况，还是要找所有状态的最优策略。</span></li>
+         </ul> 
+         <p>下面的图是用 Sarsa 找到的最优策略，这个最优策略是从一个初始的不好的策略开始所得到的，<span style="background-color:#fbd4d0;">初始的状态是从左上角出发，沿着策略中概率大的方向可以到达目标，但是很多其它的状态还没有达到最优策略，并不是所有状态的策略都是最优的。</span></p> 
+         <p><span style="background-color:#fbd4d0;">并且有可能虽然找到的这条路径能到达目标，但是不是最短的或者最优的，而最优的恰好是在没有探索的地方，这是有可能的。</span>所以这个问题就是你是想找到所有状态的最优策略，还是只想找到一个可行的路径就可以，如果你是想找到所有状态的最优策略，那你就必须去探索所有的 state action pair</p> 
+         <p style="text-align:center;"><img alt="" height="367" src="https://i-blog.csdnimg.cn/blog_migrate/e79ccc58f55b616c7af13350e04e91a9.png" width="367"></p> 
+         <p>在这个任务中，我们进行了五百次探索，一共有五百个 episode，横坐标代表不断地根据改进的策略重新采集得到的&nbsp;episode index。</p> 
+         <p>纵坐标第一个图代表沿着每个 episode 我所得到的 total reward，最开始的 reward 比较负，因为最开始的策略不好，他可能是往墙上撞或者进入到 forbidden area，会有很多负的 reward 进来，随着策略不断改进，reward 也会变得越来越大，但是在这里并没有超过 0，那么到达目标应该是正数，为什么没有超过 0 呢，因为这里是 <img alt="\epsilon" class="mathcode" src="https://latex.csdn.net/eq?%5Cepsilon">-greedy 的策略，或多或少还是会有负数的 reward 进来。</p> 
+         <p>纵坐标第二个图代表 episode length，最开始的 episode 比较长，因为最开始的策略可能是不好的，可能走了很久才瞎猫碰到死耗子刚好碰到了 target area，但是随着不断改进，最开始可能好几百步才能到达目标，现在几十步就可以到了。</p> 
+         <p class="img-center"><img alt="" height="364" src="https://i-blog.csdnimg.cn/blog_migrate/ed6dc7707a095276a42b00df92bf08b9.png" width="440"></p> 
+         <hr> 
+         <h3 id="%E4%BA%94.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%3A%20Expected%20Sarsa%EF%BC%89">五.估计 action value 的 TD 算法（TD learning of action values: Expected Sarsa）</h3> 
+         <p>从 Sarsa 出发的改进算法，从一个经典的 Sarsa 算法出发，做改进，是做研究非常常见的思路。</p> 
+         <p>Expected Sarsa 算法是 Sarsa 算法的一个变种：</p> 
+         <p><img alt="" height="668" src="https://i-blog.csdnimg.cn/blog_migrate/016ba5c05ff46f63a295a3be2031ba10.png" width="1200"></p> 
+         <p><strong>与 Sarsa 算法进行比较：</strong></p> 
+         <p><img alt="" height="500" src="https://i-blog.csdnimg.cn/blog_migrate/643195d7421db1176d2f3790a29e8a9f.png" width="1200"></p> 
+         <ul>
+          <li>第一条翻译：TD target 变了</li>
+          <li>第二条翻译：相比 Sarsa，计算量要求更大，因为要计算一个期望的式子。但是去掉了 a_t+1，不再需要对 a_t+1 进行采样，涉及到的随机变量个数减少了，相对而言随机性也会减少</li>
+          <li>第二条翻译：需要更多计算。但从减少估计方差的意义上来说，它是有益的，因为它将 Sarsa 中的随机变量从 {st, at, rt+1, st+1, at+1} 减少到 {st, at, rt+1, st+1} 。</li>
+         </ul> 
+         <hr> 
+         <p><strong>该算法在数学上有什么作用？在解决什么样的数学问题？</strong></p> 
+         <p>我们知道 Sarsa 算法是在求解一个贝尔曼公式，Expected Sarsa 是一种随机逼近算法，也是在求解一个贝尔曼公式，只不过这个贝尔曼公式的形式又发生了一些变化：</p> 
+         <p><img alt="" height="591" src="https://i-blog.csdnimg.cn/blog_migrate/9981454b033d35a2ec3b908ce2205a9b.png" width="1200"></p> 
+         <p>把 expected Sarsa 用到之前提到的例子当中，任务是从左上角的初始状态出发，找到到达目标的一个轨迹或者策略，根据 expected Sarsa 得到的策略如下左图，沿着概率较大的方向走，能够到达目标。因为我们只需要找到从特定初始状态出发到达目标的路径，其它状态的策略可能不是最优的，但这并不是我们关心的。</p> 
+         <p>下面右图展示了在这个过程中，随着逐渐学习，每个 episode 收集的 reward 越来越大，同时这个 episode 到达目标的长度所需要的步数也越来越少。</p> 
+         <p><img alt="" height="372" src="https://i-blog.csdnimg.cn/blog_migrate/774461ca335c5255e03d64c7c528766a.png" width="822"></p> 
+         <hr> 
+         <h3 id="%E5%85%AD.%E4%BC%B0%E8%AE%A1%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%88TD%20learning%20of%20action%20values%3A%20n-step%20Sarsa%EF%BC%89">六.估计 action value 的 TD 算法（TD learning of action values: n-step Sarsa）</h3> 
+         <p>n-step&nbsp;Sarsa：可将 Sarsa 和蒙特卡罗学习（Monte Carlo learning）统一起来，包含了 Sarsa 和 Mento Carlo</p> 
+         <ul>
+          <li>就是用一个时间步以后的数据来估计上一个时间步还是用n个时间步的数据来估计上一个时间步的区别。</li>
+          <li>两者的区别是一个采样全路径，一个采样一点即用，折中就是nstep</li>
+          <li>可以想象成随机梯度下降和mini-batch的区别</li>
+          <li>又是truncated的思想是吧</li>
+         </ul> 
+         <p><img alt="" height="994" src="https://i-blog.csdnimg.cn/blog_migrate/f96249f433473b35da08c1db59387cf2.png" width="1200"></p> 
+         <p><span style="background-color:#fbd4d0;">大写的是随机变量，小写的 是一个采样</span></p> 
+         <p><img alt="" height="669" src="https://i-blog.csdnimg.cn/blog_migrate/11a41e3fa81e2ed754b2b56dff413cfd.png" width="1200"></p> 
+         <p>n-steps Sarsa 算法是：</p> 
+         <p><img alt="" height="427" src="https://i-blog.csdnimg.cn/blog_migrate/c8dd8091b874373c39cbe7fb62c5df50.png" width="1200"></p> 
+         <p>n 步 Sarsa 算法更为通用，因为当 n = 1 时，它变成了（一步）Sarsa 算法</p> 
+         <p>而当 n = ∞ 时，若选取 α_t 恒等于 1，它变成了 MC 学习算法。</p> 
+         <p><img alt="" height="544" src="https://i-blog.csdnimg.cn/blog_migrate/b83f3e2c207ff1383542ba368e7ae16f.png" width="1200"></p> 
+         <p>错了吧，蒙特卡洛需要采样多次，这个仅采样一次？</p> 
+         <ul>
+          <li>蒙特克罗是一次采样对应多个随机变量</li>
+         </ul> 
+         <p>这个为什么是1啊？</p> 
+         <ul>
+          <li>因为alpha代表每次迭代的步长，对于MC算法来说只是单纯的估计，没有所谓的多次迭代，步长就可以设置为1</li>
+          <li>alpha是人为取的，满足条件就可以收敛</li>
+          <li>MC是直接估计出expectation，不需要再用RM求解expectation，</li>
+         </ul> 
+         <hr> 
+         <ul>
+          <li>所有算法都需要数据，Sarsa 需要下面序列里前五个数据&nbsp;(st, at, rt+1, st+1, at+1），在 t 时刻我能得到这五个数据，就可以直接用；而蒙特卡洛需要下面序列里无穷多个，或者一直到 episode 结束所有的这些数据我才能计算 t 时刻 st 对应的 action value；那么 n-step Sarsa 是折中的，既不能只用前五个就来计算刚才那个式子，也不需要等到所有的后面都有了，在前五个之外，还需要到 t+n 时刻的测量才可以。</li>
+          <li>在 t 时刻不知道后面这些测量，需要等（在此我们知道，n 很大的时候 n-step 与蒙特卡洛方法接近，而蒙特卡洛也需要等，在 t 时刻虽然我得到了一些数据，但是不能立刻去更新，我必须等到 episode 结束，用后边所有的经验才能去更新，所以我们之前说蒙特卡洛方法是 offline 的）。而 n-step 方法既不是 offline 也不是 online，或者说是特殊的 online 方法，就是因为我需要等到 t+n&nbsp;时刻才能对 st 和 at 对应的这个 q_t+n(st,at)&nbsp;进行更新</li>
+         </ul> 
+         <p><img alt="" height="706" src="https://i-blog.csdnimg.cn/blog_migrate/538456e328160a98c8099ea6036252af.png" width="1200"></p> 
+         <p>由于 n-step&nbsp;Sarsa 包括 Sarsa 和 MC 学习这两种极端情况，因此其性质是 Sarsa 和蒙特卡洛方法的混合体：</p> 
+         <ul>
+          <li>- 如果 n 较大，其性质接近 MC 学习，因此方差（variance）较大，偏差（bias）较小。</li>
+          <li>- 如果 n 较小，其性质接近于 Sarsa，因此由于初始猜测，偏差相对较大，慢慢随着数据越来越多，偏差会消失掉；而方差相对较小。</li>
+         </ul> 
+         <p>最后，n-step&nbsp;Sarsa 还是在做 policy evaluation，也就是你给我一个测量我能估计出他的 action value。那么为了得到最优的测量，它可以与 policy improvement 相结合，以寻找最优策略。</p> 
+         <hr> 
+         <h3 id="%E4%B8%83.%E4%BC%B0%E8%AE%A1%E6%9C%80%E4%BC%98%20action%20value%20%E7%9A%84%20TD%20%E7%AE%97%E6%B3%95%EF%BC%9AQ-learning%EF%BC%88TD%20learning%20of%20optimal%20action%20values%3A%20Q-learning%EF%BC%89">七.估计最优 action value 的 TD 算法：Q-learning（TD learning of optimal action values: Q-learning）</h3> 
+         <p>之前介绍的三章所有的&nbsp;Sarsa 算法本质上来说是用来估计一个给定策略的 action value，即做 policy evaluation，然后可以把它和&nbsp;policy improvement 相结合，然后在 policy evaluation 和&nbsp;policy improvement 之间相互迭 代，就可以得到一个寻找最优策略的算法。</p> 
+         <p><span style="background-color:#fbd4d0;">Q learning 和 Sarsa 以及之前的算法主要区别是它是直接估计 optimal action value，它不需要去做 policy evaluation 和 policy improvement 这两个之间来回交替运行，因为直接就把最优的 action value 估计出来了，进而得到最优策略。</span></p> 
+         <p>下面直接给出 Q learning 算法</p> 
+         <p><img alt="" height="1088" src="https://i-blog.csdnimg.cn/blog_migrate/c5b4a2830d1feb013a195283e4f1b4ea.png" width="1200"></p> 
+         <hr> 
+         <p><strong>Q-learning 在数学上有什么作用？在解决一个什么数学问题？</strong></p> 
+         <p>Sarsa 在求解一个给定策略的贝尔曼方程，而 Q learning 不是求一个给定策略的贝尔曼方程的 action value，它是在求解一个贝尔曼最优方程</p> 
+         <p><img alt="" height="229" src="https://i-blog.csdnimg.cn/blog_migrate/8224a8b6a82e791f9de7ebe5de375290.png" width="947"></p> 
+         <p>这就是用 action value 表示的贝尔曼最优方程。详细请看我书中的证明。</p> 
+         <p><span style="background-color:#fbd4d0;">最后得到的 q 值不是说哪一个策略的 q 值，而是最优的 q 值，当然这个最优 q 值对应的最优的策略。</span></p> 
+         <hr> 
+         <p><strong>Off-policy vs on-policy（所有强化学习算法都有这样的一个分类）</strong></p> 
+         <p>在进一步研究 Q-learning 之前，我们首先要介绍两个重要的概念：策略学习（on-policy learning）和非策略学习（off-policy learning）。</p> 
+         <p>在 TD learning 任务中存在两种策略：（之前学的 Sarsa 和 TD 方法已经涉及到这个了，但是并没有明确的提出来，现在把它提出来）</p> 
+         <ul>
+          <li>- 行为策略（behavior policy）与环境进行交互，用于生成经验样本（experience samples）。</li>
+          <li>- 目标策略（target policy）是我们一直在更新的，会不断更新，最后这个 target policy 就会达到我们想要的最优策略（optimal policy）。</li>
+         </ul> 
+         <p>基于 behavior 策略和 target 策略可以定义两大类强化学习的算法，就是 Off-policy 和&nbsp;on-policy：</p> 
+         <ul>
+          <li>当行为策略（behavior policy）与目标策略（target policy）相同时，这种学习被称为 on-policy 学习。也就是说我用这个策略和环境进行交互，然后得到 experience，同时我再改进这个策略，改进完了之后我再用这个策略和环境进行交互，这个就叫 on policy</li>
+          <li>当两者不同时，这种学习被称为 Off-policy。比如我用一个策略和环境进行交互得到大量的经验，然后我用这些经验不断地改进一个策略，然后那个策略最后会收敛到一个最优的策略。</li>
+          <li>off-policy: 执行的策略和估计出来的策略可以不同，比如同时存在2个模型，我可以执行别人的策略</li>
+         </ul> 
+         <p>前面学到的 Sarsa 是 on-policy，行为策略（behavior policy）与目标策略（target policy）相同；而现在要学的 Q learning 是 off-policy，即行为策略（behavior policy）与目标策略（target policy）可以不同，也就是说既可以相同也可以不同</p> 
+         <hr> 
+         <p><strong>off-policy learning 的优势，当 behavior policy 和 target policy 不同时候的优势：</strong></p> 
+         <ul>
+          <li>- 我们可以从之前别人的那些经验当中，它们采取了自己的策略积累了一些经验，我们可以拿过来然后去学习。它可以根据任何其他策略产生的经验样本搜索最佳策略 。</li>
+          <li>- 作为一个重要的特例（即一个比较典型的例子是），behavior policy 可以选择为探索性（exploratory）策略，就是探索性很强，能够探索所有的 state action pair，我们可以基于这种探索性非常好的估计出来每一个 state action pair 它们的 action value。</li>
+          <li>例如，如果我们想估算所有 state action pair 的 action value，我们可以使用探索性策略来生成访问每个状态-行动对的足够多的 episode。</li>
+          <li>相反，如果不是这样，如果必须要用 target policy作为 behavior policy 然后再去生成经验，因为 target policy 可能是 greedy 或者&nbsp;<img alt="\epsilon" class="mathcode" src="https://latex.csdn.net/eq?%5Cepsilon">-greedy 的，它的探索性比较弱，我看你很难探索到所有的 s 和 a，进而估计出所有的（s,a）的最优值</li>
+         </ul> 
+         <hr> 
+         <p><strong>如何判断 TD 算法是&nbsp;Off-policy 还是&nbsp;on-policy</strong>？</p> 
+         <p>从两个方面评估，下面的三个例子都是从这两个方面评估的：</p> 
+         <ul>
+          <li>- 首先，检查算法在数学上的作用，这个算法在解决什么样的数学问题。</li>
+          <li>- 其次，检查实现算法需要哪些东西才可以跑起来。这一点值得特别注意，因为它是初学者最困惑的问题之一。需要实施这个算法 需要什么样的测量</li>
+         </ul> 
+         <hr> 
+         <p>&nbsp;&nbsp;<img alt="" height="1104" src="https://i-blog.csdnimg.cn/blog_migrate/d494c26a91ef5e5bb3ed1bc2cd915b5d.png" width="1200"></p> 
+         <p>πt 就是 behavior policy，因为用它来进行采样；那么 target policy 是什么呢，这个就要用到刚才我们说到，需要知道他在干嘛，它是在估计&nbsp;πt 对应的 action value，然后我用那个 action value 再去更新&nbsp;πt 从而得到更好的策略。所以&nbsp;πt 既是一个 behavior policy，也是 target policy</p> 
+         <blockquote> 
+          <p>s和a不是采样得来的吧，因为不知道他们的概率分布？</p> 
+          <ul>
+           <li>你走的episode就是一个采样啊</li>
+           <li>采样不就知道概率了</li>
+           <li>就是不知道概率分布才要采样</li>
+           <li>知道呀，环境，和策略都知道</li>
+           <li>不知道概率就是不知道模型，这里不知道模型但知道模型的输出</li>
+          </ul> 
+         </blockquote> 
+         <p><img alt="" height="541" src="https://i-blog.csdnimg.cn/blog_migrate/73e043a9109f6bc876e9a4fc32215d91.png" width="1200"></p> 
+         <blockquote> 
+          <ul>
+           <li>那这两个p都是依赖于环境的，而不是依赖于模型的。环境和策略是独立的。</li>
+           <li>就是用于迭代的策略和用于与环境交互的是同一个</li>
+           <li>说白了就是在自己的基础上更新迭代自己</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <p><img alt="" height="1182" src="https://i-blog.csdnimg.cn/blog_migrate/bbfb6320e6cda0676bafc289a92f51fc.png" width="1200"></p> 
+         <blockquote> 
+          <ul>
+           <li>&nbsp;只要是需要进行策略评估的,都是on-policy</li>
+           <li>瞎说：off-policy中，behavior只用于估计（采样）R和S，而on-policy中，还同时估计（采样）了A</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <p>贝尔曼公式需要给的一个策略，然后通过贝尔曼公式求出给定策略对应的 action value 或者 state value，但是贝尔曼最优公式不涉及任何策略，只是一个含有 q 值的一个等式。当然贝尔曼最优公式对应的是最优策略，但是显式的不含有任何策略</p> 
+         <p><img alt="" height="974" src="https://i-blog.csdnimg.cn/blog_migrate/238cfd299b25a80756b98cb210965dab.png" width="1200"></p> 
+         <p>Q learning 中的 behavior policy 是我需要从 st 出发根据一个测量得到一个 at；它的 target policy 就是我在计算 q，我会根据这个 q 来每一个状态看一看哪个 action 的 q 比较大，我就选择那个 action，这个所对应的策略就是 target policy，当这个 q 逐渐收敛到最优的 q 值的时候，也就是 optimal action value 对应的 target 策略，也就收敛到了最优策略</p> 
+         <p>Q-learning 的 off-policy 也让他可以使用任何策略产生的数据而不影响自己的策略</p> 
+         <blockquote> 
+          <p>那这两个概率是怎么得到的？还是说无模型的情况下不需要知道，我只需要采样把st+1的状态得到能代入进去算就可以？</p> 
+          <ul>
+           <li>不知道的，只需要通过采样得到</li>
+           <li>这两个概率是通过我们采样的到的</li>
+           <li>环境给的</li>
+          </ul> 
+          <p>判断依据就是说我在评估的到底是不是我已经采取的策略呗</p> 
+         </blockquote> 
+         <hr> 
+         <p>由于 Q-learning 是 off-policy 的，因此可以以 off-policy 或 on-policy 的方式实施，即 behavior policy 和 target policy 可以不同也可以相同。</p> 
+         <p>Q-learning 的&nbsp;on-policy 的版本和 Sarsa 一样，唯一的区别是在更新 q 的公式不同</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/f656f5913946b36c237927357e47bafb.png" width="1200"></p> 
+         <p><img alt="" height="1174" src="https://i-blog.csdnimg.cn/blog_migrate/981713a1c1be674c499b556c901e2e18.png" width="1200"></p> 
+         <p>随着 q 的估计越来越准确， pi 的估计也会收敛到最优的策略</p> 
+         <blockquote> 
+          <ul>
+           <li>一条轨迹（episode）提前根据pi b 生成了，那么行为策略和目标策略当然是不同的啊， on plicy时，不是也应该是这样吗？回合（episode）又不是实时更新的&nbsp;</li>
+           <li>我觉得应该注意两个算法的生成数据，一个是迭代生成的，一个是已经生成好的</li>
+           <li>懂了，off policy是两个不同的策略分别工作</li>
+          </ul> 
+         </blockquote> 
+         <hr> 
+         <p><strong>例子：</strong></p> 
+         <p>任务描述：</p> 
+         <ul>
+          <li>- 这些例子的任务是为每一个状态找到最优策略，这和刚才的 Sarsa 例子不同</li>
+         </ul> 
+         <p><img alt="" height="150" src="https://i-blog.csdnimg.cn/blog_migrate/7f34fc086d7c6062cbc155f2eabf2418.png" width="930"></p> 
+         <p>基本事实（Ground truth）：如下图，先给出最优策略和相应的最优状态值。待会我们用 Q learning 会算出来一个策略，看一下那个策略和这个策略是否相同</p> 
+         <p><img alt="" height="382" src="https://i-blog.csdnimg.cn/blog_migrate/6be1ff2b7e8f9801d6ce49add29138ef.png" width="738"></p> 
+         <p>首先我们选定一个 behavior policy，用这个 behavior policy 产生很多的数据。下面的左图的 behavior policy 已经绘制出来了，它是一个均匀采样的策略，也就是在每个状态的 5 个 action 都各给 0.2 的概率，它的探索性比较强，如右图所示，如果 episode 有 100 万步的话，每一个 state action pair 都被访问到了很多次，所以这个数据比较好，下面看一下如何用这些数据进行 Q learning 的计算</p> 
+         <p><img alt="" height="356" src="https://i-blog.csdnimg.cn/blog_migrate/141ba582b500dfa49eec3d733c5b5b2c.png" width="796"></p> 
+         <p>当然，用上面这个 behavior policy 产生的数据来进行估计的话，肯定要用到 off-policy Q learning，下左图是最后给出的策略。这个策略的最优性可以用右图来展示，右图的纵坐标代表在估计的过程中，Q learning 给出了一系列策略，每个策略都对应一个 state value，然后我们又知道它的最优 state value，计算它俩的差再求模就是这个纵坐标。最开始这个策略不太好，和 optimal state value 有一段距离，最后就会越来越接近</p> 
+         <p><img alt="" height="361" src="https://i-blog.csdnimg.cn/blog_migrate/d170215388ccca5ac9058169022ad18b.png" width="794"></p> 
+         <p>刚才用的 behavior policy 的探索性比较强，因为我们需要在每个（s,a）都找到最优策略，所以最好访问所有的 （s,a）很多次，所以 behavior policy 最好是探索性比较强的。下面看看探索性不是很强的</p> 
+         <p><img alt="" height="1200" src="https://i-blog.csdnimg.cn/blog_migrate/15c023d47b7b5ab705e7531e1d9ef501.png" width="1200"></p> 
+         <p>考虑探索性更弱的<br><img alt="" height="880" src="https://i-blog.csdnimg.cn/blog_migrate/2100d29c843f1e3d4e4fcc48efa4db94.png" width="1077"></p> 
+         <hr> 
+         <p><span style="background-color:#fbd4d0;">off policy 的性质非常重要，之后我们会学习 deep Q learning，为什么将神经网络和 TD 算法结合的时候会选择 Q learning 呢，这里面 Q learning 的 off policy 的性质发挥了重要作用</span></p> 
+         <hr> 
+         <h3 id="%E5%85%AB.%E4%B8%80%E4%B8%AA%E7%BB%9F%E4%B8%80%E7%9A%84%E8%A7%82%E7%82%B9%EF%BC%9A%E5%B0%86%E8%BF%99%E4%BA%9B%E7%AE%97%E6%B3%95%E8%BF%9B%E8%A1%8C%E6%AF%94%E8%BE%83%EF%BC%88A%20unified%20point%20of%20view%EF%BC%89">八.一个统一的观点：将这些算法进行比较（A unified point of view）</h3> 
+         <p>下面将之前学的所有算法进行总结</p> 
+         <p>我们在本讲座中介绍的所有算法都可以用一个统一的表达式来表示：</p> 
+         <p><img alt="" height="1193" src="https://i-blog.csdnimg.cn/blog_migrate/eb91253f908d40be0376c8ea851e2a59.png" width="1200"></p> 
+         <p>除了上面的统一的形式之外，他们在做的事情也可以统一的写出来。<span style="background-color:#fbd4d0;">所有算法都可以看作是求解贝尔曼方程或贝尔曼最优方程的随机逼近算法（stochastic approximation algorithms）</span>：（在这个意义上 TD 算法和之前介绍的求解值迭代和策略迭代的算法对应上了，值迭代和策略迭代是基于模型求解贝尔曼公式和贝尔曼最优公式的的，本节课是没有模型求解的）</p> 
+         <p>本节课也学了贝尔曼公式的不同表达方式，Q learning 求解的是贝尔曼最优公式，直接把最优的 q value 求解出来，相对应所得到的 policy 也就是最优的</p> 
+         <p><span style="background-color:#fbd4d0;">这些 TD 算法本质上是求解一个给定策略的贝尔曼公式，但是我怎么让它来搜素最优的策略呢，其实就是把 policy evaluation 和 policy improvement 相结合，就可以得到搜素最优的策略的算法</span></p> 
+         <p><img alt="" height="1019" src="https://i-blog.csdnimg.cn/blog_migrate/d7ae8a590a7e291e49baa44c7e84c59d.png" width="1200"></p> 
+         <p>&nbsp;最后一行的蒙特卡洛方法也是来求解这样一个式子，这个式子你可以说他是贝尔曼公式，其实他是 action value 的一个最基本的定义</p> 
+         <h3 id="%E4%B9%9D.%E6%80%BB%E7%BB%93">九.总结</h3> 
+         <ul>
+          <li>- 介绍各种 TD 学习算法</li>
+          <li>- 它们的表达式、数学解释、实现、关系、示例</li>
+          <li>- 统一观点</li>
+         </ul> 
+         <p><img alt="" height="254" src="https://i-blog.csdnimg.cn/blog_migrate/9b25f3b4349731400b9db5590cf7755a.png" width="1091"></p> 
+         <p></p> 
+        </div> 
+       </div> 
+      </article>  
+     </div>        
+     <div id="pcCommentBox" class="comment-box comment-box-new2 login-comment-box-new" style="display:none"> 
+      <div class="has-comment" style="display:block"> 
+       <div class="one-line-box"> 
+        <div class="has-comment-tit go-side-comment"> 
+         <span class="count">8</span>&nbsp;条评论 
+        </div> 
+        <div class="has-comment-con comment-operate-item"></div> 
+        <a class="has-comment-bt-right go-side-comment focus">写评论</a> 
+       </div> 
+      </div> 
+     </div>     
+     <div class="blog-footer-bottom" style="margin-top:10px;"></div>   
+    </main> 
+    <aside class="blog_container_aside "> 
+     <div id="asideProfile" class="aside-box active"> 
+      <div class="profile-intro d-flex"> 
+       <div class="avatar-box d-flex justify-content-center flex-column"> 
+        <a href="https://blog.csdn.net/qq_64671439" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_379&quot;,&quot;spm&quot;:&quot;3001.4121&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1" class="avatar_pic"> </a> 
+       </div> 
+       <div class="user-info d-flex flex-column profile-intro-name-box"> 
+        <div class="profile-intro-name-boxTop"> 
+         <a href="https://blog.csdn.net/qq_64671439" target="_blank" class="" id="uid" title="leaf_leaves_leaf" data-report-click="{&quot;mod&quot;:&quot;popu_379&quot;,&quot;spm&quot;:&quot;3001.4122&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439&quot;,&quot;ab&quot;:&quot;new&quot;}"> <span class="name" username="qq_64671439">leaf_leaves_leaf</span> </a> 
+        </div> 
+        <div class="profile-intro-name-boxFooter-new"> 
+         <p class="profile-intro-name-leve"> <span> 博客等级 </span> <img class="level" src="https://csdnimg.cn/identity/blog5.png"> </p> 
+         <span class="profile-intro-name-years" title="已加入 CSDN 4年">码龄4年</span> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="profile-intro-rank-information"> 
+       <dl> 
+        <a href="https://blog.csdn.net/qq_64671439" data-report-click="{&quot;mod&quot;:&quot;1598321000_001&quot;,&quot;spm&quot;:&quot;3001.4310&quot;}" data-report-query="t=1"> 
+         <dd>
+          <span>84</span>
+         </dd> 
+         <dt>
+          原创
+         </dt> </a> 
+       </dl> 
+       <dl title="1639"> 
+        <dd>
+         1639
+        </dd> 
+        <dt>
+         点赞
+        </dt> 
+       </dl> 
+       <dl title="3070"> 
+        <dd>
+         3070
+        </dd> 
+        <dt>
+         收藏
+        </dt> 
+       </dl> 
+       <dl id="fanBox" title="5600"> 
+        <dd>
+         <span id="fan">5600</span>
+        </dd> 
+        <dt>
+         粉丝
+        </dt> 
+       </dl> 
+      </div> 
+      <div class="profile-intro-name-boxOpration"> 
+       <div class="opt-letter-watch-box"> 
+        <a class="personal-watch bt-button" id="btnAttent">已关注</a> 
+       </div> 
+       <div class="opt-letter-watch-box"> 
+        <a rel="noopener" class="bt-button personal-letter" href="https://im.csdn.net/chat/qq_64671439" target="_blank">私信</a> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="swiper-slide-box-remuneration"> 
+      <a data-report-click="{&quot;spm&quot;:&quot;3001.9728&quot;,&quot;extra&quot;:{&quot;index&quot;:&quot;0&quot;}}" data-report-view="{&quot;spm&quot;:&quot;3001.9728&quot;,&quot;extra&quot;:{&quot;index&quot;:&quot;0&quot;}}" href="https://mp.csdn.net/edit?utm_source=blog" target="_blank"> <img src="https://i-operation.csdnimg.cn/images/bfc20af708654cc689adbb6361f6dc98.png" alt=""> </a> 
+     </div> 
+     <div id="asideHotArticle" class="aside-box"> 
+      <h3 class="aside-title">热门文章</h3> 
+      <div class="aside-content"> 
+       <ul class="hotArticle-list"> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135287166" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135287166&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细一次成功】Ubuntu 20.04 安装 ROS 详细教程 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">45445</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135293643" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135293643&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细】Ubuntu 下安装 Anaconda <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">34936</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135730107" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135730107&quot;,&quot;ab&quot;:&quot;new&quot;}"> 解决 Ubuntu 重启后输入 nvidia-smi 显示 no devices were found 的问题 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">25440</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135255536" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135255536&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细】解决联想拯救者Y7000p在ubuntu20.04未找到wifi适配器,安装rtl8852ce网卡驱动问题 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">10751</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_64671439/article/details/135490585" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_541&quot;,&quot;spm&quot;:&quot;3001.4139&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135490585&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【详细】双系统 Ubuntu 如何给根目录扩容 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">9331</span> </a> </li> 
+       </ul> 
+      </div> 
+     </div> 
+     <div id="asideCategory" class="aside-box aside-box-column flexible-box-new"> 
+      <h3 class="aside-title">分类专栏</h3> 
+      <div class="aside-content" id="aside-content"> 
+       <ul> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12935633.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12935633.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756925.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> openrealm </span> </a> <span class="special-column-num">3篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12994944.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12994944.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 语义分割 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824105.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824105.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> PX4 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12947656.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12947656.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 力扣 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824116.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824116.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 挑战杯 </span> </a> <span class="special-column-num">6篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12562527.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12562527.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756724.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> ubuntu </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12659611.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12659611.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756780.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 强化学习PPO </span> </a> <span class="special-column-num">2篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12696741.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12696741.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756928.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 强化学习避障项目 </span> </a> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561778.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561778.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756918.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> AirSim </span> </a> <span class="special-column-num">4篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12540921.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12540921.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> 【强化学习的数学原理-赵世钰】课程笔记 </span> </a> <span class="special-column-num">10篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12735220.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12735220.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> ros练习 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12564618.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12564618.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756913.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> word 排版 </span> </a> <span class="special-column-num">1篇</span> </li> 
+        <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561800.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561800.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+          <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class="title oneline"> github上的代码运行修改 </span> </a> </li> 
+       </ul> 
+      </div> 
+      <p class="text-center"> <a class="flexible-btn-new" data-report-click="{&quot;spm&quot;:&quot;3001.10779&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-maxheight="0" data-minheight="208px" data-fbox="#aside-content" data-flag="flag"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></a> <a class="flexible-btn-new-close" data-report-click="{&quot;spm&quot;:&quot;3001.10779&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-minheight="208px" data-fbox="#aside-content" data-scroll="true" data-flag="flag"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></a> </p> 
+     </div> 
+     <div class="article-previous" id="article-previous"> 
+      <dl data-report-click="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}"> 
+       <dt>
+         上一篇： 
+       </dt> 
+       <dd> 
+        <a href="https://blog.csdn.net/qq_64671439/article/details/136548102" data-report-query="spm=3001.10752"> 华为电脑截屏快捷键 </a> 
+       </dd> 
+      </dl> 
+      <dl class="next" data-report-click="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}"> 
+       <dt>
+         下一篇： 
+       </dt> 
+       <dd> 
+        <a href="https://blog.csdn.net/qq_64671439/article/details/136661090" data-report-query="spm=3001.10796"> Ubuntu 安装腾讯会议 </a> 
+       </dd> 
+      </dl> 
+     </div> 
+     <div id="asideNewComments" class="aside-box"> 
+      <h3 class="aside-title">最新评论</h3> 
+      <div class="aside-content"> 
+       <ul class="newcomment-list"> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135293643#comments_37868975" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135293643#comments_37868975&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135293643#comments_37868975&quot;,&quot;ab&quot;:&quot;new&quot;}">【详细】Ubuntu 下安装 Anaconda</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/qq_63845677" class="user-name" target="_blank">就叫潇洒哥: </a> <span class="code-comments">文件目录下怎么打开终端？</span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135345465#comments_37822481" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135345465#comments_37822481&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135345465#comments_37822481&quot;,&quot;ab&quot;:&quot;new&quot;}">【强化学习的数学原理-赵世钰】课程笔记（五）蒙特卡洛方法</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/m0_69062172" class="user-name" target="_blank">m0_69062172: </a> <span class="code-comments">佬，你是通过什么做笔记的呀<img src="https://g.csdnimg.cn/static/face/emoji/004.png" alt="表情包"></span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/149597533#comments_37755289" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533#comments_37755289&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533#comments_37755289&quot;,&quot;ab&quot;:&quot;new&quot;}">win11升级更新后，wsl出现的各种问题</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/2401_82435300" class="user-name" target="_blank">2401_82435300: </a> <span class="code-comments">感谢老哥，试了一下真的可以，就这个问题困扰了我两三天了<img src="https://g.csdnimg.cn/static/face/emoji/010.png" alt="表情包"></span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135287166#comments_37736186" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135287166#comments_37736186&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135287166#comments_37736186&quot;,&quot;ab&quot;:&quot;new&quot;}">【详细一次成功】Ubuntu 20.04 安装 ROS 详细教程</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/jsjsbshahsh" class="user-name" target="_blank">jsjsbshahsh: </a> <span class="code-comments">为什么我的乌龟按键没反应啊</span> </p> </li> 
+        <li> <a class="title text-truncate" target="_blank" href="https://blog.csdn.net/qq_64671439/article/details/135305331#comments_37683175" data-report-click="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135305331#comments_37683175&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_542&quot;,&quot;spm&quot;:&quot;3001.4231&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/135305331#comments_37683175&quot;,&quot;ab&quot;:&quot;new&quot;}">【强化学习的数学原理-赵世钰】课程笔记（二）贝尔曼公式</a> <p class="comment ellipsis"> <a href="https://blog.csdn.net/2402_88137294" class="user-name" target="_blank">无敌蝌蚪哥: </a> <span class="code-comments">和滑冰差不多</span> </p> </li> 
+       </ul> 
+      </div> 
+     </div> 
+     <div id="asideHotArticle" class="aside-box"> 
+      <h3 class="aside-title">大家在看</h3> 
+      <div class="aside-content"> 
+       <ul class="hotArticle-list"> 
+        <li> <a href="https://blog.csdn.net/2403_85288168/article/details/150954511" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150954511&quot;,&quot;strategy&quot;:&quot;202_1052723-3250665_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150954511&quot;,&quot;strategy&quot;:&quot;202_1052723-3250665_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> Selenium WebDriver 驱动下载与使用 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">158</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_42910179/article/details/150935691" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42910179/article/details/150935691&quot;,&quot;strategy&quot;:&quot;202_1052723-3250656_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42910179/article/details/150935691&quot;,&quot;strategy&quot;:&quot;202_1052723-3250656_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【图像算法 - 25】基于深度学习 YOLOv11 与 OpenCV 实现人员跌倒识别系统（人体姿态估计版本） <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">828</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/qq_32020645/article/details/150980105" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_32020645/article/details/150980105&quot;,&quot;strategy&quot;:&quot;202_1052723-3250660_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_32020645/article/details/150980105&quot;,&quot;strategy&quot;:&quot;202_1052723-3250660_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> Apache Flink连载（四十三）：Flink基于Kubernetes部署 - Kubernetes部署模式之Application Cluster-HA Application Cluster </a> </li> 
+        <li> <a href="https://blog.csdn.net/2403_85288168/article/details/150957908" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150957908&quot;,&quot;strategy&quot;:&quot;202_1052723-3250666_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/2403_85288168/article/details/150957908&quot;,&quot;strategy&quot;:&quot;202_1052723-3250666_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> 【解决办法】IntelliJ IDEA 里Java 文件图标显示为咖啡杯 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">113</span> </a> </li> 
+        <li> <a href="https://blog.csdn.net/luomoyoushang/article/details/150761248" target="_blank" data-report-click="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/luomoyoushang/article/details/150761248&quot;,&quot;strategy&quot;:&quot;202_1052723-3250661_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10093&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/luomoyoushang/article/details/150761248&quot;,&quot;strategy&quot;:&quot;202_1052723-3250661_RCMD&quot;,&quot;ab&quot;:&quot;new&quot;}"> 2025最新最全大模型八股文整理 <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/readCountWhite.png" alt=""> <span class="read">892</span> </a> </li> 
+       </ul> 
+      </div> 
+     </div> 
+     <div id="asideArchive" class="aside-box" style="display:block!important; width:300px;"> 
+      <h3 class="aside-title">最新文章</h3> 
+      <div class="aside-content"> 
+       <ul class="inf_list clearfix"> 
+        <li class="clearfix"> <a href="https://blog.csdn.net/qq_64671439/article/details/149814959" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149814959&quot;,&quot;ab&quot;:&quot;left&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149814959&quot;,&quot;ab&quot;:&quot;left&quot;}">在VScode里运行并调试C++程序</a> </li> 
+        <li class="clearfix"> <a href="https://blog.csdn.net/qq_64671439/article/details/149597533" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533&quot;,&quot;ab&quot;:&quot;left&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/149597533&quot;,&quot;ab&quot;:&quot;left&quot;}">win11升级更新后，wsl出现的各种问题</a> </li> 
+        <li class="clearfix"> <a href="https://blog.csdn.net/qq_64671439/article/details/148900674" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/148900674&quot;,&quot;ab&quot;:&quot;left&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_382&quot;,&quot;spm&quot;:&quot;3001.4136&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/article/details/148900674&quot;,&quot;ab&quot;:&quot;left&quot;}">遥感图像语义分割1-安装mmsegmentation</a> </li> 
+       </ul> 
+       <div class="archive-bar"></div> 
+       <div class="archive-box"> 
+        <div class="archive-list-item">
+         <a href="https://blog.csdn.net/qq_64671439?type=blog&amp;year=2025&amp;month=08" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_538&quot;,&quot;spm&quot;:&quot;3001.4138&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439?type=blog&amp;year=2025&amp;month=08&quot;}"><span class="year">2025年</span><span class="num">13篇</span></a>
+        </div> 
+        <div class="archive-list-item">
+         <a href="https://blog.csdn.net/qq_64671439?type=blog&amp;year=2024&amp;month=12" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_538&quot;,&quot;spm&quot;:&quot;3001.4138&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439?type=blog&amp;year=2024&amp;month=12&quot;}"><span class="year">2024年</span><span class="num">60篇</span></a>
+        </div> 
+        <div class="archive-list-item">
+         <a href="https://blog.csdn.net/qq_64671439?type=blog&amp;year=2023&amp;month=12" target="_blank" data-report-click="{&quot;mod&quot;:&quot;popu_538&quot;,&quot;spm&quot;:&quot;3001.4138&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439?type=blog&amp;year=2023&amp;month=12&quot;}"><span class="year">2023年</span><span class="num">11篇</span></a>
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <!-- 详情页显示目录 --> 
+     <!--文章目录--> 
+     <div id="asidedirectory" class="aside-box"> 
+      <div class="groupfile groupfile-active" id="directory"> 
+       <h3 class="aside-title">目录</h3> 
+       <div class="align-items-stretch group_item" id="align-items-stretch"> 
+        <div class="pos-box"> 
+         <div class="scroll-box"> 
+          <div class="toc-box"></div> 
+         </div> 
+        </div> 
+       </div> 
+       <p class="flexible-btn-new active" id="flexible-btn-groupfile" data-report-click="{&quot;spm&quot;:&quot;3001.10780&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></p> 
+       <p class="flexible-btn-new-close active" data-report-click="{&quot;spm&quot;:&quot;3001.10780&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></p> 
+      </div> 
+     </div> 
+    </aside>    
+   </div> 
+   <div class="recommend-right align-items-stretch clearfix" id="rightAside" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div class="rightside-fixed-hide"> 
+      <div class="recommend-column-box aside-box"> 
+       <h3 class="aside-title">相关专栏 </h3> 
+       <div class="aside-content"> 
+        <div class="recommend-column-itembox exp1"> 
+         <a href="https://blog.csdn.net/julialove102123/category_12545383.html" title="AI人工智能：一文读懂「X」系列" target="_blank" data-report-view="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/julialove102123/category_12545383.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;136529678\&quot;,\&quot;recommendCount\&quot;:\&quot;15\&quot;,\&quot;index\&quot;:\&quot;0\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}" data-report-click="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/julialove102123/category_12545383.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;136529678\&quot;,\&quot;recommendCount\&quot;:\&quot;15\&quot;,\&quot;index\&quot;:\&quot;0\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}"> 
+          <div class="info-box"> 
+           <div class="img-box"> 
+            <div class="column-img" style="background-image: url(https://i-blog.csdnimg.cn/blog_column_migrate/14aaee690250108c0ac05618fbbf761a.png?x-oss-process=image/resize,m_fixed,h_224,w_224)" alt="AI人工智能：一文读懂「X」系列" srcset=""></div> 
+           </div> 
+           <div class="info"> 
+            <div class="title-box"> 
+             <p class="title">AI人工智能：一文读懂「X」系列</p> 
+             <p class="tag">专栏</p> 
+            </div> 
+            <p class="learn">19 人学习</p> 
+           </div> 
+          </div> <p class="desc" title="随着AI的快速发展，有很多知识需要快速了解，但是针对某个技术点一般都会有很长很长的介绍视频，对于大家来说每个视频学习完都会比较耗费时间，趁着在复习，这个系列叫「一文读懂xxx」，涵盖生成式AI、chatgpt、注意力机制、RLHF等等，希望可以总结所学汇集精髓输出！相互交流~">随着AI的快速发展，有很多知识需要快速了解，但是针对某个技术点一般都会有很长很长的介绍视频，对于大家来说每个视频学习完都会比较耗费时间，趁着在复习，这个系列叫「一文读懂xxx」，涵盖生成式AI、chatgpt、注意力机制、RLHF等等，希望可以总结所学汇集精髓输出！相互交流~</p> </a> 
+        </div> 
+        <div class="recommend-column-itembox exp1"> 
+         <a href="https://blog.csdn.net/qq_42818403/category_12206485.html" title="Matlab偏微分方程系列编程" target="_blank" data-report-view="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42818403/category_12206485.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;136529678\&quot;,\&quot;recommendCount\&quot;:\&quot;15\&quot;,\&quot;index\&quot;:\&quot;1\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}" data-report-click="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_42818403/category_12206485.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;136529678\&quot;,\&quot;recommendCount\&quot;:\&quot;15\&quot;,\&quot;index\&quot;:\&quot;1\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}"> 
+          <div class="info-box"> 
+           <div class="img-box"> 
+            <div class="column-img" style="background-image: url(https://i-blog.csdnimg.cn/blog_column_migrate/a1539387deb1523158fd69af45cd2d96.jpeg?x-oss-process=image/resize,m_fixed,h_224,w_224)" alt="Matlab偏微分方程系列编程" srcset=""></div> 
+           </div> 
+           <div class="info"> 
+            <div class="title-box"> 
+             <p class="title">Matlab偏微分方程系列编程</p> 
+             <p class="tag">专栏</p> 
+            </div> 
+            <p class="learn">43 人学习</p> 
+           </div> 
+          </div> <p class="desc" title="常有研究生向我请教那些复杂的微分方程 (组) 是如何求解的。我在他们身上看到了我当初的影子, 同时我也意识到大多数研究生对数值方法的程序实现存在诸多问题。这时候我开始着手将已掌握的数值方法及其重要的技巧和经验进行总结, 来要让更多的人接触到这些有价值的数值方法。">常有研究生向我请教那些复杂的微分方程 (组) 是如何求解的。我在他们身上看到了我当初的影子, 同时我也意识到大多数研究生对数值方法的程序实现存在诸多问题。这时候我开始着手将已掌握的数值方法及其重要的技巧和经验进行总结, 来要让更多的人接触到这些有价值的数值方法。</p> </a> 
+        </div> 
+        <div class="recommend-column-itembox exp1"> 
+         <a href="https://blog.csdn.net/frigidwinter/category_12170787.html" title="运动规划实战进阶：深度强化学习篇" target="_blank" data-report-view="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/frigidwinter/category_12170787.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;136529678\&quot;,\&quot;recommendCount\&quot;:\&quot;15\&quot;,\&quot;index\&quot;:\&quot;2\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}" data-report-click="{&quot;spm&quot;:&quot;3001.10573&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/frigidwinter/category_12170787.html&quot;,&quot;ab&quot;:&quot;exp1&quot;,&quot;extra&quot;:&quot;{\&quot;id\&quot;:\&quot;136529678\&quot;,\&quot;recommendCount\&quot;:\&quot;15\&quot;,\&quot;index\&quot;:\&quot;2\&quot;,\&quot;type\&quot;:\&quot;column\&quot;}&quot;}"> 
+          <div class="info-box"> 
+           <div class="img-box"> 
+            <div class="column-img" style="background-image: url(https://i-blog.csdnimg.cn/direct/ff59360fcf0a40e09f51d82e6c08bb93.png?x-oss-process=image/resize,m_fixed,h_224,w_224)" alt="运动规划实战进阶：深度强化学习篇" srcset=""></div> 
+           </div> 
+           <div class="info"> 
+            <div class="title-box"> 
+             <p class="title">运动规划实战进阶：深度强化学习篇</p> 
+             <p class="tag">专栏</p> 
+            </div> 
+            <p class="learn">21 人学习</p> 
+           </div> 
+          </div> <p class="desc" title="🔥附DRL运动规划Python代码和权重文件🔥(不含训练框架)主要包含经典强化学习理论(环境与回报、贝尔曼最优等)和深度强化学习模型(DQN、PG、TD3等)🔥订阅后私信博主或在文章底部/博客主页添加博主微信进入技术交流群">🔥附DRL运动规划Python代码和权重文件🔥(不含训练框架)主要包含经典强化学习理论(环境与回报、贝尔曼最优等)和深度强化学习模型(DQN、PG、TD3等)🔥订阅后私信博主或在文章底部/博客主页添加博主微信进入技术交流群</p> </a> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <div id="recommend-right"> 
+      <div class="flex-column aside-box groupfile groupfile-active " id="groupfile"> 
+       <div class="groupfile-div"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item" id="align-items-stretch-right"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+        <p class="flexible-btn-new" id="flexible-btn-groupfile" data-report-click="{&quot;spm&quot;:&quot;3001.10782&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-traigger="true" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch-right"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></p> 
+        <p class="flexible-btn-new-close close" data-report-click="{&quot;spm&quot;:&quot;3001.10782&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-traigger="true" data-minheight="117px" data-maxheight="446px" data-fbox="#align-items-stretch-right"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></p> 
+       </div> 
+      </div> 
+      <div class="article-previous" id="article"> 
+       <dl data-report-click="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10752&quot;,&quot;extend1&quot;:&quot;上一篇&quot;}"> 
+        <dt>
+          上一篇： 
+        </dt> 
+        <dd> 
+         <a href="https://blog.csdn.net/qq_64671439/article/details/136548102" data-report-query="spm=3001.10752"> 华为电脑截屏快捷键 </a> 
+        </dd> 
+       </dl> 
+       <dl class="next" data-report-click="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.10796&quot;,&quot;extend1&quot;:&quot;下一篇&quot;}"> 
+        <dt>
+          下一篇： 
+        </dt> 
+        <dd> 
+         <a href="https://blog.csdn.net/qq_64671439/article/details/136661090" data-report-query="spm=3001.10796"> Ubuntu 安装腾讯会议 </a> 
+        </dd> 
+       </dl> 
+      </div> 
+      <div class="aside-box kind_person d-flex flex-column flexible-box-new"> 
+       <h3 class="aside-title">分类专栏</h3> 
+       <div class="align-items-stretch kindof_item" id="kind_person_column"> 
+        <div class="aside-content" id="aside-content-column"> 
+         <ul> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12935633.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12935633.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756925.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> openrealm </span> </a> <span class="special-column-num">3篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12994944.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12994944.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 语义分割 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824105.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824105.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> PX4 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12947656.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12947656.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 力扣 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12824116.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12824116.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 挑战杯 </span> </a> <span class="special-column-num">6篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12562527.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12562527.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756724.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> ubuntu </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12659611.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12659611.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756780.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 强化学习PPO </span> </a> <span class="special-column-num">2篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12696741.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12696741.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756928.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 强化学习避障项目 </span> </a> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561778.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561778.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756918.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> AirSim </span> </a> <span class="special-column-num">4篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12540921.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12540921.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> 【强化学习的数学原理-赵世钰】课程笔记 </span> </a> <span class="special-column-num">10篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12735220.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12735220.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756923.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> ros练习 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12564618.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12564618.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756913.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> word 排版 </span> </a> <span class="special-column-num">1篇</span> </li> 
+          <li> <a class="clearfix special-column-name" href="https://blog.csdn.net/qq_64671439/category_12561800.html" data-report-click="{&quot;mod&quot;:&quot;popu_537&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4137&quot;,&quot;strategy&quot;:&quot;pc付费专栏左侧入口&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439/category_12561800.html&quot;,&quot;ab&quot;:&quot;new&quot;}"> 
+            <div class="special-column-bar "></div> <img src="https://i-blog.csdnimg.cn/columns/default/20201014180756919.png?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" onerror="this.src='https://i-blog.csdnimg.cn/columns/default/20201014180756922.png?x-oss-process=image/resize,m_fixed,h_64,w_64'"> <span class=""> github上的代码运行修改 </span> </a> </li> 
+         </ul> 
+        </div> 
+        <p class="text-center"> <a class="flexible-btn-new" data-report-click="{&quot;spm&quot;:&quot;3001.10783&quot;,&quot;strategy&quot;:&quot;展开全部&quot;}" data-traigger="true" data-maxheight="0" data-minheight="208px" data-fbox="#aside-content-column" data-flag="flag"><span class="text">展开全部</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-bot-White.png" alt=""></a> <a class="flexible-btn-new-close" data-report-click="{&quot;spm&quot;:&quot;3001.10783&quot;,&quot;strategy&quot;:&quot;收起&quot;}" data-traigger="true" data-minheight="208px" data-fbox="#aside-content-column" data-scroll="true" data-flag="flag"><span class="text">收起</span> <img class="look-more" src="https://csdnimg.cn/release/blogv2/dist/pc/img/arrowup-line-top-White.png" alt=""></a> </p> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+   <div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div id="recommend-right-concision"> 
+      <div class="flex-column aside-box groupfile" id="groupfileConcision"> 
+       <div class="groupfile-div1"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+  </div> 
+  <div class="mask-dark"></div> 
+  <div class="skin-boxshadow"></div> 
+  <div class="directory-boxshadow"></div> 
+  <div class="comment-side-box-shadow comment-side-tit-close" id="commentSideBoxshadow"> 
+   <div class="comment-side-content"> 
+    <div class="comment-side-tit"> 
+     <div class="comment-side-tit-count">
+      评论&nbsp;
+      <span class="count">8</span>
+     </div> 
+     <img class="comment-side-tit-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/closeBt.png">
+    </div> 
+    <div id="pcCommentSideBox" class="comment-box comment-box-new2 " style="display:block"> 
+     <div class="comment-edit-box d-flex"> 
+      <div class="user-img"> 
+       <a href="https://blog.csdn.net/2501_92738035" target="_blank"> <img src="https://profile-avatar.csdnimg.cn/default.jpg!1"> </a> 
+      </div> 
+      <form id="commentform"> 
+       <textarea class="comment-content" name="comment_content" id="comment_content" placeholder="欢迎高质量的评论，低质的评论会被折叠" maxlength="1000"></textarea> 
+       <div class="comment-reward-box" style="background-image: url('https://img-home.csdnimg.cn/images/20230131025301.png');"> 
+        <a class="btn-remove-reward"></a> 
+        <div class="form-reward-box"> 
+         <div class="info">
+           成就一亿技术人! 
+         </div> 
+         <div class="price-info">
+           拼手气红包
+          <span class="price">6.0元</span> 
+         </div> 
+        </div> 
+       </div> 
+       <div class="comment-operate-box"> 
+        <div class="comment-operate-l"> 
+         <span id="tip_comment" class="tip">还能输入<em>1000</em>个字符</span> 
+        </div> 
+        <div class="comment-operate-c">
+          &nbsp; 
+        </div> 
+        <div class="comment-operate-r"> 
+         <div class="comment-operate-item comment-reward"> 
+          <img class="comment-operate-img" data-url="https://csdnimg.cn/release/blogv2/dist/pc/img/" src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentReward.png" alt="红包"> 
+          <span class="comment-operate-tip">添加红包</span> 
+         </div> 
+         <div class="comment-operate-item comment-emoticon"> 
+          <img class="comment-operate-img" data-url="https://csdnimg.cn/release/blogv2/dist/pc/img/" src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentEmotionIcon.png" alt="表情包"> 
+          <span class="comment-operate-tip">插入表情</span> 
+          <div class="comment-emoticon-box comment-operate-isshow"> 
+           <div class="comment-emoticon-img-box"></div> 
+          </div> 
+         </div> 
+         <div class="comment-operate-item comment-code"> 
+          <img class="comment-operate-img" data-url="https://csdnimg.cn/release/blogv2/dist/pc/img/" src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentCodeIcon.png" alt="表情包"> 
+          <span class="comment-operate-tip">代码片</span> 
+          <div class="comment-code-box comment-operate-isshow"> 
+           <ul id="commentCode"> 
+            <li><a data-code="html">HTML/XML</a></li> 
+            <li><a data-code="objc">objective-c</a></li> 
+            <li><a data-code="ruby">Ruby</a></li> 
+            <li><a data-code="php">PHP</a></li> 
+            <li><a data-code="csharp">C</a></li> 
+            <li><a data-code="cpp">C++</a></li> 
+            <li><a data-code="javascript">JavaScript</a></li> 
+            <li><a data-code="python">Python</a></li> 
+            <li><a data-code="java">Java</a></li> 
+            <li><a data-code="css">CSS</a></li> 
+            <li><a data-code="sql">SQL</a></li> 
+            <li><a data-code="plain">其它</a></li> 
+           </ul> 
+          </div> 
+         </div> 
+         <div class="comment-operate-item"> 
+          <input type="hidden" id="comment_replyId" name="comment_replyId"> 
+          <input type="hidden" id="article_id" name="article_id" value="136529678"> 
+          <input type="hidden" id="comment_userId" name="comment_userId" value=""> 
+          <input type="hidden" id="commentId" name="commentId" value=""> 
+          <a data-report-click="{&quot;mod&quot;:&quot;1582594662_003&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4227&quot;,&quot;ab&quot;:&quot;new&quot;}"> <input type="submit" class="btn-comment btn-comment-input" value="评论"> </a> 
+         </div> 
+        </div> 
+       </div> 
+      </form> 
+     </div> 
+     <div class="comment-list-container"> 
+      <div class="comment-list-box comment-operate-item"> 
+      </div> 
+      <div id="lookGoodComment" class="look-good-comment side-look-comment"> 
+       <a class="look-more-comment">查看更多评论<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentArrowDownWhite.png" alt=""></a> 
+      </div> 
+      <div id="lookFlodComment" class="look-flod-comment"> 
+       <span class="count"></span>&nbsp;条评论被折叠&nbsp;
+       <a class="look-more-flodcomment">查看</a> 
+      </div> 
+      <div class="opt-box text-center"> 
+       <div class="btn btn-sm btn-link-blue" id="btnMoreComment"></div> 
+      </div> 
+     </div> 
+    </div> 
+    <div id="pcFlodCommentSideBox" class="pc-flodcomment-sidebox"> 
+     <div class="comment-fold-tit">
+      <span id="lookUnFlodComment" class="back"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentArrowLeftWhite.png" alt=""></span>被折叠的&nbsp;
+      <span class="count"></span>&nbsp;条评论 
+      <a href="https://blogdev.blog.csdn.net/article/details/122245662" class="tip" target="_blank">为什么被折叠?</a> 
+      <a href="https://bbs.csdn.net/forums/FreeZone" class="park" target="_blank"> <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/iconPark.png">到【灌水乐园】发言</a> 
+     </div> 
+     <div class="comment-fold-content"></div> 
+     <div id="lookBadComment" class="look-bad-comment side-look-comment"> 
+      <a class="look-more-comment">查看更多评论<img src="https://csdnimg.cn/release/blogv2/dist/pc/img/commentArrowDownWhite.png" alt=""></a> 
+     </div> 
+    </div> 
+   </div> 
+   <div class="comment-rewarddialog-box"> 
+    <div class="form-box"> 
+     <div class="title-box">
+       添加红包 
+      <a class="btn-form-close"></a> 
+     </div> 
+     <form id="commentRewardForm"> 
+      <div class="ipt-box"> 
+       <label for="txtName">祝福语</label> 
+       <div class="ipt-btn-box"> 
+        <input type="text" name="name" id="txtName" autocomplete="off" maxlength="50"> 
+        <a class="btn-ipt btn-random"></a> 
+       </div> 
+       <p class="notice">请填写红包祝福语或标题</p> 
+      </div> 
+      <div class="ipt-box"> 
+       <label for="txtSendAmount">红包数量</label> 
+       <div class="ipt-txt-box"> 
+        <input type="text" name="sendAmount" maxlength="4" id="txtSendAmount" placeholder="请填写红包数量(最小10个)" autocomplete="off"> 
+        <span class="after-txt">个</span> 
+       </div> 
+       <p class="notice">红包个数最小为10个</p> 
+      </div> 
+      <div class="ipt-box"> 
+       <label for="txtMoney">红包总金额</label> 
+       <div class="ipt-txt-box error"> 
+        <input type="text" name="money" maxlength="5" id="txtMoney" placeholder="请填写总金额(最低5元)" autocomplete="off"> 
+        <span class="after-txt">元</span> 
+       </div> 
+       <p class="notice">红包金额最低5元</p> 
+      </div> 
+      <div class="balance-info-box"> 
+       <label>余额支付</label> 
+       <div class="balance-info">
+         当前余额
+        <span class="balance">3.43</span>元 
+        <a href="https://i.csdn.net/#/wallet/balance/recharge" class="link-charge" target="_blank">前往充值 &gt;</a> 
+       </div> 
+      </div> 
+      <div class="opt-box"> 
+       <div class="pay-info">
+         需支付：
+        <span class="price">10.00</span>元 
+       </div> 
+       <button type="button" class="ml-auto btn-cancel">取消</button> 
+       <button type="button" class="ml8 btn-submit" disabled="true">确定</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="rr-guide-box"> 
+    <div class="rr-first-box"> 
+     <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward02.png" alt=""> 
+     <button class="btn-guide-known next">下一步</button> 
+    </div> 
+    <div class="rr-second-box"> 
+     <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward03.png" alt=""> 
+     <button class="btn-guide-known known">知道了</button> 
+    </div> 
+   </div> 
+  </div> 
+  <div class="redEnvolope" id="redEnvolope"> 
+   <div class="env-box"> 
+    <div class="env-container"> 
+     <div class="pre-open" id="preOpen"> 
+      <div class="top"> 
+       <header> 
+        <img class="clearTpaErr" :src="redpacketAuthor.avatar" alt=""> 
+        <div class="author">
+         成就一亿技术人!
+        </div> 
+       </header> 
+       <div class="bot-icon"></div> 
+      </div> 
+      <footer> 
+       <div class="red-openbtn open-start"></div> 
+       <div class="tip">
+         领取后你会自动成为博主和红包主的粉丝 
+        <a class="rule" target="_blank">规则</a> 
+       </div> 
+      </footer> 
+     </div> 
+     <div class="opened" id="opened"> 
+      <div class="bot-icon"> 
+       <header> 
+        <a class="creatorUrl" href="" target="_blank"> <img class="clearTpaErr" src="https://profile-avatar.csdnimg.cn/default.jpg!2" alt=""> </a> 
+        <div class="author"> 
+         <div class="tt">
+          hope_wisdom
+         </div> 发出的红包 
+        </div> 
+       </header> 
+      </div> 
+      <div class="receive-box"> 
+       <header></header> 
+       <div class="receive-list"> 
+       </div> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="close-btn"></div> 
+   </div> 
+  </div> 
+  <div id="rewardNew" class="reward-popupbox-new"> 
+   <p class="rewad-title">打赏作者<span class="reward-close"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/closeBt.png"></span></p> 
+   <dl class="profile-box"> 
+    <dd> 
+     <a href="https://blog.csdn.net/qq_64671439" data-report-click="{&quot;mod&quot;:&quot;popu_379&quot;,&quot;dest&quot;:&quot;https://blog.csdn.net/qq_64671439&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1" class="avatar_pic"> </a> 
+    </dd> 
+    <dt> 
+     <p class="blog-name">leaf_leaves_leaf</p> 
+     <p class="blog-discript">你的鼓励将是我创作的最大动力</p> 
+    </dt> 
+   </dl> 
+   <div class="reward-box-new"> 
+    <div class="reward-content">
+     <div class="reward-right"></div>
+    </div> 
+   </div> 
+   <div class="money-box"> 
+    <span class="choose-money choosed" data-id="1">¥1</span> 
+    <span class="choose-money " data-id="2">¥2</span> 
+    <span class="choose-money " data-id="4">¥4</span> 
+    <span class="choose-money " data-id="6">¥6</span> 
+    <span class="choose-money " data-id="10">¥10</span> 
+    <span class="choose-money " data-id="20">¥20</span> 
+   </div> 
+   <div class="sure-box"> 
+    <div class="sure-box-money"> 
+     <div class="code-box"> 
+      <div class="code-num-box"> 
+       <span class="code-name">扫码支付：</span>
+       <span class="code-num">¥1</span> 
+      </div> 
+      <div class="code-img-box"> 
+       <div class="renovate"> 
+        <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-time-out.png"> 
+        <span>获取中</span> 
+       </div> 
+      </div> 
+      <div class="code-pay-box"> 
+       <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/newWeiXin.png" alt=""> 
+       <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/newZhiFuBao.png" alt=""> 
+       <span>扫码支付</span> 
+      </div> 
+     </div> 
+    </div> 
+    <div class="sure-box-blance"> 
+     <p class="tip">您的余额不足，请更换扫码支付或<a target="_blank" data-report-click="{&quot;mod&quot;:&quot;1597646289_003&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4302&quot;}" href="https://i.csdn.net/#/wallet/balance/recharge?utm_source=RewardVip" class="go-invest">充值</a></p> 
+     <p class="is-have-money"><a class="reward-sure">打赏作者</a></p> 
+    </div> 
+   </div> 
+  </div> 
+  <div class="pay-code"> 
+   <div class="pay-money">
+    实付
+    <span class="pay-money-span" data-nowprice="" data-oldprice="">元</span>
+   </div> 
+   <div class="content-blance">
+    <a class="blance-bt" href="javascript:;">使用余额支付</a>
+   </div> 
+   <div class="content-code"> 
+    <div id="payCode" data-id=""> 
+     <div class="renovate"> 
+      <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-time-out.png"> 
+      <span>点击重新获取</span> 
+     </div> 
+    </div> 
+    <div class="pay-style">
+     <span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/weixin.png"></span>
+     <span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/zhifubao.png"></span>
+     <span><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/jingdong.png"></span>
+     <span class="text">扫码支付</span>
+    </div> 
+   </div> 
+   <div class="bt-close"> 
+    <svg t="1567152543821" class="icon" viewbox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10924" xmlns:xlink="http://www.w3.org/1999/xlink" width="12" height="12"> 
+     <defs> 
+      <style type="text/css"></style> 
+     </defs> 
+     <path d="M512 438.378667L806.506667 143.893333a52.032 52.032 0 1 1 73.6 73.621334L585.621333 512l294.485334 294.485333a52.074667 52.074667 0 0 1-73.6 73.642667L512 585.621333 217.514667 880.128a52.053333 52.053333 0 1 1-73.621334-73.642667L438.378667 512 143.893333 217.514667a52.053333 52.053333 0 1 1 73.621334-73.621334L512 438.378667z" fill="" p-id="10925"></path> 
+    </svg> 
+   </div> 
+   <div class="pay-balance"> 
+    <input type="radio" class="pay-code-radio" data-type="details"> 
+    <span class="span">钱包余额</span> 
+    <span class="balance" style="color:#FC5531;font-size:14px;">0</span> 
+    <div class="pay-code-tile"> 
+     <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/pay-help.png" alt=""> 
+     <div class="pay-code-content"> 
+      <div class="span"> 
+       <p class="title">抵扣说明：</p> 
+       <p> 1.余额是钱包充值的虚拟货币，按照1:1的比例进行支付金额的抵扣。<br> 2.余额无法直接购买下载，可以购买VIP、付费专栏及课程。</p> 
+      </div> 
+     </div> 
+    </div> 
+   </div> 
+   <a class="pay-balance-con" href="https://i.csdn.net/#/wallet/balance/recharge" target="_blank"><img src="https://csdnimg.cn/release/blogv2/dist/pc/img/recharge.png" alt=""><span>余额充值</span></a> 
+  </div>  
+  <div class="keyword-dec-box" id="keywordDecBox"></div>  
+  <!-- 富文本柱状图  --> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css">        
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">                  
+ </body>
+</html>

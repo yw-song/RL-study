@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <link rel="canonical" href="https://blog.csdn.net/qq_64671439/article/details/135305331"> 
+  <meta http-equiv="content-type" content="text/html; charset=utf-8"> 
+  <meta name="renderer" content="webkit"> 
+  <meta name="force-rendering" content="webkit"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="report" content="{&quot;pid&quot;: &quot;blog&quot;, &quot;spm&quot;:&quot;1001.2101&quot;}"> 
+  <meta name="referrer" content="always"> 
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <link rel="alternate" media="handheld" href="#">  
+  <meta name="applicable-device" content="pc"> 
+  <link href="https://g.csdnimg.cn/static/logo/favicon32.ico" rel="shortcut icon" type="image/x-icon"> 
+  <title>【强化学习的数学原理-赵世钰】课程笔记（二）贝尔曼公式-CSDN博客</title>  
+  <meta name="keywords" content="赵世钰"> 
+  <meta name="csdn-baidu-search" content="{&quot;autorun&quot;:true,&quot;install&quot;:true,&quot;keyword&quot;:&quot;赵世钰&quot;}"> 
+  <meta name="description" content="文章浏览阅读6k次，点赞61次，收藏73次。本文围绕强化学习展开，介绍了状态值、动作值和贝尔曼公式。状态值可评价策略好坏，回报用于评估策略。贝尔曼公式描述状态值关系，通过推导其矩阵向量形式可求解状态值，此过程即策略评估。动作值能帮助选择更好的动作，与状态值相互关联。"> 
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/css/detail_enter-d4fc849858.min.css">  
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/release/blogv2/dist/pc/themesSkin/skin-1024/skin-1024-ecd36efea2.min.css">    
+  <meta name="toolbar" content="{&quot;type&quot;:&quot;0&quot;,&quot;fixModel&quot;:&quot;1&quot;}">    
+  <link rel="stylesheet" type="text/css" href="https://csdnimg.cn/public/sandalstrap/1.4/css/sandalstrap.min.css"> 
+  <style>
+        .MathJax, .MathJax_Message, .MathJax_Preview{
+            display: none
+        }
+    </style>    
+ 	<style>
+	main div.blog-content-box pre {
+		max-height: 100%;
+		overflow-y: hidden;
+	}
+	</style>
+ </head>  
+ <body class="nodata  " style=""> 
+  <div id="toolbarBox" style="min-height: 48px;"></div>    
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/pc/css/blog_code-01256533b5.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/chart-3456820cac.css"> 
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/swiper/6.0.4/css/swiper.css">   
+  <div class="main_father clearfix d-flex justify-content-center mainfather-concision" style="height:100%;"> 
+   <div class="container clearfix container-concision" id="mainBox">  
+    <main>  
+     <div class="blog-content-box"> 
+      <div class="article-header-box"> 
+       <div class="article-header"> 
+        <div class="article-title-box"> 
+         <h1 class="title-article" id="articleContentId">【强化学习的数学原理-赵世钰】课程笔记（二）贝尔曼公式</h1> 
+        </div> 
+        <div class="article-info-box"> 
+         <div class="article-bar-top"> 
+          <img class="article-type-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/original.png" alt=""> 
+          <div class="bar-content"> 
+           <a class="follow-nickName " href="https://blog.csdn.net/qq_64671439" target="_blank" rel="noopener" title="leaf_leaves_leaf">leaf_leaves_leaf</a> 
+           <img class="article-time-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newUpTime2.png" alt=""> 
+           <span class="time">已于&nbsp;2024-02-08 23:22:35&nbsp;修改</span> 
+           <div class="read-count-box"> 
+            <img class="article-read-img article-heard-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/articleReadEyes2.png" alt=""> 
+            <span class="read-count">阅读量6k</span> 
+            <a id="blog_detail_zk_collection" class="un-collection" data-report-click="{&quot;mod&quot;:&quot;popu_823&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="article-collect-img article-heard-img un-collect-status isdefault" style="display:inline-block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollect2.png" alt=""> <img class="article-collect-img article-heard-img collect-status isactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarCollectionActive2.png" alt=""> <span class="name">收藏</span> <span class="get-collection"> 73 </span> </a> 
+            <div class="read-count-box is-like" data-type="top"> 
+             <img class="article-read-img article-heard-img" style="display:none" id="is-like-imgactive-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Active.png" alt=""> 
+             <img class="article-read-img article-heard-img" style="display:block" id="is-like-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newHeart2023Black.png" alt=""> 
+             <span class="read-count" id="blog-digg-num">点赞数 61 </span> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="blog-tags-box"> 
+          <div class="tags-box artic-tag-box"> 
+           <span class="label">分类专栏：</span> 
+           <a class="tag-link" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" rel="noopener">【强化学习的数学原理-赵世钰】课程笔记</a> 
+           <span class="label">文章标签：</span> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;笔记&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;笔记\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E7%AC%94%E8%AE%B0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">笔记</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">学习</a> 
+           <a rel="noopener" data-report-query="spm=1001.2101.3001.4223" data-report-click="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" data-report-view="{&quot;mod&quot;:&quot;popu_626&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4223&quot;,&quot;strategy&quot;:&quot;机器学习&quot;,&quot;ab&quot;:&quot;new&quot;,&quot;extra&quot;:&quot;{\&quot;searchword\&quot;:\&quot;机器学习\&quot;}&quot;}" class="tag-link" href="https://so.csdn.net/so/search/s.do?q=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;t=all&amp;o=vip&amp;s=&amp;l=&amp;f=&amp;viparticle=&amp;from_tracking_code=tag_word&amp;from_code=app_blog_art" target="_blank">机器学习</a> 
+          </div> 
+         </div> 
+         <div class="up-time">
+          <span>于&nbsp;2023-12-31 17:00:49&nbsp;首次发布</span>
+         </div> 
+         <div class="slide-content-box"> 
+          <div class="article-copyright"> 
+           <div class="creativecommons">
+             版权声明：本文为博主原创文章，遵循
+            <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener"> CC 4.0 BY-SA </a>版权协议，转载请附上原文出处链接和本声明。 
+           </div> 
+           <div class="article-source-link">
+             本文链接：
+            <a href="https://blog.csdn.net/qq_64671439/article/details/135305331" target="_blank">https://blog.csdn.net/qq_64671439/article/details/135305331</a> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="operating"> 
+          <a class="href-article-edit slide-toggle">版权</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div id="blogHuaweiyunAdvert"></div> 
+      <div id="blogColumnPayAdvert"> 
+       <div class="column-group"> 
+        <div class="column-group-item column-group0 column-group-item-one"> 
+         <div class="item-l"> 
+          <a class="item-target" href="https://blog.csdn.net/qq_64671439/category_12540921.html" target="_blank" title="【强化学习的数学原理-赵世钰】课程笔记" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6332&quot;}"> <img class="item-target" src="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" alt=""> <span class="title item-target"> <span> <span class="tit">【强化学习的数学原理-赵世钰】课程笔记</span> <span class="dec">专栏收录该内容</span> </span> </span> </a> 
+         </div> 
+         <div class="item-m"> 
+          <span>10 篇文章</span> 
+         </div> 
+         <div class="item-r"> 
+          <a class="item-target article-column-bt articleColumnFreeBt" data-id="12540921">订阅专栏</a> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="ai-abstract-box"> 
+       <div class="ai-abstract"> 
+        <div class="abstract-content"> 
+         <img class="lock-img" src="https://img-home.csdnimg.cn/images/20240711042549.png" alt=""> 本文围绕强化学习展开，介绍了状态值、动作值和贝尔曼公式。状态值可评价策略好坏，回报用于评估策略。贝尔曼公式描述状态值关系，通过推导其矩阵向量形式可求解状态值，此过程即策略评估。动作值能帮助选择更好的动作，与状态值相互关联。 
+        </div> 
+        <p> 摘要生成于 <a href="https://ai.csdn.net?utm_source=cknow_pc_ai_abstract" data-report-query="spm=3001.10128" data-report-view="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;}}" data-report-click="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;,&quot;text&quot;:&quot;C知道&quot;}}" target="_blank"> C知道</a> ，由 DeepSeek-R1 满血版支持， <a href="https://ai.csdn.net?utm_source=cknow_pc_ai_abstract" data-report-query="spm=3001.10128" data-report-click="{&quot;spm&quot;:&quot;3001.10128&quot;,&quot;extra&quot;:{&quot;location&quot;:&quot;ai_abstract&quot;,&quot;text&quot;:&quot;前往体验&quot;}}" target="_blank"> 前往体验 &gt;</a></p> 
+       </div> 
+      </div> 
+      <article class="baidu_pl"> 
+       <div id="article_content" class="article_content clearfix"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/kdoc_html_views-1a98987dfd.css"> 
+        <link rel="stylesheet" href="https://csdnimg.cn/release/blogv2/dist/mdeditor/css/editerView/ck_htmledit_views-704d5b9767.css"> 
+        <div id="content_views" class="htmledit_views atom-one-dark"> 
+         <p id="main-toc"><strong>目录</strong></p> 
+         <p id="%E4%B8%80.%20%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0-toc" style="margin-left:0px;"><a href="#%E4%B8%80.%20%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0" rel="nofollow">一. 内容概述</a></p> 
+         <p id="1.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E5%86%85%E5%AE%B9-toc" style="margin-left:40px;"><a href="#1.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E5%86%85%E5%AE%B9" rel="nofollow">1. 第二章主要有两个内容</a></p> 
+         <p id="2.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%A4%A7%E7%BA%B2-toc" style="margin-left:40px;"><a href="#2.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%A4%A7%E7%BA%B2" rel="nofollow">2. 第二章大纲</a></p> 
+         <p id="%E4%BA%8C.%C2%A0%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%8C.%C2%A0%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89" rel="nofollow">二.&nbsp;激励性实例（Motivating examples）</a></p> 
+         <p id="1.%20%E4%BE%8B%E5%AD%901%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%9E%E6%8A%A5%2F%E6%94%B6%E7%9B%8A%EF%BC%88return%EF%BC%89%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%9F-toc" style="margin-left:40px;"><a href="#1.%20%E4%BE%8B%E5%AD%901%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%9E%E6%8A%A5%2F%E6%94%B6%E7%9B%8A%EF%BC%88return%EF%BC%89%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%9F" rel="nofollow">1. 例子1：为什么回报/收益（return）很重要？</a></p> 
+         <p id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%EF%BC%9F-toc" style="margin-left:80px;"><a href="#%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%EF%BC%9F" rel="nofollow">&nbsp; &nbsp; &nbsp; &nbsp; （1）什么是回报（return）？</a></p> 
+         <p id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%882%EF%BC%89%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%9F-toc" style="margin-left:80px;"><a href="#%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%882%EF%BC%89%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%9F" rel="nofollow">&nbsp; &nbsp; &nbsp; &nbsp; （2）为什么回报（return）很重要？</a></p> 
+         <p id="2.%20%E4%BE%8B%E5%AD%902%EF%BC%9A%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%EF%BC%9F-toc" style="margin-left:40px;"><a href="#2.%20%E4%BE%8B%E5%AD%902%EF%BC%9A%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%EF%BC%9F" rel="nofollow">2. 例子2：如何计算回报（return）？</a></p> 
+         <p id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E6%96%B9%E6%B3%951%EF%BC%9A%E9%80%9A%E8%BF%87%E5%AE%9A%E4%B9%89-toc" style="margin-left:80px;"><a href="#%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E6%96%B9%E6%B3%951%EF%BC%9A%E9%80%9A%E8%BF%87%E5%AE%9A%E4%B9%89" rel="nofollow">&nbsp; &nbsp; &nbsp; &nbsp; （1）方法1：通过定义</a></p> 
+         <p id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%882%EF%BC%89%E6%96%B9%E6%B3%952%EF%BC%9A-toc" style="margin-left:80px;"><a href="#%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%882%EF%BC%89%E6%96%B9%E6%B3%952%EF%BC%9A" rel="nofollow">&nbsp; &nbsp; &nbsp; &nbsp; （2）方法2：</a></p> 
+         <p id="%E4%B8%89.%20%E7%8A%B6%E6%80%81%E5%80%BC%EF%BC%88state%20value%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%89.%20%E7%8A%B6%E6%80%81%E5%80%BC%EF%BC%88state%20value%EF%BC%89" rel="nofollow">三. 状态值（state value）</a></p> 
+         <p id="%C2%A0%E5%9B%9B.%20%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%9A%E6%8E%A8%E5%AF%BC-toc" style="margin-left:0px;"><a href="#%C2%A0%E5%9B%9B.%20%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%9A%E6%8E%A8%E5%AF%BC" rel="nofollow">&nbsp;四. 贝尔曼公式：推导</a></p> 
+         <p id="1.%20%E6%8E%A8%E5%AF%BC-toc" style="margin-left:40px;"><a href="#1.%20%E6%8E%A8%E5%AF%BC" rel="nofollow">1. 推导</a></p> 
+         <p id="2.%20%E4%BE%8B%E5%AD%90-toc" style="margin-left:40px;"><a href="#2.%20%E4%BE%8B%E5%AD%90" rel="nofollow">2. 例子</a></p> 
+         <p id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901%EF%BC%9A-toc" style="margin-left:80px;"><a href="#%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901%EF%BC%9A" rel="nofollow">&nbsp; &nbsp; &nbsp; &nbsp; （1）例子1：</a></p> 
+         <p id="%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902-toc" style="margin-left:80px;"><a href="#%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902" rel="nofollow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）例子2</a></p> 
+         <p id="%E4%BA%94.%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%88%C2%A0%C2%A0Bellman%20equation%EF%BC%89%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%90%91%E9%87%8F%E5%BD%A2%E5%BC%8F%EF%BC%88Matrix-vector%20form%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%BA%94.%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%88%C2%A0%C2%A0Bellman%20equation%EF%BC%89%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%90%91%E9%87%8F%E5%BD%A2%E5%BC%8F%EF%BC%88Matrix-vector%20form%EF%BC%89" rel="nofollow">五.贝尔曼公式（&nbsp;&nbsp;Bellman equation）：矩阵向量形式（Matrix-vector form）</a></p> 
+         <p id="1.%20%E6%8E%A8%E5%AF%BC%E5%87%BA%E7%9F%A9%E9%98%B5%E5%90%91%E9%87%8F%E5%BD%A2%E5%BC%8F%EF%BC%9A-toc" style="margin-left:40px;"><a href="#1.%20%E6%8E%A8%E5%AF%BC%E5%87%BA%E7%9F%A9%E9%98%B5%E5%90%91%E9%87%8F%E5%BD%A2%E5%BC%8F%EF%BC%9A" rel="nofollow">1. 推导出矩阵向量形式：</a></p> 
+         <p id="2.%20%E4%BE%8B%E5%AD%90-toc" style="margin-left:40px;"><a href="#2.%20%E4%BE%8B%E5%AD%90" rel="nofollow">2. 例子</a></p> 
+         <p id="%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901-toc" style="margin-left:80px;"><a href="#%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901" rel="nofollow">（1）例子1</a></p> 
+         <p id="%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902-toc" style="margin-left:80px;"><a href="#%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902" rel="nofollow">（2）例子2</a></p> 
+         <p id="%E5%85%AD.%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%88%C2%A0Bellman%20equation%EF%BC%89%EF%BC%9A%E6%B1%82%E8%A7%A3%E7%8A%B6%E6%80%81%E5%80%BC%EF%BC%88state%20value%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E5%85%AD.%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%88%C2%A0Bellman%20equation%EF%BC%89%EF%BC%9A%E6%B1%82%E8%A7%A3%E7%8A%B6%E6%80%81%E5%80%BC%EF%BC%88state%20value%EF%BC%89" rel="nofollow">六.贝尔曼公式（&nbsp;Bellman equation）：求解状态值（state value）</a></p> 
+         <p id="1.%E6%B1%82%E8%A7%A3-toc" style="margin-left:40px;"><a href="#1.%E6%B1%82%E8%A7%A3" rel="nofollow">1.求解</a></p> 
+         <p id="2.%E4%BE%8B%E5%AD%90-toc" style="margin-left:40px;"><a href="#2.%E4%BE%8B%E5%AD%90" rel="nofollow">2.例子</a></p> 
+         <p id="%E4%B8%83.%E5%8A%A8%E4%BD%9C%E5%80%BC%EF%BC%88action%20value%EF%BC%89-toc" style="margin-left:0px;"><a href="#%E4%B8%83.%E5%8A%A8%E4%BD%9C%E5%80%BC%EF%BC%88action%20value%EF%BC%89" rel="nofollow">七.动作值（action value）</a></p> 
+         <p id="1.%E5%8A%A8%E4%BD%9C%E5%80%BC%E5%AE%9A%E4%B9%89-toc" style="margin-left:40px;"><a href="#1.%E5%8A%A8%E4%BD%9C%E5%80%BC%E5%AE%9A%E4%B9%89" rel="nofollow">1.动作值定义</a></p> 
+         <p id="2.%E5%8A%A8%E4%BD%9C%E5%80%BC%E4%B8%8E%E7%8A%B6%E6%80%81%E5%80%BC%E7%9A%84%E8%81%94%E7%B3%BB-toc" style="margin-left:40px;"><a href="#2.%E5%8A%A8%E4%BD%9C%E5%80%BC%E4%B8%8E%E7%8A%B6%E6%80%81%E5%80%BC%E7%9A%84%E8%81%94%E7%B3%BB" rel="nofollow">2.动作值与状态值的联系</a></p> 
+         <p id="3.%E4%BE%8B%E5%AD%90-toc" style="margin-left:40px;"><a href="#3.%E4%BE%8B%E5%AD%90" rel="nofollow">3.例子</a></p> 
+         <p id="%E5%85%AB.%E6%80%BB%E7%BB%93-toc" style="margin-left:0px;"><a href="#%E5%85%AB.%E6%80%BB%E7%BB%93" rel="nofollow">八.总结</a></p> 
+         <hr id="hr-toc"> 
+         <p></p> 
+         <h2 id="%E4%B8%80.%20%E5%86%85%E5%AE%B9%E6%A6%82%E8%BF%B0">一. 内容概述</h2> 
+         <h3 id="1.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E5%86%85%E5%AE%B9">1. 第二章主要有两个内容</h3> 
+         <p>（1）一个核心概念：状态值（state value）：<span style="background-color:#fbd4d0;">从一个状态出发，沿着一个策略我所得到的奖励回报的平均值</span>。<strong>状态值越高，说明对应的策略越好</strong>。之所以已关注状态值，是因为它能<strong>评价一个策略的好坏</strong>。</p> 
+         <p>（2）基本工具：贝尔曼公式（the Bellman equation）：</p> 
+         <ul>
+          <li>用于分析状态值，描述所有状态和状态值之间的关系，这个关系就是一个方程，一个等式。<span style="background-color:#fbd4d0;">通过求解这个方程就可以求解出来一个给定策略的状态值，因此就可以评价这个策略的好坏。</span></li>
+          <li><span style="background-color:#fbd4d0;">求解贝尔曼公式进而得到一个策略所对应的状态值这样的一个过程被称为策略评价（policy evaluation）</span>，policy evaluation 在强化学习中是非常基础的一个概念，我评价了一个策略得到它的值，然后基于它的值再改进策略然后循环下去，最后就能得到一个最优的策略。&nbsp;</li>
+         </ul> 
+         <h3 id="2.%20%E7%AC%AC%E4%BA%8C%E7%AB%A0%E5%A4%A7%E7%BA%B2">2. 第二章大纲</h3> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （1）激励性实例（Motivating examples）</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （2）状态值（state value）</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （3）贝尔曼公式（&nbsp;&nbsp;Bellman equation）：推导</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （4）贝尔曼公式（&nbsp; &nbsp;Bellman equation）：矩阵向量形式</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （5）贝尔曼公式（&nbsp;&nbsp;Bellman equation）：求解状态值（state value）</p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; （6）动作值：从 state value 过渡到 action value</p> 
+         <h2 id="%E4%BA%8C.%C2%A0%E6%BF%80%E5%8A%B1%E6%80%A7%E5%AE%9E%E4%BE%8B%EF%BC%88Motivating%20examples%EF%BC%89">二.&nbsp;激励性实例（Motivating examples）</h2> 
+         <h3 id="1.%20%E4%BE%8B%E5%AD%901%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%9E%E6%8A%A5%2F%E6%94%B6%E7%9B%8A%EF%BC%88return%EF%BC%89%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%9F">1. 例子1：为什么回报/收益（return）很重要？</h3> 
+         <h4 id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%EF%BC%9F">&nbsp; &nbsp; &nbsp; &nbsp; （1）<strong>什么是回报</strong>（return）<strong>？</strong></h4> 
+         <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>沿着轨迹获得的奖励（reward）的（折扣discounted）总和。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What is return? The (discounted) sum of the rewards obtained along a trajectory.</p> 
+         <h4 id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%882%EF%BC%89%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%9F">&nbsp; &nbsp; &nbsp; &nbsp; （2）为什么回报（return）很重要？</h4> 
+         <p>下图的第三个表示，这个策略在 s1 状态有百分之 50 的概率向右，有百分之 50 的概率向下。</p> 
+         <p><img alt="" height="227" src="https://i-blog.csdnimg.cn/blog_migrate/4326ec7634120a0afec947db7fb17697.png" width="851"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>问题：</strong>从起点 s1 出发，哪项策略（policy）是 "最好的"？哪项 "最差"？</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;直觉：</strong>第一个最好，第二个最差，因为第二个进入了禁区。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;数学：</strong>我们能用数学来描述这种直觉吗？<span style="background-color:#fbd4d0;">回报（return）可以用来评估策略（policy）</span>，return 可以告诉我们哪个策略好，哪个策略坏，这样才能不断地改进策略。请参阅下文。</p> 
+         <ul>
+          <li>根据策略&nbsp;1（左图），从 s1 开始，折扣回报（discounted return）为</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="102" src="https://i-blog.csdnimg.cn/blog_migrate/a6942d5ba3163e38c25b819d1fbb164b.png" width="243"></p> 
+         <ul>
+          <li>根据策略 2（中图），从 s1 开始，折扣回报（discounted return）为</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="99" src="https://i-blog.csdnimg.cn/blog_migrate/7824372d04074dd529c61a42995b5161.png" width="271"></p> 
+         <ul>
+          <li>根据策略 3（右图），从 s1 开始，折扣回报（discounted return）为（策略3是随机性的Policy 3 is stochastic!）</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="86" src="https://i-blog.csdnimg.cn/blog_migrate/2b8763706abeef4b7a998fa7091ad26d.png" width="339"></p> 
+         <blockquote> 
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; 策略 3 这里其实是在计算期望。这里已经不是 return 的概念了，return 的概念是针对一个轨迹定义的，现在有两个轨迹，我们在做的是求平均值，即求期望。其实这里求的是状态值（state value）。</p> 
+         </blockquote> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;总之，从 s1 开始</p> 
+         <p class="img-center"><img alt="" height="43" src="https://i-blog.csdnimg.cn/blog_migrate/aace5b0a2f45f44ee25443eefa356927.png" width="242"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;上述不等式表明，第一种策略是最好的，第二种策略是最差的，这与我们的直觉完全相同。<br><strong><span style="background-color:#fbd4d0;">计算回报（return）对于评估一项策略非常重要。</span></strong></p> 
+         <h3 id="2.%20%E4%BE%8B%E5%AD%902%EF%BC%9A%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E5%9B%9E%E6%8A%A5%EF%BC%88return%EF%BC%89%EF%BC%9F">2. 例子2：如何计算回报（return）？</h3> 
+         <p class="img-center"><img alt="" height="168" src="https://i-blog.csdnimg.cn/blog_migrate/ea602ae4b4af2e42a4f522a133c71bb7.png" width="174"></p> 
+         <blockquote> 
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; 上图中四个状态（state）是 s1,s2,s3,s4，策略（policy）是绿色的箭头，奖励（reward）是 r1,r2,r3,r4。</p> 
+         </blockquote> 
+         <h4 id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E6%96%B9%E6%B3%951%EF%BC%9A%E9%80%9A%E8%BF%87%E5%AE%9A%E4%B9%89">&nbsp; &nbsp; &nbsp; &nbsp; （1）方法1：通过定义</h4> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#fbd4d0;">&nbsp;</span><strong><span style="background-color:#fbd4d0;">让 vi 表示从 si（i = 1、2、3、4）出发得到的回报（return）。</span></strong>注意，轨迹是无穷的，例如，从 s1 出发：s1-&gt;s2-&gt;s3-&gt;s4-&gt;s1-&gt;s2-&gt;s3-&gt;s4-&gt;s1......会一直走下去</p> 
+         <p class="img-center"><img alt="" height="168" src="https://i-blog.csdnimg.cn/blog_migrate/f9291825925d6def1bfd8828a49ae739.png" width="252"></p> 
+         <h4 id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%882%EF%BC%89%E6%96%B9%E6%B3%952%EF%BC%9A">&nbsp; &nbsp; &nbsp; &nbsp; （2）方法2：</h4> 
+         <p class="img-center"><img alt="" height="149" src="https://i-blog.csdnimg.cn/blog_migrate/c83b3c29df8e268d1a152bb6e6dfa6f2.png" width="397"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 上面这一组式子告诉我们从不同状态出发得到的 return 依赖于从其他状态出发得到的 return，回报（return）相互依赖。&nbsp;</p> 
+         <blockquote> 
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; 这一思想在强化学习中被称为 Bootstrapping !</p> 
+         </blockquote> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 如何使用这些方程？把上面的一组式子写成矩阵向量的形式（matrix-vector form）：</p> 
+         <p><img alt="" height="238" src="https://i-blog.csdnimg.cn/blog_migrate/e1e8716fcef37ac1222873a4aea7a29a.png" width="945"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 可被重写成一种更简化的形式：</p> 
+         <p class="img-center"><img alt="" height="80" src="https://i-blog.csdnimg.cn/blog_migrate/371dc051e34e461037102b13e40d8949.png" width="367"></p> 
+         <p class="img-center"><img alt="" height="45" src="https://i-blog.csdnimg.cn/blog_migrate/2f0fc26cb921c2357157af23841af2b6.png" width="138"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 从上面的方程可以解出从不同状态出发的价值（value） v ，这就是贝尔曼公式（针对这个特定的确定性 deterministic&nbsp; 问题）！&nbsp;</p> 
+         <ul>
+          <li>虽然简单，但它展示了核心概念：<span style="background-color:#fbd4d0;">一个状态（state）的价值（value）依赖于其他状态（state）的价值（value）</span></li>
+          <li>矩阵向量形式更容易理解如何求解状态值（state value）。</li>
+         </ul> 
+         <hr> 
+         <p><strong>&nbsp; &nbsp; &nbsp; &nbsp; 练习：</strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;考虑图中所示的策略（policy）。请写出回报（return）之间的关系（即写出贝尔曼方程）</p> 
+         <p class="img-center"><img alt="" height="202" src="https://i-blog.csdnimg.cn/blog_migrate/9f1d0e3302b1d44f8d93ff773b12d3fa.png" width="201"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 答案：（从 s1 出发，以奖励 0 到状态 s3 ，从状态 s3 出发得到的 return 是 v3；从 s2&nbsp;出发，以奖励 1&nbsp;到状态 s4&nbsp;，从状态 s4&nbsp;出发得到的 return 是 v4；...）</p> 
+         <p class="img-center"><img alt="" height="158" src="https://i-blog.csdnimg.cn/blog_migrate/38d47fd87670b6ed3eb84df8827c8b45.png" width="143"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如何求解？这是一个线性方程组，很好求解。 我们可以先计算 v4，然后计算 v3、v2、v1。</p> 
+         <hr> 
+         <h2 id="%E4%B8%89.%20%E7%8A%B6%E6%80%81%E5%80%BC%EF%BC%88state%20value%EF%BC%89">三. 状态值（state value）</h2> 
+         <p>&nbsp; &nbsp; &nbsp;<strong> &nbsp; 单步：</strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;请考虑以下单步（single-step）流程：</p> 
+         <p class="img-center"><img alt="" height="52" src="https://i-blog.csdnimg.cn/blog_migrate/e3b52ea5d8ff88d6ddffa67711b1e976.png" width="179"></p> 
+         <ul>
+          <li>t, t + 1：离散时间实例，t 指当前的时刻，t+1 指下一个时刻&nbsp;</li>
+          <li>St：t 时刻的状态</li>
+          <li>At：在状态 St 采取的动作</li>
+          <li>Rt+1：在状态 St 采取动作&nbsp;At 之后获得的奖励（reward）（有时也写成Rt，写成什么都没有区别，只是一个习惯，但是一般都写成 Rt+1）</li>
+          <li>St+1：采取动作 At 后转换到的状态</li>
+         </ul> 
+         <p class="img-center"><img alt="" height="159" src="https://i-blog.csdnimg.cn/blog_migrate/d4172ff9c5e196eb2e7e8d4f7d43fd75.png" width="385"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注意，St、At、Rt+1 都是大写的，代表随机变量（random variables），就是我们可以对他进行一系列的操作，比如求期望（expectation）。</p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 每一步的所有跳跃（step）都由以下概率分布（probability distributions）所决定：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p> 
+         <ul>
+          <li>在 St 要采取什么样的动作（action）由<strong>策略 Π </strong>来决定</li>
+          <li>在 St 采取动作（take action）At，要得到什么样的奖励（Reward）由<strong>奖励概率（reward probability）</strong>决定</li>
+          <li>在 St 采取动作（take action）At，要跳到下一个什么状态（State）由<strong>状态转移概率（&nbsp;state transition probability）</strong>决定</li>
+         </ul> 
+         <p><img alt="" height="162" src="https://i-blog.csdnimg.cn/blog_migrate/3f91a9edd303575527607009a9ec2151.png" width="775"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;governed：受约束的，所规管的</p> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp;<strong> 多步：</strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;考虑以下多步骤轨迹（multi-step trajectory）：</p> 
+         <p class="img-center"><img alt="" height="57" src="https://i-blog.csdnimg.cn/blog_migrate/606ccae2a400a7d2fbbcae6a815f720e.png" width="481"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="background-color:#fbd4d0;">折扣回报（discounted return）Gt 是所有瞬时回报（immediate reward）与折扣因子（discount rate）乘积相加：</span></p> 
+         <p class="img-center"><img alt="" height="47" src="https://i-blog.csdnimg.cn/blog_migrate/850201ba7e3381a39bdab53747f5684d.png" width="356"></p> 
+         <ul>
+          <li>γ∈ (0, 1) 是折扣率（discount rate）。</li>
+          <li>Gt 也是一个随机变量（random variables），因为 Rt+1、Rt+2、......都是随机变量（random variables）。</li>
+         </ul> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>正式定义状态值（state value）：</strong></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#fbd4d0;">&nbsp;折扣回报（discounted return）Gt 的期望值（或称为期望值 expectation 或平均值 mean）被定义为状态值函数（state-value function），或简称为状态值（state value）：&nbsp;</span></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The expectation (or called expected value or mean) of Gt is defined as the state-value function or simply state value:</p> 
+         <p class="img-center"><img alt="" height="75" src="https://i-blog.csdnimg.cn/blog_migrate/144e22a5bd1ca9301d711098afa312dd.png" width="329"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 注意：</p> 
+         <ul>
+          <li><strong><span style="background-color:#fbd4d0;">状态值（state value）它是 s 的函数，</span></strong><span style="background-color:#fbd4d0;">是一种条件期望（conditional expectation），条件是状态从 s 开始。从不同的状态 s 出发，得到的轨迹不同，得到的折扣回报（discounted return）Gt 也不同</span></li>
+          <li><strong><span style="background-color:#fbd4d0;">状态值（state value）它是策略 Π 的函数，</span></strong><span style="background-color:#fbd4d0;">对于不同的策略（policy） ，会得到不同的轨迹，不同的轨迹会得到不同的折扣回报（discounted return）Gt，就会得到不同的状态值（state value）</span></li>
+          <li><span style="background-color:#fbd4d0;">它代表一个状态的 "价值"。如果状态值（state value）越大，那么从这个状态出发的策略（policy）就更好，因为可以获得更大的累积回报（return）。</span></li>
+         </ul> 
+         <hr> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;问：</strong>回报（return）与状态值（state value）之间的关系是什么？</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;&nbsp;&nbsp;&nbsp;答：</strong>回报（return）是针对单个轨迹（trajectory）求的 return；状态值（state value）针对多个轨迹（trajectory）得到的 return 再求平均值。如果从一个状态出发，<strong>有可能得到</strong>多个轨迹（trajectory），这时候回报（return）与状态值（state value）显然有区别；但假如从一个状态出发，一切都是确定性的，只能得到一条轨迹（trajectory），这时候那个状态的回报（return）与那个状态的状态值（state value）是一样的。</p> 
+         <p><img alt="" height="116" src="https://i-blog.csdnimg.cn/blog_migrate/55a0650a568ece73873806cb2985daab.png" width="931"></p> 
+         <hr> 
+         <p><strong>例子：</strong></p> 
+         <p><img alt="" height="251" src="https://i-blog.csdnimg.cn/blog_migrate/e37e8ebc69253c0ab7e8c2bac85d9db4.png" width="886"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 这三个例子分别对应三个策略 Π1，Π2，Π3，三个策略导致了三个轨迹（trajectory 理解为根据策略可能走出的轨迹），要计算在这三个不同策略下同一个状态 s1 的状态值（state value）</p> 
+         <p><img alt="" height="245" src="https://i-blog.csdnimg.cn/blog_migrate/62d2627f3bd6f8d4ec2d87eb79bdf7c3.png" width="944"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 策略 1 和 2 从 s1 出发，能得到唯一的一个 trajectory，这个 trajectory 的 return 就是它们分别的 state value</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#fbd4d0;">策略 3 有两条轨迹，状态值（state value）是这两条轨迹分别得到的回报（return）的平均值。就是把 probability 乘到前面去，这实际上就是期望（expectation）的求法。</span></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 比较三个策略导致的状态值（state value）的大小可知，第一种策略是最好的，第二种策略是最差的，这与我们的直觉完全相同。</p> 
+         <h2 id="%C2%A0%E5%9B%9B.%20%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%9A%E6%8E%A8%E5%AF%BC">&nbsp;四. 贝尔曼公式：推导</h2> 
+         <h3 id="1.%20%E6%8E%A8%E5%AF%BC">1. 推导</h3> 
+         <ul>
+          <li>状态值（state value）固然重要，但如何计算呢？答案就在贝尔曼公式（Bellman equation）中。</li>
+          <li><span style="background-color:#fbd4d0;">总之，贝尔曼公式（Bellman equation）描述了不同状态的状态值（state value）之间的关系。</span></li>
+         </ul> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;考虑一个随机轨迹：</p> 
+         <p class="img-center"><img alt="" height="65" src="https://i-blog.csdnimg.cn/blog_migrate/3ce18fb47c26e62cd570434c6b4d3a67.png" width="539"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 折扣回报（discounted return）Gt 可写成</p> 
+         <p class="img-center"><img alt="" height="124" src="https://i-blog.csdnimg.cn/blog_migrate/459c9ce5917f8078195ada7d77e42650.png" width="393"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所以这个时刻我所得到的 return 等于我能立即得到的奖励（immediate reward）Rt+1 加上到下一时刻从那出发能得到的 return （futrue reward）乘以 discount rate</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;那么，根据状态值（state value）的定义可以得出</p> 
+         <p class="img-center"><img alt="" height="113" src="https://i-blog.csdnimg.cn/blog_migrate/a0ea5f0f4b1f72b44e9669779ead7754.png" width="412"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;接下来，分别计算这两个项，求出他们的形式，就得到了贝尔曼公式</p> 
+         <hr> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#ffd7b9;">首先，</span><strong><span style="background-color:#ffd7b9;">计算第一项</span></strong> E[Rt+1|St = s]：当前时刻我在状态 s ，我得到的立即奖励（immediate reward）是 Rt+1</p> 
+         <p class="img-center"><img alt="" height="113" src="https://i-blog.csdnimg.cn/blog_migrate/8c03a018828d99e622005afd704e94a4.png" width="500"></p> 
+         <p>&nbsp;&nbsp;<strong>&nbsp; &nbsp; &nbsp;理解：</strong></p> 
+         <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>在状态 s ，我有多个 action 可以去选择，take action a 的概率是 Π（a|s)，当我&nbsp;take action a 我所得到的 value 是 E[Rt+1|St = s, At = a]。E[Rt+1|St = s, At = a] 可以写成</p> 
+         <p class="img-center"><img alt="" height="51" src="https://i-blog.csdnimg.cn/blog_migrate/d5b4cb8c37f41f1128595bf869195cb3.png" width="106"></p> 
+         <p><strong>&nbsp; &nbsp; &nbsp; &nbsp;</strong>意思是，从 s 出发，take action a，得到的奖励（reward）是 r&nbsp;的概率是 p(r|s, a)，根据期望的定义，取值为 r 的概率乘以 r 本身就是期望。</p> 
+         <blockquote> 
+          <p>&nbsp; &nbsp; &nbsp;<strong><span style="background-color:#fbd4d0;"> &nbsp; 注意：</span></strong><span style="background-color:#fbd4d0;">第一项其实就是我能得到的立即奖励（immediate reward）的期望/平均</span></p> 
+         </blockquote> 
+         <hr> 
+         <ul>
+          <li>大写的 S 不确定，小写的 s 是确定的。在前面的&nbsp;state value 定义时已说明，S、R 表示随机变量。</li>
+          <li>这里的大写 St，At，Rt+1都是集合，所以对于任意时刻 t，S 是确定的，A 可能有几种不同选择。&nbsp;而之前的例子是确定性奖励，所以对于 R 是一个集合（变量）印象不深。最简单的就是抽奖，你每次执行同样的行为得到的奖励却不同</li>
+          <li>这里 Π（a|s) 是采取动作 a 的概率，后面一项是采取这个动作之后，到下一个不同状态的概率</li>
+          <li>比如我有 0.5 概率（pai）撞到墙，但是撞到墙之后有 0.1 概率原地不动，也有 0.9 概率后退一步，这部分内容就是后面的 p</li>
+          <li>这里就是枚举了所有动作下的概率和收益的成绩加起来算了期望</li>
+          <li>&nbsp;就是两次离散型随机变量计算期望</li>
+         </ul> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <span style="background-color:#ffd7b9;">其次，</span><strong><span style="background-color:#ffd7b9;">计算第二项</span></strong><span style="background-color:#ffd7b9;">&nbsp;</span>E[Gt+1|St = s]：第二项是我从当前状态 s 出发得到的下一个时刻的回报（return）的期望（mean）</p> 
+         <p class="img-center"><img alt="" height="217" src="https://i-blog.csdnimg.cn/blog_migrate/dccba36d13d0c95962d655e35dce9a56.png" width="482"></p> 
+         <ul>
+          <li>第一行：从当前 s 出发，有多个选择，可以跳到不同 s' ，跳到不同 s' 的概率是 p(s'&nbsp;| s)，跳到不同 s' 所得到的值是 E[Gt+1|St = s, St+1 = s’&nbsp;]，一相加就是&nbsp;E[Gt+1|St = s]</li>
+          <li>从第一行到第二行：E[Gt+1 | St = s, St+1 = s’&nbsp;] 意思是当前状态是 s，下一个状态是 s'，计算从下一个状态出发所得到回报（return）的期望（mean），第二行&nbsp;E[Gt+1|St+1 = s'&nbsp;] 把第一行中那一项的&nbsp;St = s 去掉了，因为我已经知道了下一个状态是 s'，就不用关系我之前究竟是在什么状态了，这其实就是马尔可夫的性质，是无记忆的（memoryless Markov property）</li>
+          <li>从第二行到第三行：E[Gt+1 | St+1 = s'&nbsp;] 意思是从下一个状态 s' 出发计算我所能得到的回报（return）的平均值（mean），这个就是第三行写的一个状态值（state value）v_π(s’)，只不过是针对 s' 的状态值（state value）v_π(s’)。——最开始的状态值（state value）的定义</li>
+          <li>从第三行到第四行：从 s 到 s' 的概率 p(s'&nbsp;| s)：从 s 出发我有多种选择，可以选择不同的动作（action），选择 action a 的概率是&nbsp;π(a|s) ，选择这个 action 我跳到 s' 的概率是&nbsp;p(s'&nbsp;|s, a)，通过两者相乘相加可以得到 p(s'&nbsp;| s)。</li>
+         </ul> 
+         <blockquote> 
+          <p>&nbsp; <span style="background-color:#fbd4d0;">&nbsp; &nbsp; &nbsp; </span><strong><span style="background-color:#fbd4d0;">注意：</span></strong><span style="background-color:#fbd4d0;">第二项是 future reward 的平均（mean）</span></p> 
+         </blockquote> 
+         <hr> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; <strong>贝尔曼公式（Bellman equation）：此处西格玛 a 后面应该加一个左大括号 {，右大括号在式子的最后面 }</strong></p> 
+         <p><img alt="" height="293" src="https://i-blog.csdnimg.cn/blog_migrate/4b60e0243b10e18a39324d878cd8cf0b.png" width="886"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp;<strong> 强调，由方程中的符号可以得出以下重点：</strong></p> 
+         <ul>
+          <li>上述方程称为贝尔曼方程（Bellman equation），它描述了不同状态（states）的状态值函数（state-value functions）之间的关系：因为看上面式子标红的地方，上面式子等式左边是 s 的状态值（state value），等式右边是 s' 的状态值（state value），他们的关系可以通过这样的一个式子表达出来。</li>
+          <li>它由两个项组成：即时奖励项（immediate reward term）和未来奖励项（future reward term）。</li>
+          <li>这是一组等式：每个状态（state）都有这样的等式！！！<span style="background-color:#fbd4d0;">这不是一个式子，这个式子对状态空间中的所有状态都成立（等式后面的取值范围是 ∀s ∈ S），所以如果有 n 个状态，就有 n 个这样的式子，通过这 n 个式子可以求解出状态值（state value）。</span></li>
+         </ul> 
+         <p><img alt="" height="244" src="https://i-blog.csdnimg.cn/blog_migrate/8c1baa911a561c987eda6d2e6853f014.png" width="964"></p> 
+         <ul>
+          <li>v_π(s) 和 v_π(s') 是我们要计算的状态值，计算的思想就是 Bootstrapping ! 直观上来讲，等式左边的状态值（state value）v_π(s) 依赖于等式右边的状态值（state value）v_π(s') ，看起来好像没法计算，其实我们有一组这样的式子，把这些式子连立就可以算出来。</li>
+          <li>公式中的 π(a|s) 是给定的策略 policy（是一种概率 probability）。解方程称为策略评估（policy evaluation）：贝尔曼公式依赖于策略（policy），<strong><span style="background-color:#fbd4d0;">如果我们能计算出状态值（state value），其实我们在做的一件事就是评估这个策略（policy evaluation）究竟是好是坏</span></strong><span style="background-color:#fbd4d0;">。</span>&nbsp;</li>
+          <li>奖励概率 （Reward probability） p(r|s,a) 和状态转换概率（State transition probability） p(s'|s,a) 代表的是<strong>动态模型（dynamic model）或称为环境模型（environment model）</strong>：分两种情况，一种是我们知道这个模型（model），在本节和下节当中我们都会假设知道这个 model，给出来相应的算法；一种是不知道模型（model），这种情况下我们仍然可以求出 state value，这就是 model free reinforcement learning 的算法。</li>
+         </ul> 
+         <hr> 
+         <h3 id="2.%20%E4%BE%8B%E5%AD%90">2. 例子</h3> 
+         <h4 id="%C2%A0%20%C2%A0%20%C2%A0%20%C2%A0%20%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901%EF%BC%9A">&nbsp; &nbsp; &nbsp; &nbsp; （1）例子1：</h4> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;图中的策略 Π 由绿色的箭头表示</p> 
+         <p class="img-center"><img alt="" height="168" src="https://i-blog.csdnimg.cn/blog_migrate/88235a7539e8092db82897f78c8f7c2f.png" width="164"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;根据一般表达式（general expression）写出贝尔曼方程：</p> 
+         <p class="img-center"><img alt="" height="74" src="https://i-blog.csdnimg.cn/blog_migrate/08438c29b81767a7a85d56be2ad70bd8.png" width="483"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;这个例子很简单，因为策略（policy）是确定的（deterministic）。</p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;首先，考虑 s1 的状态值（state value）：</p> 
+         <p class="img-center"><img alt="" height="96" src="https://i-blog.csdnimg.cn/blog_migrate/0b1c4fa87a70b9130c68e8d1c137cfe7.png" width="489"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;将上面这些概率和值代入贝尔曼方程，得出：（下面这个式子和上面在 二.2 那部分用激励性例子 2 介绍的方法计算出的结果一样，即与上面直观计算出的结果是一样的，虽然此时是用复杂贝尔曼公式得到的，但从直观上来讲很容易理解）</p> 
+         <p class="img-center"><img alt="" height="51" src="https://i-blog.csdnimg.cn/blog_migrate/f10b91b8d6338f4087434cf627769384.png" width="217"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类似地，可以得出</p> 
+         <p class="img-center"><img alt="" height="162" src="https://i-blog.csdnimg.cn/blog_migrate/573e7b3e956331388e91a4ac65aef790.png" width="207"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 从最后一个方程到第一个方程，逐一求解上述方程，得到：</p> 
+         <p class="img-center"><img alt="" height="235" src="https://i-blog.csdnimg.cn/blog_migrate/c1c28195a301c1f5f982daaf38ab0868.png" width="161"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果 γ = 0.9，那么</p> 
+         <p class="img-center"><img alt="" height="213" src="https://i-blog.csdnimg.cn/blog_migrate/5c132f5d93f1bfa7cf7aa8579f03a562.png" width="212"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; 计算出 s1 的状态值是 9，s2,s3,s4 的状态值是 10。状态值（state values）代表这个状态的价值，如果一个状态的价值高，说明这个状态是值得我们往那个方向走的，之所以 s2,s3,s4 的价值高，是因为它们距离 target area 比较近。</p> 
+         <p class="img-center"><img alt="" height="126" src="https://i-blog.csdnimg.cn/blog_migrate/ecda149a0124d198a334eeda1405f507.png" width="123"></p> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:#fbd4d0;">计算出状态值（state values）后干什么？耐心等待（计算行动值（action value）并改进策略（improve policy）），慢慢的就会得到最优策略。</span></p> 
+         <hr> 
+         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s2 不是陷阱吗？为什么状态值那么高？</p> 
+         <ul>
+          <li>前面提到过，reward 是给动作打分，现在的 v 是状态的得分，所以虽然 S2 是陷阱，但是进入陷阱的惩罚是不体现在陷阱这个状态里面的</li>
+          <li>陷阱的负价值体现在 s1 的 value 是最小的上面，因为只有 s1 有可能往陷阱走</li>
+          <li>s2 的策略是走向s4，这个是高价值的；如果 s1 还有一个策略是走向s2，那么 s1 的 value 还会进一步降低</li>
+         </ul> 
+         <hr> 
+         <h4 id="%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%C2%A0%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（2）例子2</h4> 
+         <p class="img-center"><img alt="" height="71" src="https://i-blog.csdnimg.cn/blog_migrate/21885def230dc52e21082aea5c95366a.png" width="410"></p> 
+         <p class="img-center"><img alt="" height="200" src="https://i-blog.csdnimg.cn/blog_migrate/a08296d477447710aa13bf41580f97de.png" width="224"></p> 
+         <ul>
+          <li>- 写出每个状态的贝尔曼方程。&nbsp;write out the Bellman equations for each state</li>
+          <li>- 求解贝尔曼方程中的状态值。 solve the state values from the Bellman equations</li>
+          <li>- 与上一个示例中的策略进行比较。&nbsp;compare with the policy in the last example</li>
+         </ul> 
+         <p><img alt="" height="708" src="https://i-blog.csdnimg.cn/blog_migrate/5a0d80f0ced043eb8dca4a81b56acebb.png" width="1131"></p> 
+         <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;在这个策略（policy）下，计算出 s1 的状态值（state value）是 8.5，s2,s3,s4 的状态值（state value）是 10。而在上一个策略（policy）下 s1 的状态值（state value）是 9。<strong>所以这个策略没有刚才的策略好。</strong></p> 
+         <hr> 
+         <h2 id="%E4%BA%94.%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%88%C2%A0%C2%A0Bellman%20equation%EF%BC%89%EF%BC%9A%E7%9F%A9%E9%98%B5%E5%90%91%E9%87%8F%E5%BD%A2%E5%BC%8F%EF%BC%88Matrix-vector%20form%EF%BC%89">五.贝尔曼公式（&nbsp;&nbsp;Bellman equation）：矩阵向量形式（Matrix-vector form）</h2> 
+         <p>为什么要考虑矩阵向量形式？因为我们需要从中求解状态值（state value）！</p> 
+         <p>一个未知数依赖于另一个未知数。如何解决这些未知数？</p> 
+         <p class="img-center"><img alt="" height="81" src="https://i-blog.csdnimg.cn/blog_migrate/af3ec5ce6606214dfb19c9a573ce0146.png" width="514"></p> 
+         <ul>
+          <li><strong>元素形式（Elementwise form）： </strong>上述元素形式的方程对每个状态 s∈S 都成立，如果有 n 个状态就有 n 个这样的方程。这意味着有这样的 |S| 方程！</li>
+          <li><strong>矩阵向量形式（Matrix-vector form）：</strong>如果我们把所有方程放在一起，就会得到一组线性方程，可以简洁地写成矩阵向量形式。矩阵向量形式非常优雅，也非常重要。</li>
+         </ul> 
+         <hr> 
+         <h3 id="1.%20%E6%8E%A8%E5%AF%BC%E5%87%BA%E7%9F%A9%E9%98%B5%E5%90%91%E9%87%8F%E5%BD%A2%E5%BC%8F%EF%BC%9A"><strong>1. 推导出矩阵向量形式：</strong></h3> 
+         <p>回顾一下：</p> 
+         <p class="img-center"><img alt="" height="71" src="https://i-blog.csdnimg.cn/blog_migrate/14394fe923c5e0bc5f6ee487e44cbf25.png" width="436"></p> 
+         <p>将贝尔曼方程改写为（括号外的项往括号里面分配）</p> 
+         <p class="img-center"><img alt="" height="69" src="https://i-blog.csdnimg.cn/blog_migrate/5b3c8cf37e253a33d994c10dbb5c0f85.png" width="333"></p> 
+         <p>其中</p> 
+         <p class="img-center"><img alt="" height="74" src="https://i-blog.csdnimg.cn/blog_migrate/ac6d7a2cdf3a8a539102a49bd5f4754e.png" width="523"></p> 
+         <ul>
+          <li>r_π(s) 代表从当前状态出发，我所能得到的即时奖励（immediate reward）的平均值</li>
+          <li><span style="background-color:#fbd4d0;">这个式子其实与推导贝尔曼公式的时候计算第一项和第二项的时候写的中间过程的公式是一样的，是即时奖励加未来奖励</span></li>
+          <li>从当前 s 出发，有多个选择，可以跳到不同 s' ，跳到不同 s' 的概率是 p(s'&nbsp;| s)</li>
+         </ul> 
+         <p>假设状态（states）可以索引为 si (i = 1, ... , n)。</p> 
+         <p>对于状态 si，贝尔曼方程为：（从 si 跳到 sj 的概率是 p_π(sj | si)，从 si 跳到 sj 所取的 state value 是 v_π(sj) ）</p> 
+         <p class="img-center"><img alt="" height="67" src="https://i-blog.csdnimg.cn/blog_migrate/d27e6e14f4734842cc2546d28ea37e3b.png" width="325"></p> 
+         <p>将所有这些状态方程放在一起，改写成<strong>矩阵向量形式，v_π 是一个向量</strong></p> 
+         <p class="img-center"><img alt="" height="54" src="https://i-blog.csdnimg.cn/blog_migrate/3bdeffa7cce894cf0273c991fe51a11d.png" width="171"></p> 
+         <p>其中（Pπ 是状态转换矩阵（state transition matrix），pπ(sj | si) 意思是状态从 si 跳到 sj 的概率）</p> 
+         <p><img alt="" height="139" src="https://i-blog.csdnimg.cn/blog_migrate/c9a9aa12a0cd55fb7433b38123f36cdd.png" width="776"></p> 
+         <hr> 
+         <h3><strong>2. 例子</strong></h3> 
+         <h4 id="%EF%BC%881%EF%BC%89%E4%BE%8B%E5%AD%901"><strong>（1）例子1</strong></h4> 
+         <p>有四个状态，即 n = 4 的时候的矩阵向量形式</p> 
+         <p><img alt="" height="230" src="https://i-blog.csdnimg.cn/blog_migrate/e3e7458ca095b0c7f56655619742e32a.png" width="865"></p> 
+         <p>考虑下图，策略（policy）用绿色的箭头表示</p> 
+         <p><img alt="" height="840" src="https://i-blog.csdnimg.cn/blog_migrate/20bce6d00b54d12be0de9edde8e6c6db.png" width="1200"></p> 
+         <h4 id="%EF%BC%882%EF%BC%89%E4%BE%8B%E5%AD%902">（2）例子2</h4> 
+         <p><img alt="" height="230" src="https://i-blog.csdnimg.cn/blog_migrate/8783ee440f43c926a24aabe80f985ee3.png" width="861"></p> 
+         <p><img alt="" height="800" src="https://i-blog.csdnimg.cn/blog_migrate/a2ff262ff1bcc80dd1350b684e70c743.png" width="1200"></p> 
+         <h2 id="%E5%85%AD.%E8%B4%9D%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%EF%BC%88%C2%A0Bellman%20equation%EF%BC%89%EF%BC%9A%E6%B1%82%E8%A7%A3%E7%8A%B6%E6%80%81%E5%80%BC%EF%BC%88state%20value%EF%BC%89">六.贝尔曼公式（&nbsp;Bellman equation）：求解状态值（state value）</h2> 
+         <h3 id="1.%E6%B1%82%E8%A7%A3">1.求解</h3> 
+         <p><strong>用刚才推导的贝尔曼公式的矩阵和向量的形式求解状态值（state value）</strong></p> 
+         <p>为什么要求解状态值（state value）？</p> 
+         <ul>
+          <li><span style="background-color:#fbd4d0;">给定一个策略（policy），我们会列出来它的贝尔曼公式（&nbsp;Bellman equation），再进一步求解这个贝尔曼公式得到状态值（state value），求出相应的状态值这样的一个过程（state value）称为策略评估（policy evaluation）！</span>这是 RL 中的一个基本问题。它是找到更好策略的基础。</li>
+          <li>策略评估（policy evaluation）是强化学习中的关键，因为只有能够去评价一个策略好或者不好，我们才能进一步改进它最后再找到最优的策略。</li>
+         </ul> 
+         <hr> 
+         <p>矩阵向量形式的贝尔曼方程为：<strong><span style="background-color:#fbd4d0;">v_π 是一个向量</span></strong></p> 
+         <p class="img-center"><img alt="" height="49" src="https://i-blog.csdnimg.cn/blog_migrate/763227a966beca23653f5c85ea4bdf72.png" width="180"></p> 
+         <p>下面给出两种求解贝尔曼公式的方法：</p> 
+         <p>（1）闭式解为（The closed-form solution is），即状态值（state value）的解析表达式为：</p> 
+         <p class="img-center"><img alt="" height="47" src="https://i-blog.csdnimg.cn/blog_migrate/c5eaf36cbfed73d03a3584c39c3834d6.png" width="185"></p> 
+         <p>实际上，我们仍然需要使用数值工具来计算矩阵逆，实际中并不会使用。我们能避免矩阵逆运算吗？可以，通过迭代算法（iterative algorithms）。</p> 
+         <p>（2）<strong>迭代解决（iterative solution）方案是：</strong>（vk 和 vk+1 都是向量，包含了不同时刻的所有状态值）</p> 
+         <p class="img-center"><img alt="" height="50" src="https://i-blog.csdnimg.cn/blog_migrate/ce3d24003dffdd85d558b3bd05353282.png" width="198"></p> 
+         <p>首先可以随便猜一个 v0 等于什么（比如全为0），然后带入到等式右边，得到等式左边的 v1；然后把 v1 再带到等式右边，得到等式左边的 v2；然后把 v2&nbsp;再带到等式右边，得到等式左边的 v3，如此循环计算下去，就会得到一个序列 {v0, v1, v2, . }。我们可以证明当 k 趋向于 ∞ 的时候，vk 就收敛到了&nbsp;vπ，这个&nbsp;vπ 就是真实的状态值（state value）</p> 
+         <p class="img-center"><img alt="" height="63" src="https://i-blog.csdnimg.cn/blog_migrate/0c3165b2cbfc5e905bde4494a1e46d70.png" width="403"></p> 
+         <p><img alt="" height="425" src="https://i-blog.csdnimg.cn/blog_migrate/82cd8042297653ef68fb9617aa1ab74b.png" width="876"></p> 
+         <hr> 
+         <h3 id="2.%E4%BE%8B%E5%AD%90">2.例子</h3> 
+         <p class="img-center"><img alt="" height="36" src="https://i-blog.csdnimg.cn/blog_migrate/ddf588701a0e140a224e5c682b547239.png" width="561"></p> 
+         <p>以下是两项 "好 "的策略（绿色箭头是策略）和状态值（state value）。在第四列中，前两个状态的两项策略是不同的。</p> 
+         <p class="img-center"><img alt="" height="460" src="https://i-blog.csdnimg.cn/blog_migrate/91602480a789f20ec0fec87d830d53c3.png" width="420"></p> 
+         <p>用刚才讲的解析表达式或者迭代算法都可以求出状态值（state value）。可以看出，状态值（state value）全为正数，<span style="background-color:#fbd4d0;">靠近目标 target area 的状态值（state value）都比较大，距离目标 target area 越远，它的状态值（state value）越小</span>。&nbsp;</p> 
+         <hr> 
+         <p>以下是两项 "不好"的策略（绿色箭头是策略）和状态值（state value）。状态值（state value）比好策略的状态值小。</p> 
+         <p class="img-center"><img alt="" height="440" src="https://i-blog.csdnimg.cn/blog_migrate/0cf5f34e56afa2744f189e358cd3d24b.png" width="404"></p> 
+         <p>上面两个策略很明显会撞墙或进入禁区，从直觉上讲，这是不好的策略；而计算出的状态值（state value）有负数，通过状态值（state value）也可以判断出这是不好的策略，这与我们的直觉一致。&nbsp;</p> 
+         <blockquote> 
+          <p>可以看出，我们可以通过计算状态值（state value）来评价一个策略（policy）的好坏</p> 
+         </blockquote> 
+         <h2 id="%E4%B8%83.%E5%8A%A8%E4%BD%9C%E5%80%BC%EF%BC%88action%20value%EF%BC%89">七.动作值（action value）</h2> 
+         <p>从状态值（state value）到动作值（action value） ：</p> 
+         <ul>
+          <li>状态值（state value）：智能体从某一状态（state）开始所能获得的平均回报（average return）。</li>
+          <li>动作值（action value）：智能体从某一状态（state）出发并采取某项动作（taking an action）之后所能获得的平均回报（average return）。</li>
+         </ul> 
+         <p>我们为什么关心动作值（action value）？</p> 
+         <ul>
+          <li>策略指的是在一个状态我要选择什么样的 action，有一些 action 我们如何做选择呢？就要根据 action value 来做判断，action value 大的意味着我选择那个 action 会得到更多的 reward，那我就会去选择那个。</li>
+          <li>因为我们想知道哪个动作更好。这一点在下面的讲解中会更加清楚。我们将经常使用动作值。</li>
+         </ul> 
+         <hr> 
+         <h3 id="1.%E5%8A%A8%E4%BD%9C%E5%80%BC%E5%AE%9A%E4%B9%89">1.动作值定义</h3> 
+         <p>动作值定义：我们从当前状态 s 出发，选择动作 a 之后，我所得到的回报（return）的一个平均（average）就是动作值（action value）：</p> 
+         <p class="img-center"><img alt="" height="53" src="https://i-blog.csdnimg.cn/blog_migrate/c239600b6f8f43a90dc51d80c79169aa.png" width="339"></p> 
+         <ul>
+          <li>q_π（s，a）是状态-动作对（s，a）的函数，依赖于从哪个状态出发，从哪个状态的 action 出发。</li>
+          <li>q_π(s, a) 依赖于 π，不同的策略会得到不同的 action value</li>
+         </ul> 
+         <p>（不确定对）确定了action的话reward不也是确定的吗，为啥还要求期望？</p> 
+         <ul>
+          <li>确定了action，action的reward确定，但结果状态不确定，所以期望是给结果状态v（s‘）的</li>
+          <li>就比如之前老师讲的被风吹歪的例子，现态采取同个策略可能会掉到不同的次态</li>
+         </ul> 
+         <hr> 
+         <h3 id="2.%E5%8A%A8%E4%BD%9C%E5%80%BC%E4%B8%8E%E7%8A%B6%E6%80%81%E5%80%BC%E7%9A%84%E8%81%94%E7%B3%BB">2.动作值与状态值的联系</h3> 
+         <p>根据条件期望的性质可以得出：等式右边意思是我有很多个 a，我选择一个 a 的概率是 π(a | s)，选择 a 后所得到的 average return 是 q_π(s,a)</p> 
+         <p class="img-center"><img alt="" height="74" src="https://i-blog.csdnimg.cn/blog_migrate/5cc86d76177e978bab98b79b679a96d1.png" width="423"></p> 
+         <p>因此</p> 
+         <p style="text-align:center;"><img alt="" height="70" src="https://i-blog.csdnimg.cn/blog_migrate/8687a926c22e85b0ee6cf8bf260e6e9f.png" width="511"></p> 
+         <p>等式左边是从一个状态出发的 state value 等于右边我选择不同 action 得到的 action value 的平均值，权重就是策略 π。</p> 
+         <blockquote> 
+          <p>action value其实可以理解为state value的一个action下的值</p> 
+         </blockquote> 
+         <hr> 
+         <p>回想一下，状态值（state value）由以下公式给出</p> 
+         <p class="img-center"><img alt="" height="90" src="https://i-blog.csdnimg.cn/blog_migrate/dea085d60d183621456515cd9227a4db.png" width="537"></p> 
+         <p>比较 (2) 和 (3)，我们可以得出<strong>动作值函数（action-value function）的表达式</strong>为</p> 
+         <p class="img-center"><img alt="" height="64" src="https://i-blog.csdnimg.cn/blog_migrate/769af59b2b8b82e0146e6d7450e7bb3a.png" width="618"></p> 
+         <p>(2) 和 (4) 是一枚硬币的两面：</p> 
+         <ul>
+          <li>(2) 说明了如何从动作值（action value）中获取状态值（state value）。</li>
+          <li>(4) 则说明了如何从状态值（state value）中获取动作值（action value）。</li>
+         </ul> 
+         <blockquote> 
+          <p>在概率论范畴下，研究对象都是随机变量，是没有常规意义的平均的。所说的平均都是概率意义平均，即期望。</p> 
+         </blockquote> 
+         <h3 id="3.%E4%BE%8B%E5%AD%90">3.例子</h3> 
+         <p class="img-center"><img alt="" height="199" src="https://i-blog.csdnimg.cn/blog_migrate/b34787e74d9e665275306c9814c27c2f.png" width="212"></p> 
+         <p>写出状态 s1 的动作值</p> 
+         <p class="img-center"><img alt="" height="51" src="https://i-blog.csdnimg.cn/blog_migrate/135292cb267cc5c1754bd86a37d5839b.png" width="256"></p> 
+         <p>问题？下面这些不等于0！！</p> 
+         <p class="img-center"><img alt="" height="53" src="https://i-blog.csdnimg.cn/blog_migrate/d2eb4f46e1860fbf6f7fbbcd18c2c656.png" width="505"></p> 
+         <p>至于其他动作：所有的 action 都可以计算</p> 
+         <p class="img-center"><img alt="" height="149" src="https://i-blog.csdnimg.cn/blog_migrate/dbe0f8d0aee34b9eb9089c4635838b0b.png" width="255"></p> 
+         <p><strong>强调：</strong></p> 
+         <ul>
+          <li>动作值（action value）很重要，因为我们未来会已关注在某个状态它不同的 action ，它们之间会相互比较，我们会选一个动作值（action value）最大的那个。因为我们关心的是采取哪种动作。</li>
+          <li>我们可以先求解贝尔曼公式，计算所有状态值（state value），然后再计算动作值（action value）。</li>
+          <li>我们也可以不计算状态值（state value），使用或不使用模型直接计算动作值（action value）。</li>
+         </ul> 
+         <hr> 
+         <h2 id="%E5%85%AB.%E6%80%BB%E7%BB%93">八.总结</h2> 
+         <p><img alt="" height="654" src="https://i-blog.csdnimg.cn/blog_migrate/e54228bd005ecf19674c55e14e5ef97e.png" width="1016"></p> 
+        </div> 
+       </div> 
+      </article>   
+      <img src="https://img-home.csdnimg.cn/images/20211209110851.png" alt="pdf_watermark" width="0" height="0" style="display: none"> 
+      <div class="print_watermark"></div> 
+      <div class="print_watermark_info"> 
+       <p>内容来源：csdn.net</p> 
+       <p>作者昵称：leaf_leaves_leaf</p> 
+       <p>原文链接：https://blog.csdn.net/qq_64671439/article/details/135305331</p> 
+       <p>作者主页：https://blog.csdn.net/qq_64671439</p> 
+      </div> 
+      <style>
+    .print_watermark, .print_watermark_info {
+      display: none
+    }
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact; /* Chrome, Safari */
+        color-adjust: exact; /* Firefox */
+        background-image: none !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact;
+      }
+      .blog-content-box {
+        padding: 0;
+      }
+      .blog-content-box .article-header .article-info-box > div:not(.article-bar-top){
+        display: none !important;
+      }
+      .blog-content-box .article-header .article-info-box  .article-bar-top img{
+          display:none
+      }
+      .blog-content-box .article-header .article-info-box > .article-bar-top .bar-content > *:not(.follow-nickName):not(.time){
+          display: none !important;
+      }
+      .print_watermark {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 999;
+        background-image: url('https://img-home.csdnimg.cn/images/20211209110851.png');
+        background-size: 180px auto;
+        background-repeat: repeat;
+      }
+      .print_watermark_info {
+        display: block;
+        position: fixed;
+        bottom: 16px;
+        right: 0;
+        z-index: 1000;
+        color: #e8e8ed;
+        font-size: 12px;
+        ocapity: .5
+      }
+      @page {
+        margin: 0 10mm 10mm;
+        size: landscape;
+      }
+      body, article {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #csdn-toolbar,.main_father > *:not(#mainBox), .csdn-side-toolbar, .main_father aside {
+        display: none !important;
+      }
+      .main_father > #mainBox {
+        width: unset
+      }
+      .main_father > #mainBox > main > *:not(.blog-content-box){
+        display: none !important;
+      }
+    }
+  </style> 
+     </div> 
+     <div class="directory-boxshadow-dialog" style="display:none;"> 
+      <div class="directory-boxshadow-dialog-box"> 
+      </div> 
+      <div class="vip-limited-time-offer-box-new" id="vip-limited-time-offer-box-new"> 
+       <img class="limited-img limited-img-new" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-newWhite.png"> 
+       <div class="vip-limited-time-top">
+         确定要放弃本次机会？ 
+       </div> 
+       <span class="vip-limited-time-text">福利倒计时</span> 
+       <div class="limited-time-box-new"> 
+        <span class="time-hour"></span> 
+        <i>:</i> 
+        <span class="time-minite"></span> 
+        <i>:</i> 
+        <span class="time-second"></span> 
+       </div> 
+       <div class="limited-time-vip-box"> 
+        <p> <img class="coupon-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/vip-limited-close-roup.png"> <span class="def">立减 ¥</span> <span class="active limited-num"></span> </p> 
+        <span class="">普通VIP年卡可用</span> 
+       </div> 
+       <a class="limited-time-btn-new" href="https://mall.csdn.net/vip" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.9621&quot;}" data-report-query="spm=1001.2101.3001.9621">立即使用</a> 
+      </div> 
+     </div> 
+     <div class="more-toolbox-new more-toolbar" id="toolBarBox"> 
+      <div class="left-toolbox"> 
+       <div class="toolbox-left"> 
+        <div class="profile-box"> 
+         <a class="profile-href" target="_blank" href="https://blog.csdn.net/qq_64671439"><img class="profile-img" src="https://profile-avatar.csdnimg.cn/6ba86a546a1040ee8d58623f42066c13_qq_64671439.jpg!1"> <span class="profile-name"> leaf_leaves_leaf </span> </a> 
+        </div> 
+        <div class="profile-attend"> 
+         <a class="tool-attend tool-bt-button tool-bt-attend" href="javascript:;" data-report-view="{&quot;mod&quot;:&quot;1592215036_002&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4232&quot;,&quot;extend1&quot;:&quot;已关注&quot;}">已关注</a> 
+         <a class="tool-item-follow active-animation" style="display:none;">已关注</a> 
+        </div> 
+       </div> 
+       <div class="toolbox-middle"> 
+        <ul class="toolbox-list"> 
+         <li class="tool-item tool-item-size tool-active is-like" id="is-like" data-type="bottom"> <a class="tool-item-href"> <img style="display:none;" id="is-like-imgactive-animation-like" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/tobarThumbUpactive.png" alt=""> <img class="isactive" style="display:none" id="is-like-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like-active.png" alt=""> <img class="isdefault" style="display:block" id="is-like-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/like.png" alt=""> <span id="spanCount" class="count "> 61 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">点赞</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-unlike" id="is-unlike"> <a class="tool-item-href"> <img class="isactive" style="margin-right:0px;display:none" id="is-unlike-imgactive" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike-active.png" alt=""> <img class="isdefault" style="margin-right:0px;display:block" id="is-unlike-img" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/unlike.png" alt=""> <span id="unlikeCount" class="count "></span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">踩</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-collection "> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_824&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4130&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img style="display:none" id="is-collection-img-collection" class="animation-dom active-animation" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect-active.png" alt=""> <img class="isdefault" id="is-collection-img" style="display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/collect.png" alt=""> <img class="isactive" id="is-collection-imgactive" style="display:none" src="https://csdnimg.cn/release/blogv2/dist/pc/img/newCollectActive.png" alt=""> <span class="count get-collection " data-num="73" id="get-collection"> 73 </span> </a> 
+          <div class="tool-hover-tip collect"> 
+           <div class="collect-operate-box"> 
+            <span class="collect-text" id="is-collection"> 收藏 </span> 
+           </div> 
+          </div> 
+          <div class="tool-active-list"> 
+           <div class="text">
+             觉得还不错? 
+            <span class="collect-text" id="tool-active-list-collection"> 一键收藏 </span> 
+            <img id="tool-active-list-close" src="https://csdnimg.cn/release/blogv2/dist/pc/img/collectionCloseWhite.png" alt=""> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-comment"> 
+          <div class="guide-rr-first"> 
+           <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/guideRedReward01.png" alt=""> 
+           <button class="btn-guide-known">知道了</button> 
+          </div> <a class="tool-item-href go-side-comment" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.7009&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/comment.png" alt=""> <span class="count"> 1 </span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">评论</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-QRcode" data-type="article" id="tool-share"> <a class="tool-item-href" href="javascript:;" data-report-view="{&quot;spm&quot;:&quot;3001.4129&quot;,&quot;extra&quot;:{&quot;type&quot;:&quot;blogdetail&quot;}}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/share.png" alt=""> <span class="count">分享</span> </a> 
+          <div class="QRcode" id="tool-QRcode"> 
+           <div class="share-bg-box"> 
+            <div class="share-content"> 
+             <a id="copyPosterUrl" data-type="link" class="btn-share">复制链接</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="qq">分享到 QQ</a> 
+            </div> 
+            <div class="share-content"> 
+             <a class="btn-share" data-type="weibo">分享到新浪微博</a> 
+            </div> 
+            <div class="share-code"> 
+             <div class="share-code-box" id="shareCode"></div> 
+             <div class="share-code-text"> 
+              <img src="https://csdnimg.cn/release/blogv2/dist/pc/img/share/icon-wechat.png" alt="">扫一扫 
+             </div> 
+            </div> 
+           </div> 
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-item-reward"> <a class="tool-item-href" href="javascript:;" data-report-click="{&quot;mod&quot;:&quot;popu_830&quot;,&quot;spm&quot;:&quot;1001.2101.3001.4237&quot;,&quot;dest&quot;:&quot;&quot;,&quot;ab&quot;:&quot;new&quot;}"> <img class="isdefault reward-bt" id="rewardBtNew" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+          <div class="tool-hover-tip">
+           <span class="text space">打赏</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active tool-downloadpdf" id="tool-downloadpdf"> <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> </a> 
+          <div class="tool-hover-tip">
+           <span class="text">导出PDF</span>
+          </div> </li> 
+         <li class="tool-item tool-item-size tool-active is-more" id="is-more"> <a class="tool-item-href"> <img class="isdefault" style="margin-right:0px;display:block" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/more.png" alt=""> <span class="count"></span> </a> 
+          <div class="more-opt-box"> 
+           <div class="mini-box"> 
+            <a class="tool-item-href" id="rewardBtNewHide" data-report-click="{&quot;spm&quot;:&quot;3001.4237&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault reward-bt" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/reward.png" alt="打赏"> <span class="count">打赏</span> </a> 
+            <a class="tool-item-href" data-report-click="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}" data-report-view="{&quot;spm&quot;:&quot;3001.6881&quot;,&quot;extra&quot;:&quot;{\&quot;type\&quot;:\&quot;hide\&quot;}&quot;}"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/pdf.png" alt=""> <span class="count">导出PDF</span> </a> 
+            <a class="tool-item-href" id="toolReportBtnHide"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+           <div class="normal-box"> 
+            <a class="tool-item-href" id="toolReportBtnHideNormal"> <img class="isdefault" src="https://csdnimg.cn/release/blogv2/dist/pc/img/toolbar/report.png" alt=""> <span class="count">举报</span> </a> 
+           </div> 
+          </div> </li> 
+        </ul> 
+       </div> 
+       <div class="toolbox-right"> 
+        <div class="tool-directory"> 
+         <a class="bt-columnlist-show" data-id="12540921" data-free="true" data-description="" data-subscribe="false" data-title="【强化学习的数学原理-赵世钰】课程笔记" data-img="https://i-blog.csdnimg.cn/columns/default/20201014180756916.png?x-oss-process=image/resize,m_fixed,h_224,w_224" data-url="https://blog.csdn.net/qq_64671439/category_12540921.html" data-sum="10" data-people="244" data-price="0" data-hotrank="0" data-status="true" data-oldprice="0" data-join="false" data-studyvip="true" data-studysubscribe="false" data-report-view="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}" data-report-click="{&quot;spm&quot;:&quot;1001.2101.3001.6334&quot;,&quot;extend1&quot;:&quot;专栏目录&quot;}">专栏目录</a> 
+        </div> 
+       </div> 
+      </div> 
+     </div>    
+     <a id="commentBox" name="commentBox"></a> 
+    </main> 
+   </div> 
+   <div class="recommend-right1  align-items-stretch clearfix" id="rightAsideConcision" data-type="recommend"> 
+    <aside class="recommend-right_aside"> 
+     <div id="recommend-right-concision"> 
+      <div class="flex-column aside-box groupfile" id="groupfileConcision"> 
+       <div class="groupfile-div1"> 
+        <h3 class="aside-title">目录</h3> 
+        <div class="align-items-stretch group_item"> 
+         <div class="pos-box"> 
+          <div class="scroll-box"> 
+           <div class="toc-box"></div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+    </aside> 
+   </div> 
+  </div> 
+  <div class="mask-dark"></div> 
+  <div class="skin-boxshadow"></div> 
+  <div class="directory-boxshadow"></div> 
+  <div style="display:none;"> 
+   <img src="" onerror="setTimeout(function(){if(!/(csdn.net|iteye.com|baiducontent.com|googleusercontent.com|360webcache.com|sogoucdn.com|bingj.com|baidu.com)$/.test(window.location.hostname)){var test=&quot;\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x63\x73\x64\x6e\x2e\x6e\x65\x74&quot;}},3000);"> 
+  </div> 
+  <div class="keyword-dec-box" id="keywordDecBox"></div> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/chart/chart.css">        
+  <link rel="stylesheet" href="https://g.csdnimg.cn/lib/cboxEditor/1.1.6/embed-editor.min.css"> 
+  <link rel="stylesheet" href="https://csdnimg.cn/release/blog_editor_html/release1.6.12/ckeditor/plugins/codesnippet/lib/highlight/styles/atom-one-dark.css">                  
+ </body>
+</html>
