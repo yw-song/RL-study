@@ -22,7 +22,7 @@
 
 ------
 
-### 二.激励性实例（Motivating examples）-随机问题（stochastic problems）
+### 二. Motivating examples - stochastic problems
 
 下面讲几个例子，讲这个例子的目的是为了建立起上节课和这节课的关系
 
@@ -37,7 +37,7 @@
 
 ![img](./images/a5228298b6529293a20e7ab8b3f3e720.jpeg)
 
--   这么看的话\alpha_k的取值也是权衡历史值和当前采样，所以也有一种“记忆”的味道在里面 
+-   这么看的话 $\alpha_k$ 的取值也是权衡历史值和当前采样，所以也有一种“记忆”的味道在里面 
 -   每次考虑了期望值和结果采样值的差距进行考虑
 
 ------
@@ -67,27 +67,30 @@
 
 ------
 
-### 三.估计 state value 的 TD 算法（TD learning of state values）
+### 三. TD learning of state values
 
 先学习如何用 TD 算法求解一个给定的策略 π 的 state value，之所以求解 state value，是因为求解出来了 state value 就相当于作了 policy evaluation，之后和 policy improvement 相结合，就可以去找最优的策略
 
 **请注意**
 
--   TD 学习算法通常指的是一大类 RL 算法。今天这节课讲的所有的算法都是 TD 算法，包括 Q learning
+-   TD 学习算法通常指的是一大类 RL 算法。今天这节课讲的所有的算法都是 TD 算法，包括 Q-learning
 -   TD 学习算法也指下面即将介绍的一种用于估计状态值（state value）的特定算法，下面即将讲的 TD 算法是最经典的 TD 算法，就是来估计 state value 的，有一个非常明确的表达式，这时候它是指一个特定的算法。 
 
-**算法所需的数据/经验：TD 算法是基于数据，不基于模型实现强化学习的，算法使用的数据/经验（data/experience）如下：\**这些数据全都是由一个给定的策略 π 所产生的，下面的 TD 算法就是要用这些数据估计 π 所对应的 state value\****
+**算法所需的数据/经验：TD 算法是基于数据，不基于模型实现强化学习的，算法使用的数据/经验（data/experience）如下：*这些数据全都是由一个给定的策略 π 所产生的，下面的 TD 算法就是要用这些数据估计 π 所对应的 state value***
 
 ![img](./images/4546cd946bbf69550fbb3c0535f25ea7.jpeg)
 
--   之前不理解为什么v_t(s_t)不写成v_k(s_t)，原来一组{s_t,r_t+1,s_t+1}刚好用来更新一次v，所以两个不同意义的下标k和t其实是同步的。 
--   v下边的t 和 s下边的t是一回事吗？感觉s是采样的时间点，v下边的t是迭代次数
+-   之前不理解为什么 v_t(s_t) 不写成 v_k(s_t)，原来一组 {s_t,r_t+1,s_t+1} 刚好用来更新一次 v，所以两个不同意义的下标 k 和 t 其实是同步的。 
+-   v 下边的 t 和 s 下边的 t 是一回事吗？感觉 s 是采样的时间点，v 下边的 t 是迭代次数
 
 下面 TD 算法就是要用这些数据来估计 π 对应的 state value，**下面正式的给出 TD 算法，包含两个式子：** 
 
 ![img](./images/e3808fcadf8c7416453ac99e4efbc1bd.png)
 
--   最下面两点的翻译：1)在时间t，只有访问状态st的值被更新，而未访问状态s≠st的值保持不变;2)当上下文清楚时，将省略公式（2）中的更新
+-   最下面两点的翻译：
+    -   在时间t，只有访问状态st的值被更新，而未访问状态s≠st的值保持不变;
+    -   当上下文清楚时，将省略公式（2）中的更新
+
 -   实际上我们平时看 TD 算法的时候，看不到第二个式子，因为第二个式子隐含掉了，虽然忽略掉了，但是从数学上来讲，是有这样一个式子存在的
 
 下面详细介绍第一个式子：
@@ -97,6 +100,8 @@
 下面详细介绍上面式子中的两项：
 
 ![img](./images/2eeab812033fd072d25624cfd3d3d065.jpeg)
+
+**Gemini**：[为什么 $\bar{v}_t$ 能够作为 target](https://gemini.google.com/share/3a23a3e6b109)
 
 为啥v的下标不用k呢？v下标里的t和s的下标不是同一个t吧
 
@@ -142,8 +147,9 @@ TD误差（TD error）可以解释为创新（innovation），当前我对 vπ �
 
 ------
 
-**问：这种 TD 算法在数学上有什么作用？
-答：它求解给定策略 π 的贝尔曼方程。**
+**问：这种 TD 算法在数学上有什么作用？**
+
+>   **答：它求解给定策略 π 的贝尔曼方程。**
 
 在介绍贝尔曼公式的时候我们已经给出了算法，给出了 closed-form solution 和 iterative solution，在那时候介绍的算法是依赖于模型的，现在是没有模型的。
 
@@ -172,7 +178,7 @@ TD误差（TD error）可以解释为创新（innovation），当前我对 vπ �
 
 ------
 
-***\*第二，使用 RM 算法求解公式（5）这样的贝尔曼公式。\****之后我们会看到，推导出的 RM 算法与刚才介绍的 TD 算法非常类似，通过这个可以知道，TD 算法就是求解贝尔曼公式的一个 RM 算法
+***第二，使用 RM 算法求解公式（5）这样的贝尔曼公式。***之后我们会看到，推导出的 RM 算法与刚才介绍的 TD 算法非常类似，通过这个可以知道，TD 算法就是求解贝尔曼公式的一个 RM 算法
 
 ![img](./images/0792f0fe3a50ab095347a597c5e913db.jpeg)
 
@@ -222,10 +228,12 @@ TD 算法严格的收敛结果是下面一个定理：
 
 强调：
 
--   这个定理说的是，状态值 state value v_t(s) 会收敛到真实的状态值 v_t(s)，所以 TD 算法本质上还是在做一个 policy evaluation 的事情，而且是针对给定的一个策略 π。（该定理说明，对于给定的策略 π，TD 算法可以找到策略 π 的状态值）。那么我们怎么样去改进这个策略找到最优的策略呢，因为强化学习的最终目的是找到最优策略，之后我们会介绍，我们需要把 policy evaluation 和 policy improvement 两个相结合才可以）
+-   这个定理说的是，状态值 state value v_t(s) 会收敛到真实的状态值 v_t(s)，所以 TD 算法本质上还是在做一个 policy evaluation 的事情，而且是针对给定的一个策略 π。该定理说明，对于给定的策略 π，TD 算法可以找到策略 π 的状态值。
+-   那么我们怎么样去**改进**这个策略找到最优的策略呢，因为强化学习的最终目的是找到最优策略，之后我们会介绍，我们需要把 policy evaluation 和 policy improvement 两个相结合才可以
 -   αt 应该满足两个式子：
--   对任意一个 s，它的和 αt(s) 都应该趋于无穷，即每个状态 s 都应该被访问很多次。当每一个状态被访问的时候对应的 αt(s) 就是一个正数，当当前的 trajectory 是访问其他的状态，那么这个状态没被访问的时候对应的 αt(s) 就是 0，所以 αt(s) 求和等于无穷意味着它实际上被访问了很多次
--   第二个条件 α 2 t (s) < ∞ 要求 αt 最终收敛到 0，实际当中，学习率 αt 通常被选为一个小常数。在这种情况下，条件 （α 2 t (s) < ∞ 看图片）已经失效，即这个条件不成立（因为 αt 不等于 0），但是在实际当中为什么这么做呢，因为实际中是比较复杂的，我们希望很久之后我所得到的这些经验仍然能够派上用场，相反如果 αt 最后趋向于 0 了，那很久之后的经验就没用了，所以我们只是把它设置成一个很小的数，但是不让它收敛到完全是 0。当 α 为常数时，仍然可以证明算法在期望意义上收敛。
+    -   对任意一个 s，它的和 αt(s) 都应该趋于无穷，即每个状态 s 都应该被访问很多次。当每一个状态被访问的时候对应的 αt(s) 就是一个正数，当当前的 trajectory 是访问其他的状态，那么这个状态没被访问的时候对应的 αt(s) 就是 0，**所以 αt(s) 求和等于无穷意味着它实际上被访问了很多次**
+    -   **第二个条件 α 2 t (s) < ∞ 要求 αt 最终收敛到 0，实际当中，学习率 αt 通常被选为一个小常数**。在这种情况下，条件 （α 2 t (s) < ∞ 看图片）已经失效，即这个条件不成立（因为 αt 不等于 0），但是在实际当中为什么这么做呢，因为实际中是比较复杂的，我们希望很久之后我所得到的这些经验仍然能够派上用场，相反如果 αt 最后趋向于 0 了，那很久之后的经验就没用了，所以我们只是把它设置成一个很小的数，但是不让它收敛到完全是 0。当 α 为常数时，仍然可以证明算法在期望意义上收敛。
+
 
 ------
 
@@ -242,11 +250,10 @@ TD 算法严格的收敛结果是下面一个定理：
 相反 MC learning 虽然有较高的方差，但是因为它不涉及到任何的初始值，所以它的 expectation 直接等于它真实的 action value 或 state value，所以它是无偏估计
 
 -   偏差和方差不可调和，只能折中
--   不是说最后都会收敛到Vpi吗
 
 ------
 
-### 四.估计 action value 的 TD 算法（TD learning of action values – Sarsa）
+### 四. TD learning of action values – Sarsa
 
 接下来三个小结会（四到六）介绍 Sarsa 算法及其变形，然后第七章介绍 Q learning
 
@@ -255,7 +262,7 @@ TD 算法严格的收敛结果是下面一个定理：
 
 ------
 
--    上一节介绍的 TD 算法只能估计一个给定策略的 state value，但是我们知道要改进策略的时候需要估计出 action value，这样的话哪个 action value 大，就选择哪个作为新的策略。
+-    上一节介绍的 TD 算法只能估计一个给定策略的 state value，但是我们知道要**改进策略的时候需要估计出 action value**，这样的话哪个 action value 大，就选择哪个作为新的策略。
 -    接下来，我们将介绍一种可以直接估计 action value 的算法--Sarsa。Sarsa 和 TD 算法的形式非常类似，只不过估计得的是 action value。Sarsa 估计出 action value 之后，在做的其实就是 policy evaluation，就是你给我一个策略，如果把这个策略的 action value 估计出来，但这个还是不能找到最优的策略，强化学习的目的是找到最优策略。那么可以把 Sarsa policy evaluation 这个算法和 policy improvement 那个算法结合起来，就可以找到最优策略
 -    我们还将了解如何使用 Sarsa 寻找最优策略。把 Sarsa policy evaluation 这个算法和 policy improvement 那个算法结合起来，就可以找到最优策略。**所以接下来我们会介绍两部分：**
 
@@ -326,7 +333,7 @@ RL 的最终目标是找到最优策略（optimal value）。
 
 **关于此算法的说明**
 
--    q(st, at) 更新后，st 的策略立即更新。这是基于广义策略迭代（generalized policy iteration）的思想。之前学的 policy iteration 在每一个 iteration 中都分为两个步骤：policy evaluation 和 policy improvement，但是我要计算 policy evaluation 准确的 state value 的时候需要无穷步，而实际当中只计算一步或者几步，没有得到精确的 state value，但是也会立刻切换到 policy 的更新中 policy improvement，刚才介绍的 Sarsa 也是基于这样的思想
+-    q(st, at) 更新后，st 的策略立即更新。这是基于**广义策略迭代（generalized policy iteration）的思想**。之前学的 policy iteration 在每一个 iteration 中都分为两个步骤：policy evaluation 和 policy improvement，但是我要计算 policy evaluation 准确的 state value 的时候需要无穷步，而实际当中只计算一步或者几步，没有得到精确的 state value，但是也会立刻切换到 policy 的更新中 policy improvement，刚才介绍的 Sarsa 也是基于这样的思想
 -    策略是 ![\epsilon](./images/eq-20260120180259084.png)-greedy 的，而不是 greedy 的，以很好地平衡开发和探索，能够尽可能访问到更多的 （s,a），然后找到更优的策略。
 
 ![img](./images/32d83bbfcae5209f8de623e16101005f.png)
@@ -346,9 +353,9 @@ RL 的最终目标是找到最优策略（optimal value）。
 
 **下面通过一个例子来例证 Sarsa**
 
-**任务描述**：任务是找到一条从特定起始状态到目标状态的良好路径。(The task is to find a good path from a specific starting state to the target state.)
+**任务描述**：任务是找到一条从**特定起始状态**到目标状态的良好路径。(The task is to find a good path from a specific starting state to the target state.)
 
--    这项任务不同于之前所有的网格世界的任务，之前所有网格世界的任务是需要为每个状态找出最优策略！但是在这个任务里，不已关注每一个状态，只已关注从一个特定的状态到目标的一个策略或者说路径
+-    这项任务不同于之前所有的网格世界的任务，之前所有网格世界的任务是需要为**每个状态**找出最优策略！但是在这个任务里，**不已关注每一个状态，只已关注从一个特定的状态到目标的一个策略**或者说路径
 -    在这个例子里，每一个 episode 都从左上角的状态开始，以目标状态结束。
 -    今后在学习课程的时候，请注意任务的内容。我们是要找一个从特定状态出发的情况，还是要找所有状态的最优策略。
 
@@ -360,6 +367,8 @@ RL 的最终目标是找到最优策略（optimal value）。
 
 在这个任务中，我们进行了五百次探索，一共有五百个 episode，横坐标代表不断地根据改进的策略重新采集得到的 episode index。
 
+**关于下图的解释：**
+
 纵坐标第一个图代表沿着每个 episode 我所得到的 total reward，最开始的 reward 比较负，因为最开始的策略不好，他可能是往墙上撞或者进入到 forbidden area，会有很多负的 reward 进来，随着策略不断改进，reward 也会变得越来越大，但是在这里并没有超过 0，那么到达目标应该是正数，为什么没有超过 0 呢，因为这里是 ![\epsilon](./images/eq-20260120180259084.png)-greedy 的策略，或多或少还是会有负数的 reward 进来。
 
 纵坐标第二个图代表 episode length，最开始的 episode 比较长，因为最开始的策略可能是不好的，可能走了很久才瞎猫碰到死耗子刚好碰到了 target area，但是随着不断改进，最开始可能好几百步才能到达目标，现在几十步就可以到了。
@@ -368,7 +377,7 @@ RL 的最终目标是找到最优策略（optimal value）。
 
 ------
 
-### 五.估计 action value 的 TD 算法（TD learning of action values: Expected Sarsa）
+### 五. TD learning of action values: Expected Sarsa
 
 从 Sarsa 出发的改进算法，从一个经典的 Sarsa 算法出发，做改进，是做研究非常常见的思路。
 
@@ -400,7 +409,7 @@ Expected Sarsa 算法是 Sarsa 算法的一个变种：
 
 ------
 
-### 六.估计 action value 的 TD 算法（TD learning of action values: n-step Sarsa）
+### 六. TD learning of action values: n-step Sarsa
 
 n-step Sarsa：可将 Sarsa 和蒙特卡罗学习（Monte Carlo learning）统一起来，包含了 Sarsa 和 Mento Carlo
 
@@ -451,11 +460,11 @@ n 步 Sarsa 算法更为通用，因为当 n = 1 时，它变成了（一步）S
 
 ------
 
-### 七.估计最优 action value 的 TD 算法：Q-learning（TD learning of optimal action values: Q-learning）
+### 七. TD learning of optimal action values: Q-learning
 
 之前介绍的三章所有的 Sarsa 算法本质上来说是用来估计一个给定策略的 action value，即做 policy evaluation，然后可以把它和 policy improvement 相结合，然后在 policy evaluation 和 policy improvement 之间相互迭 代，就可以得到一个寻找最优策略的算法。
 
-Q learning 和 Sarsa 以及之前的算法主要区别是它是直接估计 optimal action value，它不需要去做 policy evaluation 和 policy improvement 这两个之间来回交替运行，因为直接就把最优的 action value 估计出来了，进而得到最优策略。
+Q learning 和 Sarsa 以及之前的算法主要区别是**它直接估计 optimal action value**，它不需要去做 policy evaluation 和 policy improvement 这两个之间来回交替运行，因为直接就把最优的 action value 估计出来了，进而得到最优策略。
 
 下面直接给出 Q learning 算法
 
@@ -465,11 +474,11 @@ Q learning 和 Sarsa 以及之前的算法主要区别是它是直接估计 opti
 
 **Q-learning 在数学上有什么作用？在解决一个什么数学问题？**
 
-Sarsa 在求解一个给定策略的贝尔曼方程，而 Q learning 不是求一个给定策略的贝尔曼方程的 action value，它是在求解一个贝尔曼最优方程
+Sarsa 在求解一个给定策略的贝尔曼方程，而 Q learning 不是求一个给定策略的贝尔曼方程的 action value，它是在求解一个**贝尔曼最优方程**
 
 ![img](./images/8224a8b6a82e791f9de7ebe5de375290.png)
 
-这就是用 action value 表示的贝尔曼最优方程。详细请看我书中的证明。
+**这就是用 action value 表示的贝尔曼最优方程**。详细请看我书中的证明。
 
 最后得到的 q 值不是说哪一个策略的 q 值，而是最优的 q 值，当然这个最优 q 值对应的最优的策略。
 
@@ -577,7 +586,7 @@ Q-learning 的 on-policy 的版本和 Sarsa 一样，唯一的区别是在更新
 
 任务描述：
 
--    这些例子的任务是为每一个状态找到最优策略，这和刚才的 Sarsa 例子不同
+-    这些例子的任务是为**每一个状态**找到最优策略，这和刚才的 Sarsa 例子不同
 
 ![img](./images/7f34fc086d7c6062cbc155f2eabf2418.png)
 
@@ -585,7 +594,7 @@ Q-learning 的 on-policy 的版本和 Sarsa 一样，唯一的区别是在更新
 
 ![img](./images/6be1ff2b7e8f9801d6ce49add29138ef.png)
 
-首先我们选定一个 behavior policy，用这个 behavior policy 产生很多的数据。下面的左图的 behavior policy 已经绘制出来了，它是一个均匀采样的策略，也就是在每个状态的 5 个 action 都各给 0.2 的概率，它的探索性比较强，如右图所示，如果 episode 有 100 万步的话，每一个 state action pair 都被访问到了很多次，所以这个数据比较好，下面看一下如何用这些数据进行 Q learning 的计算
+首先我们选定一个 **behavior policy**，用这个 behavior policy 产生很多的数据。下面的左图的 behavior policy 已经绘制出来了，它是一个**均匀采样的策略**，也就是在每个状态的 5 个 action 都各给 0.2 的概率，它的探索性比较强，如右图所示，如果 episode 有 100 万步的话，每一个 state action pair 都被访问到了很多次，所以这个数据比较好，下面看一下如何用这些数据进行 Q learning 的计算
 
 ![img](./images/141ba582b500dfa49eec3d733c5b5b2c.png)
 
@@ -598,15 +607,14 @@ Q-learning 的 on-policy 的版本和 Sarsa 一样，唯一的区别是在更新
 ![img](./images/15c023d47b7b5ab705e7531e1d9ef501.jpeg)
 
 考虑探索性更弱的
-![img](./images/2100d29c843f1e3d4e4fcc48efa4db94.png)
 
-------
+![img](./images/2100d29c843f1e3d4e4fcc48efa4db94.png)
 
 off policy 的性质非常重要，之后我们会学习 deep Q learning，为什么将神经网络和 TD 算法结合的时候会选择 Q learning 呢，这里面 Q learning 的 off policy 的性质发挥了重要作用
 
 ------
 
-### 八.一个统一的观点：将这些算法进行比较（A unified point of view）
+### 八. A unified point of view
 
 下面将之前学的所有算法进行总结
 
@@ -614,7 +622,7 @@ off policy 的性质非常重要，之后我们会学习 deep Q learning，为�
 
 ![img](./images/eb91253f908d40be0376c8ea851e2a59.jpeg)
 
-除了上面的统一的形式之外，他们在做的事情也可以统一的写出来。所有算法都可以看作是求解贝尔曼方程或贝尔曼最优方程的随机逼近算法（stochastic approximation algorithms）：（在这个意义上 TD 算法和之前介绍的求解值迭代和策略迭代的算法对应上了，值迭代和策略迭代是基于模型求解贝尔曼公式和贝尔曼最优公式的的，本节课是没有模型求解的）
+除了上面的统一的形式之外，他们在做的事情也可以统一的写出来。所有算法都可以看作是**求解贝尔曼方程或贝尔曼最优方程**的随机逼近算法（stochastic approximation algorithms）：在这个意义上 TD 算法和之前介绍的求解值迭代和策略迭代的算法对应上了，值迭代和策略迭代是基于模型求解贝尔曼公式和贝尔曼最优公式的的，本节课是没有模型求解的
 
 本节课也学了贝尔曼公式的不同表达方式，Q learning 求解的是贝尔曼最优公式，直接把最优的 q value 求解出来，相对应所得到的 policy 也就是最优的
 
@@ -624,7 +632,7 @@ off policy 的性质非常重要，之后我们会学习 deep Q learning，为�
 
  最后一行的蒙特卡洛方法也是来求解这样一个式子，这个式子你可以说他是贝尔曼公式，其实他是 action value 的一个最基本的定义
 
-### 九.总结
+### 九. Summary
 
 -   介绍各种 TD 学习算法
 -   它们的表达式、数学解释、实现、关系、示例
